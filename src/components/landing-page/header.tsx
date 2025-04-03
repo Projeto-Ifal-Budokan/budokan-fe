@@ -1,60 +1,76 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Button } from '../ui/button';
 
+// Navigation links data
+const navLinks = [
+  { href: '#about', label: 'Sobre Nós' },
+  { href: '#disciplines', label: 'Modalidades' },
+  { href: '#instructors', label: 'Senseis' },
+  { href: '#schedule', label: 'Horários' },
+  { href: '#contact', label: 'Contato' },
+];
+
+const Logo = () => {
+  return (
+    <div className='flex items-center gap-2'>
+      <Image
+        src='/logo.jpeg'
+        alt='Budokan Logo'
+        width={50}
+        height={50}
+        className='rounded-full'
+      />
+      <span className='text-xl font-bold text-white'>BUDOKAN</span>
+    </div>
+  );
+};
+
 export const Header = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <header className='sticky top-0 z-50 w-full bg-blue-900 py-2 text-white shadow-lg'>
       <div className='container flex h-16 items-center justify-between'>
-        <div className='flex items-center gap-2'>
-          <Image
-            src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/budokan.jpg-agJBqgCaSEzyDWGHfvAUrKFDnFWaS2.jpeg'
-            alt='Budokan Logo'
-            width={50}
-            height={50}
-            className='rounded-full'
-          />
-          <span className='text-xl font-bold text-white'>BUDOKAN</span>
-        </div>
-        <nav className='hidden items-center gap-6 md:flex'>
-          <Link
-            href='#about'
-            className='text-sm font-medium text-white transition-colors hover:text-orange-300'
-          >
-            Sobre Nós
+        <Logo />
+
+        {/* Desktop Navigation */}
+        <nav
+          className='hidden items-center gap-6 md:flex'
+          aria-label='Main navigation'
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className='text-sm font-medium text-white transition-colors hover:text-orange-300'
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link href='/login'>
+            <Button className='border-0 bg-orange-500 text-white hover:bg-orange-600'>
+              Área do Aluno
+            </Button>
           </Link>
-          <Link
-            href='#disciplines'
-            className='text-sm font-medium text-white transition-colors hover:text-orange-300'
-          >
-            Modalidades
-          </Link>
-          <Link
-            href='#instructors'
-            className='text-sm font-medium text-white transition-colors hover:text-orange-300'
-          >
-            Senseis
-          </Link>
-          <Link
-            href='#schedule'
-            className='text-sm font-medium text-white transition-colors hover:text-orange-300'
-          >
-            Horários
-          </Link>
-          <Link
-            href='#contact'
-            className='text-sm font-medium text-white transition-colors hover:text-orange-300'
-          >
-            Contato
-          </Link>
-          <Button className='border-0 bg-orange-500 text-white hover:bg-orange-600'>
-            Área do Aluno
-          </Button>
         </nav>
+
+        {/* Mobile Menu Toggle */}
         <Button
           variant='outline'
           size='icon'
           className='border-white text-white hover:bg-blue-800 md:hidden'
+          onClick={toggleMobileMenu}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls='mobile-menu'
+          aria-label='Toggle menu'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -68,12 +84,47 @@ export const Header = () => {
             strokeLinejoin='round'
             className='h-6 w-6'
           >
-            <line x1='4' x2='20' y1='12' y2='12' />
-            <line x1='4' x2='20' y1='6' y2='6' />
-            <line x1='4' x2='20' y1='18' y2='18' />
+            {isMobileMenuOpen ? (
+              <g>
+                <line x1='18' y1='6' x2='6' y2='18' />
+                <line x1='6' y1='6' x2='18' y2='18' />
+              </g>
+            ) : (
+              <g>
+                <line x1='4' x2='20' y1='12' y2='12' />
+                <line x1='4' x2='20' y1='6' y2='6' />
+                <line x1='4' x2='20' y1='18' y2='18' />
+              </g>
+            )}
           </svg>
         </Button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div
+          id='mobile-menu'
+          className='bg-blue-900 px-6 py-4 shadow-lg md:hidden'
+        >
+          <nav className='flex flex-col space-y-4'>
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className='text-sm font-medium text-white transition-colors hover:text-orange-300'
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link href='/login'>
+              <Button className='w-full border-0 bg-orange-500 text-white hover:bg-orange-600'>
+                Área do Aluno
+              </Button>
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
