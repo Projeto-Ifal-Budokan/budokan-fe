@@ -170,10 +170,8 @@ export const ContactSection = () => {
                       Horário de Funcionamento
                     </h4>
                     <p className='text-gray-600'>
-                      Segunda a Sexta: 16:00 - 21:30
+                      Segunda a Sexta: 07:00 - 21:30
                     </p>
-                    <p className='text-gray-600'>Sábado: 09:00 - 16:00</p>
-                    <p className='text-gray-600'>Domingo: 09:00 - 12:00</p>
                   </div>
                 </div>
               </div>
