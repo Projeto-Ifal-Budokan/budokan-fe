@@ -46,7 +46,7 @@ export const Footer = () => {
                   href='/arquearia'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
-                  Tiro com Arco (Arquearia)
+                  Arquearia
                 </Link>
               </li>
             </ul>

@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import budokanMembersAsset from '@/assets/images/budokan-members.png';
+
 export const AboutSection = () => {
   return (
     <section id='about' className='bg-white py-16'>
@@ -18,7 +20,7 @@ export const AboutSection = () => {
         <div className='grid items-center gap-12 md:grid-cols-2'>
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
             <Image
-              src='/placeholder.svg?height=400&width=600'
+              src={budokanMembersAsset.src}
               alt='Budokan Dojo'
               fill
               className='object-cover'

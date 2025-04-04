@@ -1,5 +1,6 @@
 'use client';
 
+import { User2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -56,7 +57,11 @@ export const Header = () => {
             </Link>
           ))}
           <Link href='/login'>
-            <Button className='bg-primary hover:bg-primary/90 border-0 text-white'>
+            <Button
+              size='lg'
+              className='bg-primary hover:bg-primary/90 border-0 text-white'
+            >
+              <User2 className='size-4' />
               Área do Aluno
             </Button>
           </Link>
@@ -118,7 +123,7 @@ export const Header = () => {
               </Link>
             ))}
             <Link href='/login'>
-              <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
+              <Button className='bg-primary hover:bg-primary/90 h-10 w-full border-0 text-white'>
                 Área do Aluno
               </Button>
             </Link>

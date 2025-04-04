@@ -6,7 +6,7 @@ export const ContactSection = () => {
       <div className='container'>
         <div className='mb-12 text-center'>
           <h2 className='mb-4 text-3xl font-bold text-blue-900'>
-            Entre em Contatoo
+            Entre em Contato
           </h2>
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
@@ -102,7 +102,8 @@ export const ContactSection = () => {
                   <div>
                     <h4 className='font-bold text-blue-900'>Endereço</h4>
                     <p className='text-gray-600'>
-                      Rua das Artes Marciais, 123 - São Paulo, SP
+                      Av. Dr. Júlio Marques Luz, 779 - Jatiúca, Maceió
+                      - AL, 57037-000
                     </p>
                   </div>
                 </div>
@@ -123,10 +124,10 @@ export const ContactSection = () => {
                   </svg>
                   <div>
                     <h4 className='font-bold text-blue-900'>Telefone</h4>
-                    <p className='text-gray-600'>(11) 99999-9999</p>
+                    <p className='text-gray-600'>(82) 99996-674</p>
                   </div>
                 </div>
-                <div className='flex items-start'>
+                {/* <div className='flex items-start'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     width='24'
@@ -146,7 +147,7 @@ export const ContactSection = () => {
                     <h4 className='font-bold text-blue-900'>E-mail</h4>
                     <p className='text-gray-600'>contato@budokan.com.br</p>
                   </div>
-                </div>
+                </div> */}
                 <div className='flex items-start'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'

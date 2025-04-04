@@ -8,6 +8,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 
+import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel.png';
+import karetdoCarouselAsset from '@/assets/images/karatedo-carousel.png';
+import kendoCarouselAsset from '@/assets/images/kendo-carousel.png';
 interface CarouselSlide {
   id: number;
   image: string;
@@ -19,19 +22,19 @@ export default function HeroCarousel() {
   const slides: CarouselSlide[] = [
     {
       id: 1,
-      image: '/placeholder.svg?height=600&width=1920',
+      image: karetdoCarouselAsset.src,
       title: 'Karate-Do',
       subtitle: 'O caminho das mãos vazias: disciplina, técnica e filosofia',
     },
     {
       id: 2,
-      image: '/placeholder.svg?height=600&width=1920',
+      image: kendoCarouselAsset.src,
       title: 'Kendo',
       subtitle: 'O caminho da espada: a arte marcial dos samurais',
     },
     {
       id: 3,
-      image: '/placeholder.svg?height=600&width=1920',
+      image: arqueariaCarouselAsset.src,
       title: 'Arquearia',
       subtitle: 'O caminho do arco: a arte milenar do tiro com arco japonês',
     },
@@ -95,18 +98,18 @@ export default function HeroCarousel() {
               currentSlide === index ? 'z-10 opacity-100' : 'z-0 opacity-0'
             }`}
           >
-            <div className='absolute inset-0 z-10 bg-gradient-to-r from-blue-900/90 to-blue-800/90' />
+            <div className='absolute inset-0 z-10 bg-gradient-to-r from-blue-900/30 to-blue-800/30' />
             <Image
               src={slide.image || '/placeholder.svg'}
               alt={slide.title}
               fill
-              className='object-cover'
+              className='object-cover object-center'
               priority={index === 0}
             />
             <div className='absolute inset-0 z-20 container flex flex-col items-center justify-center text-center text-white'>
               <div className='mb-6'>
                 <Image
-                  src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/budokan.jpg-agJBqgCaSEzyDWGHfvAUrKFDnFWaS2.jpeg'
+                  src='/logo.jpeg'
                   alt='Budokan Logo'
                   width={120}
                   height={120}
@@ -123,11 +126,11 @@ export default function HeroCarousel() {
                 {slide.subtitle}
               </p>
               <div className='flex flex-col gap-4 sm:flex-row'>
-                <Button className='bg-primary hover:bg-primary/90/110 border-0 px-8 py-6 text-lg font-bold text-white'>
+                <Button className='bg-primary hover:bg-primary/90 border-0 px-8 py-6 text-lg font-bold text-white'>
                   Agende uma Aula Experimental
                 </Button>
                 <Button
-                  className='bg-blue-900 px-8 py-6 text-lg text-white'
+                  className='bg-blue-900 px-8 py-6 text-lg text-white hover:bg-blue-900/90'
                   onClick={handleExploreClick}
                 >
                   Conheça Nossas Modalidades

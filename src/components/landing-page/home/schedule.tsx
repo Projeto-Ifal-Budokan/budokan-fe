@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { modalitiesSchedules } from '@/data/schedules';
 
 export const ScheduleSection = () => {
   return (
@@ -14,100 +15,43 @@ export const ScheduleSection = () => {
         </div>
 
         <div className='grid gap-8 md:grid-cols-3'>
-          <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-            <h3 className='text-primary mb-4 text-xl font-bold'>Karate-Do</h3>
-            <ul className='space-y-4'>
-              <li className='flex justify-between'>
-                <span>Segunda, Quarta e Sexta</span>
-                <span>17:00 - 18:00</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Segunda, Quarta e Sexta</span>
-                <span>18:00 - 19:30</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Segunda, Quarta e Sexta</span>
-                <span>19:30 - 21:00</span>
-              </li>
-            </ul>
-            <div className='mt-6 border-t border-white/20 pt-4'>
-              <h4 className='mb-2 font-medium'>Níveis</h4>
-              <div className='flex flex-wrap gap-2'>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Infantil
-                </span>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Juvenil
-                </span>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Adulto
-                </span>
+          {modalitiesSchedules.map((modality, index) => (
+            <div
+              key={index}
+              className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'
+            >
+              <h3 className='text-primary mb-4 text-xl font-bold'>
+                {modality.name}
+              </h3>
+              <ul className='space-y-4'>
+                {modality.schedules.map((schedule, idx) => (
+                  <li key={idx} className='flex justify-between'>
+                    <span>{schedule.days}</span>
+                    <span>
+                      {Array.isArray(schedule.time)
+                        ? schedule.time.map((time, timeIdx) => (
+                            <div key={timeIdx}>{time}</div>
+                          ))
+                        : schedule.time}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className='mt-6 border-t border-white/20 pt-4'>
+                <h4 className='mb-2 font-medium'>Níveis</h4>
+                <div className='flex flex-wrap gap-2'>
+                  {modality.levels.map((level, idx) => (
+                    <span
+                      key={idx}
+                      className='bg-primary rounded-full px-2 py-1 text-xs text-white'
+                    >
+                      {level}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-            <h3 className='text-primary mb-4 text-xl font-bold'>Kendo</h3>
-            <ul className='space-y-4'>
-              <li className='flex justify-between'>
-                <span>Terça e Quinta</span>
-                <span>18:00 - 19:30</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Terça e Quinta</span>
-                <span>19:30 - 21:00</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Sábado</span>
-                <span>10:00 - 12:00</span>
-              </li>
-            </ul>
-            <div className='mt-6 border-t border-white/20 pt-4'>
-              <h4 className='mb-2 font-medium'>Níveis</h4>
-              <div className='flex flex-wrap gap-2'>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Iniciantes
-                </span>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Intermediários
-                </span>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Avançados
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-            <h3 className='text-primary mb-4 text-xl font-bold'>
-              Arquearia (Tiro com Arco)
-            </h3>
-            <ul className='space-y-4'>
-              <li className='flex justify-between'>
-                <span>Sábado</span>
-                <span>09:00 - 12:00</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Domingo</span>
-                <span>09:00 - 12:00</span>
-              </li>
-              <li className='flex justify-between'>
-                <span>Quarta-feira</span>
-                <span>19:00 - 21:00</span>
-              </li>
-            </ul>
-            <div className='mt-6 border-t border-white/20 pt-4'>
-              <h4 className='mb-2 font-medium'>Níveis</h4>
-              <div className='flex flex-wrap gap-2'>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Iniciantes
-                </span>
-                <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
-                  Intermediários
-                </span>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
         <div className='mt-12 text-center'>
