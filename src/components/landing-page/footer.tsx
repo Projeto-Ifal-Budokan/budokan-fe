@@ -43,10 +43,10 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href='/kyudo'
+                  href='/arquearia'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
-                  Tiro com Arco (Kyudo)
+                  Tiro com Arco (Arquearia)
                 </Link>
               </li>
             </ul>

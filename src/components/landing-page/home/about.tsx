@@ -36,9 +36,9 @@ export const AboutSection = () => {
             </p>
             <p className='mb-4 text-gray-600'>
               Ao longo de mais de três décadas, a Budokan se consolidou como uma
-              referência no ensino de Karate-Do, Kendo e Kyudo (Tiro com Arco),
-              formando não apenas atletas de alto rendimento, mas cidadãos
-              íntegros e disciplinados.
+              referência no ensino de Karate-Do, Kendo e Arquearia (Tiro com
+              Arco), formando não apenas atletas de alto rendimento, mas
+              cidadãos íntegros e disciplinados.
             </p>
             <p className='text-gray-600'>
               Nossa escola já formou diversos campeões em competições nacionais
@@ -70,9 +70,10 @@ export const AboutSection = () => {
             </div>
             <h4 className='mb-2 text-xl font-bold text-blue-900'>Missão</h4>
             <p className='text-gray-600'>
-              Promover o desenvolvimento físico, mental e espiritual através do
-              ensino de artes marciais tradicionais, formando praticantes
-              técnicos e cidadãos éticos.
+              Promover o desenvolvimento integral dos indivíduos por meio das
+              artes marciais tradicionais, cultivando disciplina, respeito e
+              harmonia entre corpo e mente, preservando as tradições culturais
+              do karatê, kendô e arqueria.
             </p>
           </div>
 
@@ -96,9 +97,10 @@ export const AboutSection = () => {
             </div>
             <h4 className='mb-2 text-xl font-bold text-blue-900'>Visão</h4>
             <p className='text-gray-600'>
-              Ser reconhecida como referência nacional no ensino de artes
-              marciais japonesas, preservando suas tradições e valores enquanto
-              formamos gerações de praticantes.
+              Ser reconhecida como a principal escola de artes marciais
+              tradicionais em Maceió, destacando-se pela excelência no ensino do
+              karatê, kendô e arqueria, formando indivíduos que exemplifiquem os
+              valores marciais na sociedade.
             </p>
           </div>
 
@@ -121,9 +123,9 @@ export const AboutSection = () => {
             </div>
             <h4 className='mb-2 text-xl font-bold text-blue-900'>Valores</h4>
             <p className='text-gray-600'>
-              Respeito, disciplina, perseverança, integridade e excelência
-              técnica são os pilares que sustentam nossa filosofia de ensino e
-              convivência.
+              Disciplina, respeito, honra, perseverança, humildade, tradição e
+              comunidade são os pilares que sustentam nossa filosofia de ensino
+              e convivência.
             </p>
           </div>
         </div>

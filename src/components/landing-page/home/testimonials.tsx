@@ -77,14 +77,14 @@ export const TestimonialssSection = () => {
               <div>
                 <h4 className='font-bold text-blue-900'>Roberto Tanaka</h4>
                 <p className='text-sm text-gray-500'>
-                  Praticante de Kyudo há 7 anos
+                  Praticante de Arquearia há 7 anos
                 </p>
               </div>
             </div>
             <p className='text-gray-600 italic'>
-              "O Kyudo na Budokan é uma experiência transformadora. Mais que uma
-              arte marcial, é uma jornada de autoconhecimento. Cada tiro com o
-              arco é uma oportunidade de conectar corpo, mente e espírito em
+              "O Arquearia na Budokan é uma experiência transformadora. Mais que
+              uma arte marcial, é uma jornada de autoconhecimento. Cada tiro com
+              o arco é uma oportunidade de conectar corpo, mente e espírito em
               perfeita harmonia."
             </p>
           </div>

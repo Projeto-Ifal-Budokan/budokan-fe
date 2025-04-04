@@ -1,6 +1,6 @@
+import arqueariaAsset from '@/assets/images/arquearia.png';
 import karateAsset from '@/assets/images/karate-do.png';
 import kendoAsset from '@/assets/images/kendo.png';
-import kyudoAsset from '@/assets/images/kyudo.png';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -74,22 +74,22 @@ export const DisciplinesSection = () => {
           <div className='overflow-hidden rounded-lg bg-white shadow-md'>
             <div className='relative h-80'>
               <Image
-                src={kyudoAsset.src}
-                alt='Kyudo (Tiro com Arco)'
+                src={arqueariaAsset.src}
+                alt='Arquearia'
                 fill
                 className='object-cover object-top'
               />
             </div>
             <div className='p-6'>
               <h3 className='mb-2 text-xl font-bold text-blue-900'>
-                Kyudo (Tiro com Arco)
+                Arquearia
               </h3>
               <p className='mb-4 text-gray-600'>
                 O "Caminho do Arco" é uma arte marcial que utiliza arco e
                 flecha, focando na precisão, concentração e harmonia entre corpo
                 e mente. É considerado uma forma de meditação em movimento.
               </p>
-              <Link href='/kyudo'>
+              <Link href='/arquearia'>
                 <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                   Saiba Mais
                 </Button>

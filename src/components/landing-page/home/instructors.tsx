@@ -68,10 +68,10 @@ export const InstructorsSection = () => {
             <h3 className='mb-1 text-xl font-bold text-blue-900'>
               Sensei Sato
             </h3>
-            <p className='text-primary mb-3 font-medium'>Kyudo - 6º Dan</p>
+            <p className='text-primary mb-3 font-medium'>Arquearia - 6º Dan</p>
             <p className='text-gray-600'>
-              Especialista em Kyudo, treinou por mais de 15 anos no Japão antes
-              de retornar ao Brasil para difundir esta arte milenar. É
+              Especialista em Arquearia, treinou por mais de 15 anos no Japão
+              antes de retornar ao Brasil para difundir esta arte milenar. É
               reconhecido por sua precisão técnica e profundo conhecimento
               filosófico.
             </p>

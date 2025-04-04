@@ -80,7 +80,7 @@ export const ScheduleSection = () => {
 
           <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
             <h3 className='text-primary mb-4 text-xl font-bold'>
-              Kyudo (Tiro com Arco)
+              Arquearia (Tiro com Arco)
             </h3>
             <ul className='space-y-4'>
               <li className='flex justify-between'>

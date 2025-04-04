@@ -32,7 +32,7 @@ export default function HeroCarousel() {
     {
       id: 3,
       image: '/placeholder.svg?height=600&width=1920',
-      title: 'Kyudo',
+      title: 'Arquearia',
       subtitle: 'O caminho do arco: a arte milenar do tiro com arco japonês',
     },
   ];

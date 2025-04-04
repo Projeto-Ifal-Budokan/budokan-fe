@@ -6,7 +6,7 @@ export const ContactSection = () => {
       <div className='container'>
         <div className='mb-12 text-center'>
           <h2 className='mb-4 text-3xl font-bold text-blue-900'>
-            Entre em Contato
+            Entre em Contatoo
           </h2>
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
