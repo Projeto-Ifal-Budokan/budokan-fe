@@ -71,7 +71,7 @@ export const Header = () => {
         <Button
           variant='outline'
           size='icon'
-          className='border-white text-white hover:bg-blue-800 md:hidden'
+          className='border-white bg-transparent text-white hover:bg-blue-800 md:hidden'
           onClick={toggleMobileMenu}
           aria-expanded={isMobileMenuOpen}
           aria-controls='mobile-menu'
