@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'Budokan - Associação de Artes Marciais',
   description:
-    'Centro de excelência em Karate, Kendo e Tiro com Arco tradicional japonês',
+    'Centro de excelência em Karate, Kendo e Arquearia tradicional japonês',
 };
 
 export default function RootLayout({
