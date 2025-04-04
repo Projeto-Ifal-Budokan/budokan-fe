@@ -144,14 +144,14 @@ export default function HeroCarousel() {
       {/* Navigation arrows */}
       <button
         onClick={() => handleControlClick(prevSlide)}
-        className='absolute top-1/2 left-4 z-30 -translate-y-1/2 rounded-full bg-blue-900/50 p-2 text-white transition-all hover:bg-blue-900/70'
+        className='absolute top-1/2 left-4 z-30 -translate-y-1/2 cursor-pointer rounded-full bg-blue-900/50 p-2 text-white transition-all hover:bg-blue-900/70'
         aria-label='Previous slide'
       >
         <ChevronLeft size={24} />
       </button>
       <button
         onClick={() => handleControlClick(nextSlide)}
-        className='absolute top-1/2 right-4 z-30 -translate-y-1/2 rounded-full bg-blue-900/50 p-2 text-white transition-all hover:bg-blue-900/70'
+        className='absolute top-1/2 right-4 z-30 -translate-y-1/2 cursor-pointer rounded-full bg-blue-900/50 p-2 text-white transition-all hover:bg-blue-900/70'
         aria-label='Next slide'
       >
         <ChevronRight size={24} />
