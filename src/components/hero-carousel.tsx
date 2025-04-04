@@ -123,12 +123,11 @@ export default function HeroCarousel() {
                 {slide.subtitle}
               </p>
               <div className='flex flex-col gap-4 sm:flex-row'>
-                <Button className='border-0 bg-orange-500 px-8 py-6 text-lg font-bold text-blue-900 hover:bg-orange-600'>
+                <Button className='bg-primary hover:bg-primary/90/110 border-0 px-8 py-6 text-lg font-bold text-white'>
                   Agende uma Aula Experimental
                 </Button>
                 <Button
-                  variant='outline'
-                  className='border-white bg-blue-900 px-8 py-6 text-lg text-yellow-500 hover:bg-yellow-500/90'
+                  className='bg-blue-900 px-8 py-6 text-lg text-white'
                   onClick={handleExploreClick}
                 >
                   Conheça Nossas Modalidades
@@ -163,7 +162,7 @@ export default function HeroCarousel() {
             onClick={() => goToSlide(index)}
             className={`h-3 w-3 rounded-full transition-all ${
               currentSlide === index
-                ? 'w-8 bg-orange-500'
+                ? 'bg-primary w-8'
                 : 'bg-white/60 hover:bg-white'
             }`}
             aria-label={`Go to slide ${index + 1}`}
@@ -171,24 +170,5 @@ export default function HeroCarousel() {
         ))}
       </div>
     </div>
-  );
-}
-
-// ChevronDown component for the scroll indicator
-function ChevronDown({ size = 24 }: { size?: number }) {
-  return (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width={size}
-      height={size}
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-    >
-      <path d='m6 9 6 6 6-6' />
-    </svg>
   );
 }

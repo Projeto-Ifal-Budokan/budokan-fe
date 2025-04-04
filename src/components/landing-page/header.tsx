@@ -56,7 +56,7 @@ export const Header = () => {
             </Link>
           ))}
           <Link href='/login'>
-            <Button className='border-0 bg-orange-500 text-white hover:bg-orange-600'>
+            <Button className='bg-primary hover:bg-primary/90 border-0 text-white'>
               Área do Aluno
             </Button>
           </Link>
@@ -118,7 +118,7 @@ export const Header = () => {
               </Link>
             ))}
             <Link href='/login'>
-              <Button className='w-full border-0 bg-orange-500 text-white hover:bg-orange-600'>
+              <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                 Área do Aluno
               </Button>
             </Link>

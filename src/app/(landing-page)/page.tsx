@@ -3,6 +3,10 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import karateAsset from '@/assets/images/karate-do.png';
+import kendoAsset from '@/assets/images/kendo.png';
+import kyudoAsset from '@/assets/images/kyudo.png';
+
 export default function Home() {
   return (
     <div className=''>
@@ -16,7 +20,7 @@ export default function Home() {
             <h2 className='mb-4 text-3xl font-bold text-blue-900'>
               Sobre a Budokan
             </h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
               Há mais de 30 anos formando campeões e transformando vidas através
               das artes marciais tradicionais japonesas.
@@ -145,7 +149,7 @@ export default function Home() {
             <h2 className='mb-4 text-3xl font-bold text-blue-900'>
               Nossas Modalidades
             </h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
               Conheça as artes marciais tradicionais japonesas ensinadas na
               Budokan, cada uma com sua história, filosofia e técnicas únicas.
@@ -154,12 +158,12 @@ export default function Home() {
 
           <div className='grid gap-8 md:grid-cols-3'>
             <div className='overflow-hidden rounded-lg bg-white shadow-md'>
-              <div className='relative h-48'>
+              <div className='relative h-80'>
                 <Image
-                  src='/placeholder.svg?height=200&width=400'
+                  src={karateAsset.src}
                   alt='Karate-Do'
                   fill
-                  className='object-cover'
+                  className='object-cover object-top'
                 />
               </div>
               <div className='p-6'>
@@ -173,7 +177,7 @@ export default function Home() {
                   autocontrole.
                 </p>
                 <Link href='/karate'>
-                  <Button className='w-full border-0 bg-orange-500 text-white hover:bg-orange-600'>
+                  <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                     Saiba Mais
                   </Button>
                 </Link>
@@ -181,12 +185,12 @@ export default function Home() {
             </div>
 
             <div className='overflow-hidden rounded-lg bg-white shadow-md'>
-              <div className='relative h-48'>
+              <div className='relative h-80'>
                 <Image
-                  src='/placeholder.svg?height=200&width=400'
+                  src={kendoAsset.src}
                   alt='Kendo'
                   fill
-                  className='object-cover'
+                  className='object-cover object-top'
                 />
               </div>
               <div className='p-6'>
@@ -197,7 +201,7 @@ export default function Home() {
                   força, velocidade, precisão e um espírito forte.
                 </p>
                 <Link href='/kendo'>
-                  <Button className='w-full border-0 bg-orange-500 text-white hover:bg-orange-600'>
+                  <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                     Saiba Mais
                   </Button>
                 </Link>
@@ -205,12 +209,12 @@ export default function Home() {
             </div>
 
             <div className='overflow-hidden rounded-lg bg-white shadow-md'>
-              <div className='relative h-48'>
+              <div className='relative h-80'>
                 <Image
-                  src='/placeholder.svg?height=200&width=400'
+                  src={kyudoAsset.src}
                   alt='Kyudo (Tiro com Arco)'
                   fill
-                  className='object-cover'
+                  className='object-cover object-top'
                 />
               </div>
               <div className='p-6'>
@@ -224,7 +228,7 @@ export default function Home() {
                   movimento.
                 </p>
                 <Link href='/kyudo'>
-                  <Button className='w-full border-0 bg-orange-500 text-white hover:bg-orange-600'>
+                  <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                     Saiba Mais
                   </Button>
                 </Link>
@@ -241,7 +245,7 @@ export default function Home() {
             <h2 className='mb-4 text-3xl font-bold text-blue-900'>
               Nossos Senseis
             </h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
               Conheça os mestres que dedicam suas vidas à preservação e ao
               ensino das artes marciais tradicionais japonesas.
@@ -261,7 +265,7 @@ export default function Home() {
               <h3 className='mb-1 text-xl font-bold text-blue-900'>
                 Sensei Tanaka
               </h3>
-              <p className='mb-3 font-medium text-orange-600'>
+              <p className='text-primary mb-3 font-medium'>
                 Karate-Do - 7º Dan
               </p>
               <p className='text-gray-600'>
@@ -283,7 +287,7 @@ export default function Home() {
               <h3 className='mb-1 text-xl font-bold text-blue-900'>
                 Sensei Yamamoto
               </h3>
-              <p className='mb-3 font-medium text-orange-600'>Kendo - 5º Dan</p>
+              <p className='text-primary mb-3 font-medium'>Kendo - 5º Dan</p>
               <p className='text-gray-600'>
                 Com mais de 25 anos de experiência, é responsável pela divisão
                 de Kendo da Budokan. Participou de diversos campeonatos mundiais
@@ -303,7 +307,7 @@ export default function Home() {
               <h3 className='mb-1 text-xl font-bold text-blue-900'>
                 Sensei Sato
               </h3>
-              <p className='mb-3 font-medium text-orange-600'>Kyudo - 6º Dan</p>
+              <p className='text-primary mb-3 font-medium'>Kyudo - 6º Dan</p>
               <p className='text-gray-600'>
                 Especialista em Kyudo, treinou por mais de 15 anos no Japão
                 antes de retornar ao Brasil para difundir esta arte milenar. É
@@ -320,7 +324,7 @@ export default function Home() {
         <div className='container'>
           <div className='mb-12 text-center'>
             <h2 className='mb-4 text-3xl font-bold'>Horários de Aulas</h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl opacity-80'>
               Oferecemos horários flexíveis para atender às necessidades de
               nossos alunos, com turmas para diferentes níveis e faixas etárias.
@@ -329,9 +333,7 @@ export default function Home() {
 
           <div className='grid gap-8 md:grid-cols-3'>
             <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-              <h3 className='mb-4 text-xl font-bold text-orange-500'>
-                Karate-Do
-              </h3>
+              <h3 className='text-primary mb-4 text-xl font-bold'>Karate-Do</h3>
               <ul className='space-y-4'>
                 <li className='flex justify-between'>
                   <span>Segunda, Quarta e Sexta</span>
@@ -349,13 +351,13 @@ export default function Home() {
               <div className='mt-6 border-t border-white/20 pt-4'>
                 <h4 className='mb-2 font-medium'>Níveis</h4>
                 <div className='flex flex-wrap gap-2'>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Infantil
                   </span>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Juvenil
                   </span>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Adulto
                   </span>
                 </div>
@@ -363,7 +365,7 @@ export default function Home() {
             </div>
 
             <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-              <h3 className='mb-4 text-xl font-bold text-orange-500'>Kendo</h3>
+              <h3 className='text-primary mb-4 text-xl font-bold'>Kendo</h3>
               <ul className='space-y-4'>
                 <li className='flex justify-between'>
                   <span>Terça e Quinta</span>
@@ -381,13 +383,13 @@ export default function Home() {
               <div className='mt-6 border-t border-white/20 pt-4'>
                 <h4 className='mb-2 font-medium'>Níveis</h4>
                 <div className='flex flex-wrap gap-2'>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Iniciantes
                   </span>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Intermediários
                   </span>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Avançados
                   </span>
                 </div>
@@ -395,7 +397,7 @@ export default function Home() {
             </div>
 
             <div className='rounded-lg bg-white/10 p-6 backdrop-blur-sm'>
-              <h3 className='mb-4 text-xl font-bold text-orange-500'>
+              <h3 className='text-primary mb-4 text-xl font-bold'>
                 Kyudo (Tiro com Arco)
               </h3>
               <ul className='space-y-4'>
@@ -415,10 +417,10 @@ export default function Home() {
               <div className='mt-6 border-t border-white/20 pt-4'>
                 <h4 className='mb-2 font-medium'>Níveis</h4>
                 <div className='flex flex-wrap gap-2'>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Iniciantes
                   </span>
-                  <span className='rounded-full bg-orange-500 px-2 py-1 text-xs text-white'>
+                  <span className='bg-primary rounded-full px-2 py-1 text-xs text-white'>
                     Intermediários
                   </span>
                 </div>
@@ -430,7 +432,7 @@ export default function Home() {
             <p className='mb-6 opacity-80'>
               Interessado em começar? Agende uma aula experimental gratuita!
             </p>
-            <Button className='border-0 bg-orange-500 px-8 py-6 text-lg font-bold text-white hover:bg-orange-600'>
+            <Button className='bg-primary hover:bg-primary/90/80 border-0 px-8 py-6 text-lg font-bold text-white'>
               Agendar Aula Experimental
             </Button>
           </div>
@@ -444,7 +446,7 @@ export default function Home() {
             <h2 className='mb-4 text-3xl font-bold text-blue-900'>
               Depoimentos
             </h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
               Veja o que nossos alunos dizem sobre sua experiência na Budokan e
               como as artes marciais transformaram suas vidas.
@@ -537,7 +539,7 @@ export default function Home() {
             <h2 className='mb-4 text-3xl font-bold text-blue-900'>
               Entre em Contato
             </h2>
-            <div className='mx-auto mb-6 h-1 w-20 bg-orange-500'></div>
+            <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
               Estamos à disposição para esclarecer suas dúvidas e fornecer mais
               informações sobre nossas modalidades e horários.
@@ -601,7 +603,7 @@ export default function Home() {
                     className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
                   />
                 </div>
-                <Button className='w-full border-0 bg-orange-500 py-3 text-white hover:bg-orange-600'>
+                <Button className='bg-primary hover:bg-primary/90 w-full border-0 py-3 text-white'>
                   Enviar Mensagem
                 </Button>
               </form>
@@ -623,7 +625,7 @@ export default function Home() {
                       strokeWidth='2'
                       strokeLinecap='round'
                       strokeLinejoin='round'
-                      className='mt-0.5 mr-3 h-5 w-5 text-orange-500'
+                      className='text-primary mt-0.5 mr-3 h-5 w-5'
                     >
                       <path d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z' />
                       <circle cx='12' cy='10' r='3' />
@@ -646,7 +648,7 @@ export default function Home() {
                       strokeWidth='2'
                       strokeLinecap='round'
                       strokeLinejoin='round'
-                      className='mt-0.5 mr-3 h-5 w-5 text-orange-500'
+                      className='text-primary mt-0.5 mr-3 h-5 w-5'
                     >
                       <path d='M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' />
                     </svg>
@@ -666,7 +668,7 @@ export default function Home() {
                       strokeWidth='2'
                       strokeLinecap='round'
                       strokeLinejoin='round'
-                      className='mt-0.5 mr-3 h-5 w-5 text-orange-500'
+                      className='text-primary mt-0.5 mr-3 h-5 w-5'
                     >
                       <rect width='20' height='16' x='2' y='4' rx='2' />
                       <path d='m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7' />
@@ -687,7 +689,7 @@ export default function Home() {
                       strokeWidth='2'
                       strokeLinecap='round'
                       strokeLinejoin='round'
-                      className='mt-0.5 mr-3 h-5 w-5 text-orange-500'
+                      className='text-primary mt-0.5 mr-3 h-5 w-5'
                     >
                       <rect width='18' height='18' x='3' y='3' rx='2' />
                       <path d='M21 9H3' />
