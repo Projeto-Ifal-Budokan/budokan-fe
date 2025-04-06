@@ -25,7 +25,9 @@ const Logo = () => {
         height={50}
         className='rounded-full'
       />
-      <span className='text-xl font-bold text-white'>BUDOKAN</span>
+      <span className='text-xl font-bold text-white uppercase'>
+        Budokan Ryu
+      </span>
     </div>
   );
 };
