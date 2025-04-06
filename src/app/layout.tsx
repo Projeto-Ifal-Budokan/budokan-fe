@@ -6,9 +6,8 @@ import type React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Budokan - Associação de Artes Marciais',
-  description:
-    'Centro de excelência em Karate, Kendo e Arquearia tradicional japonês',
+  title: 'Budokan Ryu Escola de Karatê, Kendô & Arquearia',
+  description: 'Centro de excelência em Karatê, Kendo e Arquearia em Maceió-AL',
 };
 
 export default function RootLayout({
@@ -17,7 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='pt-BR' className='scroll-smooth'>
+    <html
+      lang='pt-BR'
+      className='scroll-smooth'
+      suppressHydrationWarning={true}
+    >
       <body className={inter.className}>
         <ThemeProvider
           attribute='class'
