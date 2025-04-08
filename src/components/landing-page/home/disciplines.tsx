@@ -16,7 +16,7 @@ export const DisciplinesSection = () => {
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
             Conheça as artes marciais tradicionais japonesas ensinadas na
-            Budokan, cada uma com sua história, filosofia e técnicas únicas.
+            Budokan-Ryu, cada uma com sua história, filosofia e técnicas únicas.
           </p>
         </div>
 

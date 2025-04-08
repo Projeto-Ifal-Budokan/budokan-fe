@@ -30,7 +30,7 @@ export const InstructorsSection = () => {
             </h3>
             <p className='text-primary mb-3 font-medium'>Karate-Do - 7º Dan</p>
             <p className='text-gray-600'>
-              Fundador da Budokan, treina Karate há mais de 40 anos. Formado
+              Fundador da Budokan-Ryu, treina Karate há mais de 40 anos. Formado
               diretamente pelos grandes mestres japoneses, é reconhecido
               internacionalmente por sua técnica e dedicação ao ensino.
             </p>
@@ -51,7 +51,7 @@ export const InstructorsSection = () => {
             <p className='text-primary mb-3 font-medium'>Kendo - 5º Dan</p>
             <p className='text-gray-600'>
               Com mais de 25 anos de experiência, é responsável pela divisão de
-              Kendo da Budokan. Participou de diversos campeonatos mundiais e é
+              Kendo da Budokan-Ryu. Participou de diversos campeonatos mundiais e é
               referência na formação de novos kendokas.
             </p>
           </div>
