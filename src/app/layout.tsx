@@ -1,20 +1,13 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import '@/app/globals.css';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Inter } from 'next/font/google';
+import type React from 'react';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "BudoKan - Landing page",
-  description: "",
+export const metadata = {
+  title: 'Budokan Ryu Escola de Karatê, Kendô & Arquearia',
+  description: 'Centro de excelência em Karatê, Kendo e Arquearia em Maceió-AL',
 };
 
 export default function RootLayout({
@@ -23,11 +16,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html
+      lang='pt-BR'
+      className='scroll-smooth'
+      suppressHydrationWarning={true}
+    >
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='light'
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
