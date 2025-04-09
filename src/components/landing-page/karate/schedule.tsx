@@ -15,53 +15,64 @@ export const ScheduleSection = () => {
 
                 <div className="space-y-4">
                     <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="font-bold text-blue-800 mb-2 flex items-center">
-                        <Clock className="h-5 w-5 mr-2 text-yellow-500" />
-                        Turma Infantil (7 a 12 anos)
-                    </h3>
-                    <ul className="space-y-1 text-gray-600">
-                        <li className="flex justify-between">
-                        <span>Segunda, Quarta e Sexta</span>
-                        <span className="font-medium">17:00 - 18:00</span>
-                        </li>
-                        <li className="flex justify-between">
-                        <span>Sábado</span>
-                        <span className="font-medium">09:00 - 11:00</span>
-                        </li>
-                    </ul>
+                        <h3 className="font-bold text-blue-800 mb-4 flex items-center">
+                            <Clock className="h-5 w-5 mr-2 text-yellow-500" />
+                            Segunda-feira
+                        </h3>
+                        <ul className="space-y-1 text-gray-600 flex flex-row justify-between w-full px-10">
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">07:00 - 08:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">17:00 - 18:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">18:30 - 19:30</span>
+                                <span className="font-medium">19:30 - 20:30</span>
+                            </li>
+                        </ul>
                     </div>
+
                     <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="font-bold text-blue-800 mb-2 flex items-center">
-                        <Clock className="h-5 w-5 mr-2 text-yellow-500" />
-                        Turma Juvenil (13 a 17 anos)
-                    </h3>
-                    <ul className="space-y-1 text-gray-600">
-                        <li className="flex justify-between">
-                        <span>Segunda, Quarta e Sexta</span>
-                        <span className="font-medium">18:00 - 19:30</span>
-                        </li>
-                        <li className="flex justify-between">
-                        <span>Sábado</span>
-                        <span className="font-medium">11:00 - 12:30</span>
-                        </li>
-                    </ul>
+                        <h3 className="font-bold text-blue-800 mb-4 flex items-center">
+                            <Clock className="h-5 w-5 mr-2 text-yellow-500" />
+                            Quarta-feira
+                        </h3>
+                        <ul className="space-y-1 text-gray-600 flex flex-row justify-between w-full px-10">
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">07:00 - 08:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">16:00 - 17:00</span>
+                                <span className="font-medium">17:00 - 18:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">18:30 - 19:30</span>
+                                <span className="font-medium">19:30 - 20:30</span>
+                            </li>
+                        </ul>
                     </div>
+
                     <div className="bg-blue-50 p-4 rounded-lg">
-                    <h3 className="font-bold text-blue-800 mb-2 flex items-center">
-                        <Clock className="h-5 w-5 mr-2 text-yellow-500" />
-                        Turma Adulto (18+ anos)
-                    </h3>
-                    <ul className="space-y-1 text-gray-600">
-                        <li className="flex justify-between">
-                        <span>Segunda, Quarta e Sexta</span>
-                        <span className="font-medium">19:30 - 21:00</span>
-                        </li>
-                        <li className="flex justify-between">
-                        <span>Sábado</span>
-                        <span className="font-medium">14:00 - 16:00</span>
-                        </li>
-                    </ul>
+                        <h3 className="font-bold text-blue-800 mb-4 flex items-center">
+                            <Clock className="h-5 w-5 mr-2 text-yellow-500" />
+                            Sexta-feira
+                        </h3>
+                        <ul className="space-y-1 text-gray-600 flex flex-row justify-between w-full px-10">
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">07:00 - 08:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">16:00 - 17:00</span>
+                                <span className="font-medium">17:00 - 18:00</span>
+                            </li>
+                            <li className="flex flex-col justify-between">
+                                <span className="font-medium">18:30 - 19:30</span>
+                                <span className="font-medium">19:30 - 20:30</span>
+                            </li>
+                        </ul>
                     </div>
+
                 </div>
                 </div>
                 <div className="bg-blue-800 text-white p-8 rounded-lg">
