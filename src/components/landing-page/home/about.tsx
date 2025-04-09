@@ -37,8 +37,8 @@ export const AboutSection = () => {
               filosofia e técnicas.
             </p>
             <p className='mb-4 text-gray-600'>
-              Ao longo de mais de três décadas, a Budokan-Ryu se consolidou como uma
-              referência no ensino de Karate-Do, Kendo e Arquearia (Tiro com
+              Ao longo de mais de três décadas, a Budokan-Ryu se consolidou como
+              uma referência no ensino de Karate-Do, Kendo e Arquearia (Tiro com
               Arco), formando não apenas atletas de alto rendimento, mas
               cidadãos íntegros e disciplinados.
             </p>
