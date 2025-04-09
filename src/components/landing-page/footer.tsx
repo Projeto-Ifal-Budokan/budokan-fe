@@ -56,7 +56,7 @@ export const Footer = () => {
             <ul className='space-y-2'>
               <li>
                 <Link
-                  href='#about'
+                  href='/#about'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
                   Sobre Nós
@@ -64,7 +64,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href='#instructors'
+                  href='/#instructors'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
                   Senseis
@@ -72,7 +72,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href='#schedule'
+                  href='/#schedule'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
                   Horários
@@ -80,7 +80,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href='#contact'
+                  href='/#contact'
                   className='text-sm opacity-70 transition-colors hover:text-orange-300 hover:opacity-100'
                 >
                   Contato
