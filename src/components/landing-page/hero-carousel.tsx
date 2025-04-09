@@ -110,14 +110,16 @@ export default function HeroCarousel() {
               <div className='mb-6'>
                 <Image
                   src='/logo.jpeg'
-                  alt='Budokan Logo'
+                  alt='Budokan-Ryu Logo'
                   width={120}
                   height={120}
                   className='mx-auto rounded-full'
                 />
               </div>
               <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
-                Associação de Artes Marciais Budokan
+                Associação de Artes Marciais
+                <br/>
+                Budokan-Ryu
               </h1>
               <h2 className='mb-2 text-2xl font-semibold md:text-3xl'>
                 {slide.title}
