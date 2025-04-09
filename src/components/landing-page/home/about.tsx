@@ -8,7 +8,7 @@ export const AboutSection = () => {
       <div className='container'>
         <div className='mb-12 text-center'>
           <h2 className='mb-4 text-3xl font-bold text-blue-900'>
-            Sobre a Budokan
+            Sobre a Budokan-Ryu
           </h2>
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
@@ -21,7 +21,7 @@ export const AboutSection = () => {
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
             <Image
               src={budokanMembersAsset.src}
-              alt='Budokan Dojo'
+              alt='Budokan-Ryu Dojo'
               fill
               className='object-cover'
             />
@@ -32,12 +32,12 @@ export const AboutSection = () => {
             </h3>
             <p className='mb-4 text-gray-600'>
               Fundada em 1985 pelo Sensei Tanaka, a Associação de Artes Marciais
-              Budokan nasceu com o objetivo de preservar e difundir as artes
+              Budokan-Ryu nasceu com o objetivo de preservar e difundir as artes
               marciais tradicionais japonesas no Brasil, mantendo sua essência,
               filosofia e técnicas.
             </p>
             <p className='mb-4 text-gray-600'>
-              Ao longo de mais de três décadas, a Budokan se consolidou como uma
+              Ao longo de mais de três décadas, a Budokan-Ryu se consolidou como uma
               referência no ensino de Karate-Do, Kendo e Arquearia (Tiro com
               Arco), formando não apenas atletas de alto rendimento, mas
               cidadãos íntegros e disciplinados.

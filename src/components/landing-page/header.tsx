@@ -26,7 +26,7 @@ const Logo = () => {
         className='rounded-full'
       />
       <span className='text-xl font-bold text-white uppercase'>
-        Budokan Ryu
+        Budokan-Ryu
       </span>
     </div>
   );

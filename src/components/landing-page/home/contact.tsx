@@ -124,7 +124,7 @@ export const ContactSection = () => {
                   </svg>
                   <div>
                     <h4 className='font-bold text-blue-900'>Telefone</h4>
-                    <p className='text-gray-600'>(82) 99996-674</p>
+                    <p className='text-gray-600'>(82) 9.9999-6674</p>
                   </div>
                 </div>
                 {/* <div className='flex items-start'>

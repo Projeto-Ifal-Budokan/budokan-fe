@@ -15,7 +15,7 @@ export const WhatsappButton = () => {
   return (
     <FloatingWhatsApp
       phoneNumber='8299996674'
-      accountName='Budokan'
+      accountName='Budokan-Ryu'
       statusMessage='Respodemos em instantes ;)'
       chatMessage='Olá, como vai? Que tal conhecer melhor a instituição?'
       avatar='/logo.jpeg'

@@ -6,7 +6,7 @@ import type React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Budokan Ryu Escola de Karatê, Kendô & Arquearia',
+  title: 'Budokan-Ryu',
   description: 'Centro de excelência em Karatê, Kendo e Arquearia em Maceió-AL',
 };
 
