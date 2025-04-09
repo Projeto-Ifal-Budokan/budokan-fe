@@ -117,7 +117,10 @@ export default function HeroCarousel() {
                 />
               </div>
               <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
-                Associação de Artes Marciais Budokan-Ryu
+                Associação de Artes Marciais
+              </h1>
+              <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
+                Budokan-Ryu
               </h1>
               <h2 className='mb-2 text-2xl font-semibold md:text-3xl'>
                 {slide.title}
