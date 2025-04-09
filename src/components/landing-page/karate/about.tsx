@@ -29,7 +29,7 @@ export const AboutSection = () => {
                     src={karateDoAsset}
                     alt="Karate Training"
                     fill
-                    className="object-cover"
+                    className="object-cover object-[center_15%]"
                 />
                 </div>
             </div>
