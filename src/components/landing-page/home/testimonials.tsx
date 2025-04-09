@@ -1,7 +1,7 @@
 import { Testimonial, testimonialsData } from '@/data/testimonials';
 import Image from 'next/image';
 
-export const TestimonialssSection = () => {
+export const TestimonialsSection = () => {
   return (
     <section className='bg-white py-16'>
       <div className='container'>
