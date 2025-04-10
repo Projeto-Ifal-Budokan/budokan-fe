@@ -1,7 +1,7 @@
 import { Testimonial, testimonialsData } from '@/data/testimonials';
 import Image from 'next/image';
 
-export const TestimonialssSection = () => {
+export const TestimonialsSection = () => {
   return (
     <section className='bg-white py-16'>
       <div className='container'>
@@ -9,8 +9,8 @@ export const TestimonialssSection = () => {
           <h2 className='mb-4 text-3xl font-bold text-blue-900'>Depoimentos</h2>
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
-            Veja o que nossos alunos dizem sobre sua experiência na Budokan-Ryu e
-            como as artes marciais transformaram suas vidas.
+            Veja o que nossos alunos dizem sobre sua experiência na Budokan-Ryu
+            e como as artes marciais transformaram suas vidas.
           </p>
         </div>
 

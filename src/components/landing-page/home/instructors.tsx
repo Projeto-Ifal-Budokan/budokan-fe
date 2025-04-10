@@ -51,8 +51,8 @@ export const InstructorsSection = () => {
             <p className='text-primary mb-3 font-medium'>Kendo - 5º Dan</p>
             <p className='text-gray-600'>
               Com mais de 25 anos de experiência, é responsável pela divisão de
-              Kendo da Budokan-Ryu. Participou de diversos campeonatos mundiais e é
-              referência na formação de novos kendokas.
+              Kendo da Budokan-Ryu. Participou de diversos campeonatos mundiais
+              e é referência na formação de novos kendokas.
             </p>
           </div>
 

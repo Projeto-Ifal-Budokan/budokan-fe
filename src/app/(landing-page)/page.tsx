@@ -5,7 +5,7 @@ import { ContactSection } from '@/components/landing-page/home/contact';
 import { DisciplinesSection } from '@/components/landing-page/home/disciplines';
 import { InstructorsSection } from '@/components/landing-page/home/instructors';
 import { ScheduleSection } from '@/components/landing-page/home/schedule';
-import { TestimonialssSection } from '@/components/landing-page/home/testimonials';
+import { TestimonialsSection } from '@/components/landing-page/home/testimonials';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       <DisciplinesSection />
       <InstructorsSection />
       <ScheduleSection />
-      <TestimonialssSection />
+      <TestimonialsSection />
       <ContactSection />
     </>
   );

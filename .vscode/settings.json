@@ -10,5 +10,8 @@
   "conventionalCommits.promptScopes": false,
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
