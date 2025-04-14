@@ -3,7 +3,7 @@ import senseiKarateAsset from '@/assets/images/sensei-karate.jpg';
 export const instructors = [
   {
     name: 'Sensei Chicão - Francisco Araújo',
-    title: '5° Dan JKA',
+    title: '5° Dan JKA',
     description:
       'Fundador da Budokan-Ryu, treina Karate há mais de 40 anos. Formado diretamente pelo Sensei Okuda, é reconhecido nacionalmente por sua técnica e dedicação ao ensino.',
     imageSrc: senseiKarateAsset.src,
