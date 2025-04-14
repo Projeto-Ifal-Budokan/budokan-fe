@@ -1,3 +1,5 @@
+import { instructors } from '@/data/instructors';
+import { User2 } from 'lucide-react';
 import Image from 'next/image';
 
 export const InstructorsSection = () => {
@@ -16,66 +18,31 @@ export const InstructorsSection = () => {
         </div>
 
         <div className='grid gap-8 md:grid-cols-3'>
-          <div className='rounded-lg bg-blue-50 p-6 text-center'>
-            <div className='relative mx-auto mb-4 h-32 w-32'>
-              <Image
-                src='/placeholder.svg?height=150&width=150'
-                alt='Sensei Tanaka'
-                fill
-                className='rounded-full object-cover'
-              />
+          {instructors.map((instructor, index) => (
+            <div key={index} className='rounded-lg bg-blue-50 p-6 text-center'>
+              <div className='relative mx-auto mb-4 h-32 w-32'>
+                {instructor.imageSrc ? (
+                  <Image
+                    src={instructor.imageSrc ?? ''}
+                    alt={instructor.alt}
+                    fill
+                    className='rounded-full object-cover'
+                  />
+                ) : (
+                  <div className='flex h-full w-full items-center justify-center rounded-full bg-gray-200 text-gray-500'>
+                    <User2 size={64} />
+                  </div>
+                )}
+              </div>
+              <h3 className='mb-1 text-xl font-bold text-blue-900'>
+                {instructor.name}
+              </h3>
+              <p className='text-primary mb-3 font-medium'>
+                {instructor.title}
+              </p>
+              <p className='text-gray-600'>{instructor.description}</p>
             </div>
-            <h3 className='mb-1 text-xl font-bold text-blue-900'>
-              Sensei Tanaka
-            </h3>
-            <p className='text-primary mb-3 font-medium'>Karate-Do - 7º Dan</p>
-            <p className='text-gray-600'>
-              Fundador da Budokan-Ryu, treina Karate há mais de 40 anos. Formado
-              diretamente pelos grandes mestres japoneses, é reconhecido
-              internacionalmente por sua técnica e dedicação ao ensino.
-            </p>
-          </div>
-
-          <div className='rounded-lg bg-blue-50 p-6 text-center'>
-            <div className='relative mx-auto mb-4 h-32 w-32'>
-              <Image
-                src='/placeholder.svg?height=150&width=150'
-                alt='Sensei Yamamoto'
-                fill
-                className='rounded-full object-cover'
-              />
-            </div>
-            <h3 className='mb-1 text-xl font-bold text-blue-900'>
-              Sensei Yamamoto
-            </h3>
-            <p className='text-primary mb-3 font-medium'>Kendo - 5º Dan</p>
-            <p className='text-gray-600'>
-              Com mais de 25 anos de experiência, é responsável pela divisão de
-              Kendo da Budokan-Ryu. Participou de diversos campeonatos mundiais
-              e é referência na formação de novos kendokas.
-            </p>
-          </div>
-
-          <div className='rounded-lg bg-blue-50 p-6 text-center'>
-            <div className='relative mx-auto mb-4 h-32 w-32'>
-              <Image
-                src='/placeholder.svg?height=150&width=150'
-                alt='Sensei Sato'
-                fill
-                className='rounded-full object-cover'
-              />
-            </div>
-            <h3 className='mb-1 text-xl font-bold text-blue-900'>
-              Sensei Sato
-            </h3>
-            <p className='text-primary mb-3 font-medium'>Arquearia - 6º Dan</p>
-            <p className='text-gray-600'>
-              Especialista em Arquearia, treinou por mais de 15 anos no Japão
-              antes de retornar ao Brasil para difundir esta arte milenar. É
-              reconhecido por sua precisão técnica e profundo conhecimento
-              filosófico.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </section>
