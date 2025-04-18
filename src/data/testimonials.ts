@@ -34,9 +34,9 @@ export const testimonialsData: Testimonial[] = [
     id: 3,
     name: 'Roberto Tanaka',
     discipline: 'Kendo',
-    title: 'Praticante de Arquearia há 7 anos',
+    title: 'Praticante de Kendo há 7 anos',
     image: AvatarRobertoAsset.src,
     quote:
-      '"O Arquearia na Budokan é uma experiência transformadora. Mais que uma arte marcial, é uma jornada de autoconhecimento. Cada tiro com o arco é uma oportunidade de conectar corpo, mente e espírito em perfeita harmonia."',
+      '"O Kendo na Budokan-Ryu é uma experiência transformadora. Mais que uma arte marcial, é uma jornada de autoconhecimento."',
   },
 ];
