@@ -1,4 +1,4 @@
-import karateDoAsset from '@/assets/images/karate-do.png';
+import karateDoAsset from '@/assets/images/karatedo-session.jpg';
 import Image from 'next/image';
 
 export const AboutSection = () => {
@@ -36,7 +36,7 @@ export const AboutSection = () => {
               src={karateDoAsset}
               alt='Karate Training'
               fill
-              className='object-cover object-[center_15%]'
+              className='object-cover object-[70%]'
             />
           </div>
         </div>

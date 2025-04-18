@@ -1,10 +1,11 @@
-import AvatarCarlosAsset from '@/assets/images/avatar-carlos.png';
-import AvatarMarianaAsset from '@/assets/images/avatar-mariana.png';
+import AvatarAldemarAraujo from '@/assets/images/avatar-aldemar-araujo.png';
+import AvatarLilianCarmen from '@/assets/images/avatar-lilian-carmen.jpg';
 import AvatarRobertoAsset from '@/assets/images/avatar-roberto.png';
 
 export interface Testimonial {
   id: number;
   name: string;
+  discipline: string;
   title: string;
   image: string;
   quote: string;
@@ -13,23 +14,26 @@ export interface Testimonial {
 export const testimonialsData: Testimonial[] = [
   {
     id: 1,
-    name: 'Carlos Silva',
-    title: 'Praticante de Karate-Do há 5 anos',
-    image: AvatarCarlosAsset.src,
+    name: 'Aldemar Araújo',
+    discipline: 'Karate-Do',
+    title: 'Praticante de Karate-Do',
+    image: AvatarAldemarAraujo.src,
     quote:
-      '"A Budokan mudou minha vida. Além de melhorar minha condição física, o Karate-Do me ensinou disciplina, foco e respeito, valores que aplico diariamente em minha vida pessoal e profissional."',
+      '"Iniciei minha jornada no Karate em 2006 na Budokan-Ryu, atraído pela excelência técnica e pelo ambiente acolhedor que a escola proporciona. Ao longo dos anos, a combinação de instrução de alta qualidade e uma atmosfera de respeito mútuo permitiu-me desenvolver habilidades técnicas sólidas e crescer pessoalmente. A ênfase na disciplina, filosofia e tradição do Karate-Do na Budokan-Ryu tem sido fundamental para minha formação, reforçando valores essenciais que aplico em todas as áreas da minha vida."',
   },
   {
     id: 2,
-    name: 'Mariana Santos',
-    title: 'Praticante de Kendo há 3 anos',
-    image: AvatarMarianaAsset.src,
+    name: 'Lilian Carmen',
+    discipline: 'Arquearia',
+    title: 'Praticante de Arquearia',
+    image: AvatarLilianCarmen.src,
     quote:
-      '"O ambiente na Budokan é acolhedor e ao mesmo tempo desafiador. Os senseis são extremamente qualificados e atenciosos. O Kendo me trouxe equilíbrio emocional e físico que eu não encontrei em nenhuma outra atividade."',
+      '"Comecei a praticar tiro com arco em 2019 e, ao longo dos treinos, fui desenvolvendo a forma de execução correta para um tiro preciso. Em 2021 inicio a prática de tiro com arco na Budokan Arquearia, onde aprimorei, com a prática constante, a percepção do corpo, controle da respiração, forma de segurar o arco e a tensão aplicada à corda. Princípios fundamentais que ajudam na formação intrapessoal e interpessoal."',
   },
   {
     id: 3,
     name: 'Roberto Tanaka',
+    discipline: 'Kendo',
     title: 'Praticante de Arquearia há 7 anos',
     image: AvatarRobertoAsset.src,
     quote:
