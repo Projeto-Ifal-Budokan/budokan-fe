@@ -1,15 +1,15 @@
-import kendoAsset from '@/assets/images/kendo-carousel.png';
+import archeryAsset from '@/assets/images/arquearia-carousel.png';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export const HeroSection = () => {
+export const Hero = () => {
   return (
     <section className='relative'>
       <div className='relative h-[400px]'>
         <Image
-          src={kendoAsset}
-          alt='Kendo Training'
+          src={archeryAsset}
+          alt='Archery Training'
           fill
           className='object-cover'
           priority
@@ -23,9 +23,9 @@ export const HeroSection = () => {
           <ArrowLeft className='mr-2 h-4 w-4' />
           <span>Voltar</span>
         </Link>
-        <h1 className='mb-4 text-4xl font-bold md:text-6xl'>Kendo</h1>
+        <h1 className='mb-4 text-4xl font-bold md:text-6xl'>Kyudo</h1>
         <p className='mb-8 max-w-3xl text-lg md:text-xl'>
-          O caminho da espada: a arte marcial dos samurais
+          O caminho do arco: a arte milenar do tiro com arco japonês
         </p>
       </div>
     </section>

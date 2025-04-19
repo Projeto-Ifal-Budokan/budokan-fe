@@ -24,7 +24,7 @@ export const testimonialsData: Testimonial[] = [
   {
     id: 2,
     name: 'Lilian Carmen',
-    discipline: 'Arquearia',
+    discipline: 'Archery',
     title: 'Praticante de Arquearia',
     image: AvatarLilianCarmen.src,
     quote:
