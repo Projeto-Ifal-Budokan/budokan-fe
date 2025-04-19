@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { PhiloshophySession } from './philosophy';
 
-export const KarateTrainingSection = () => {
+export const TrainingSection = () => {
   return (
     <section className='bg-white py-16'>
       <div className='container'>
