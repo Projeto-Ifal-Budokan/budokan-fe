@@ -41,7 +41,6 @@ export const ScheduleSection = () => {
               </div>
             </div>
           </div>
-          
         </div>
       </div>
     </section>

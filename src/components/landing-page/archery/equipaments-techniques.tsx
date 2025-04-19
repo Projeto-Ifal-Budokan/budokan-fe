@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import archeryAsset from '@/assets/images/arquearia.png'
 
 export const EquipamentsTechniquesSection = () => {
   return (
@@ -19,10 +20,10 @@ export const EquipamentsTechniquesSection = () => {
         <div className='mb-16 grid items-center gap-12 md:grid-cols-2'>
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
             <Image
-              src='/placeholder.svg?height=400&width=600'
+              src={archeryAsset}
               alt='Arquearia Equipment'
               fill
-              className='object-cover'
+              className='object-cover object-[center_25%]'
             />
           </div>
           <div>
@@ -201,10 +202,10 @@ export const EquipamentsTechniquesSection = () => {
           </div>
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
             <Image
-              src='/placeholder.svg?height=400&width=600'
+              src={archeryAsset}
               alt='Archery Techniques'
               fill
-              className='object-cover'
+              className='object-cover object-[center_25%]'
             />
           </div>
         </div>
