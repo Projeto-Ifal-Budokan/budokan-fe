@@ -89,7 +89,7 @@ export const DisciplinesSection = () => {
                 flecha, focando na precisão, concentração e harmonia entre corpo
                 e mente. É considerado uma forma de meditação em movimento.
               </p>
-              <Link href='/arquearia'>
+              <Link href='/archery'>
                 <Button className='bg-primary hover:bg-primary/90 w-full border-0 text-white'>
                   Saiba Mais
                 </Button>
