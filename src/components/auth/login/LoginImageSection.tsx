@@ -6,7 +6,7 @@ export function LoginImageSection() {
   return (
     <div className='relative hidden overflow-hidden lg:block lg:w-1/2'>
       {/* Changed overlay to be less blue-dominant with warmer tones */}
-      <div className='absolute inset-0 z-10 bg-gradient-to-b from-blue-900 via-blue-900/80' />
+      <div className='absolute inset-0 z-10 bg-blue-800/40 bg-gradient-to-b from-blue-900 via-blue-900/80' />
       <Image
         src='/placeholder.svg?height=1080&width=1080'
         alt='Budokan-Ryu Martial Arts'
