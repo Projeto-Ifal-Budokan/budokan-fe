@@ -4,7 +4,7 @@ import { BenefitsSection } from '@/components/landing-page/karate/benefits';
 import { HeroSection } from '@/components/landing-page/karate/hero';
 import { HistorySection } from '@/components/landing-page/karate/history';
 import { MaterialsSection } from '@/components/landing-page/karate/materials';
-import { KarateTrainingSection } from '@/components/landing-page/karate/training';
+import { TrainingSection } from '@/components/landing-page/karate/training';
 import { TestimonialsSection } from '@/components/landing-page/karate/testimonials';
 import { FQASection } from '@/components/landing-page/karate/fqa';
 import { CTASection } from '@/components/landing-page/karate/cta';
@@ -15,7 +15,7 @@ export default function Karate() {
       <HeroSection />
       <AboutSection />
       <HistorySection />
-      <KarateTrainingSection />
+      <TrainingSection />
       <MaterialsSection />
       <BenefitsSection />
       <ScheduleSection />
