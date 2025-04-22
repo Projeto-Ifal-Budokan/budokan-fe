@@ -8,9 +8,30 @@ import { ArrowRight, ChevronLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+// Define the shape of our form data
+type LoginFormData = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
 
 export function LoginFormSection() {
   const [showPassword, setShowPassword] = useState(false);
+
+  // Initialize react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }, // Access errors here if needed
+  } = useForm<LoginFormData>();
+
+  // Placeholder onSubmit function
+  const onSubmit = (data: LoginFormData) => {
+    console.log(data);
+    // Handle form submission logic here (e.g., API call)
+  };
 
   return (
     <div className='flex w-full items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-8 lg:w-1/2'>
@@ -48,7 +69,7 @@ export function LoginFormSection() {
         </div>
 
         <div className='rounded-2xl border border-gray-100 bg-white p-8 shadow-lg'>
-          <div className='space-y-6'>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
             <div className='space-y-2'>
               <Label
                 htmlFor='email'
@@ -64,7 +85,11 @@ export function LoginFormSection() {
                   placeholder='seu.email@exemplo.com'
                   className='focus:border-primary focus:ring-primary w-full rounded-lg border-gray-300 py-3 pr-4 pl-4 transition-all duration-200 focus:ring-2'
                   autoComplete='email'
+                  // Register email input
+                  {...register('email', { required: 'Email is required' })}
                 />
+                {/* Add error display if needed */}
+                {/* {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>} */}
               </div>
             </div>
 
@@ -92,6 +117,10 @@ export function LoginFormSection() {
                   placeholder='••••••••'
                   className='focus:border-primary focus:ring-primary w-full rounded-lg border-gray-300 py-3 pr-10 pl-4 transition-all duration-200 focus:ring-2'
                   autoComplete='current-password'
+                  // Register password input
+                  {...register('password', {
+                    required: 'Password is required',
+                  })}
                 />
                 <button
                   type='button'
@@ -105,6 +134,8 @@ export function LoginFormSection() {
                     <Eye className='h-5 w-5' />
                   )}
                 </button>
+                {/* Add error display if needed */}
+                {/* {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>} */}
               </div>
             </div>
 
@@ -112,6 +143,8 @@ export function LoginFormSection() {
               <Checkbox
                 id='remember'
                 className='text-primary focus:ring-primary rounded border-gray-300'
+                // Register checkbox
+                {...register('rememberMe')}
               />
               <Label
                 htmlFor='remember'
@@ -121,11 +154,14 @@ export function LoginFormSection() {
               </Label>
             </div>
 
-            <Button className='group hover:from-primary/80 hover:to-primary flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-blue-800 to-blue-900 py-6 text-base font-medium text-white shadow-md transition-all duration-300 hover:shadow-lg'>
+            <Button
+              type='submit' // Change button type to submit
+              className='group hover:from-primary/80 hover:to-primary flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-blue-800 to-blue-900 py-6 text-base font-medium text-white shadow-md transition-all duration-300 hover:shadow-lg'
+            >
               Entrar
               <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
             </Button>
-          </div>
+          </form>
         </div>
 
         <div className='mt-8 text-center'>
