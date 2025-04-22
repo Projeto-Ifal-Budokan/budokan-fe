@@ -47,23 +47,24 @@ export function LoginFormSection() {
       </div>
 
       <div className='w-full max-w-md'>
-        <div className='mb-10 flex items-center justify-center lg:justify-start'>
-          <div className='relative mr-4 lg:hidden'>
-            <div className='absolute -inset-1 rounded-full bg-orange-200 blur-sm'></div>
+        <div className='mb-10 flex flex-col items-center justify-center lg:items-start lg:justify-start'>
+          <div className='relative my-4 lg:hidden'>
             <Link href='/'>
               <Image
                 src='/logo.jpg'
                 alt='Budokan-Ryu Logo'
-                width={60}
-                height={60}
+                width={80}
+                height={80}
                 className='relative rounded-full transition-transform duration-300 hover:scale-105'
               />
             </Link>
           </div>
           <div>
-            <h2 className='text-3xl font-bold text-blue-900'>Área do Aluno</h2>
+            <h2 className='text-center text-3xl font-bold text-blue-900 lg:text-start'>
+              Área do Aluno
+            </h2>
             <p className='mt-1 text-gray-500'>
-              Acesse sua conta para visualizar aulas, eventos e muito mais
+              Acesse sua conta para visualizar aulas e muito mais!
             </p>
           </div>
         </div>
