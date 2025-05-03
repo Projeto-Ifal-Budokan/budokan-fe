@@ -85,7 +85,7 @@ export function Sidebar({ className, isCollapsed, onToggle, ...props }: SidebarP
       {/* Sidebar */}
       <div
         className={cn(
-          "group h-full overflow-hidden border-r bg-primary text-white transition-all duration-300",
+          "group h-full overflow-hidden border-r bg-blue-900 text-white transition-all duration-300",
           isCollapsed ? "w-[70px]" : "w-[240px]",
           className,
         )}
