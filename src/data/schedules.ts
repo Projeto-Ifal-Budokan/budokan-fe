@@ -26,7 +26,6 @@ export const modalitiesSchedules: Modality[] = [
         days: 'Quarta-feira',
         time: [
           '07:00 às 08:00',
-          '16:00 às 17:00',
           '17:00 às 18:00',
           '18:30 às 19:30',
           '19:30 às 20:30',
@@ -36,7 +35,6 @@ export const modalitiesSchedules: Modality[] = [
         days: 'Sexta-feira',
         time: [
           '07:00 às 08:00',
-          '16:00 às 17:00',
           '17:00 às 18:00',
           '18:30 às 19:30',
           '19:30 às 20:30',
