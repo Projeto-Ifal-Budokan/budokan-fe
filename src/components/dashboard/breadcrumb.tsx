@@ -19,13 +19,13 @@ export function Breadcrumb() {
   // Map path segments to readable names
   const pathNames: Record<string, string> = {
     dashboard: "Dashboard",
-    modalidades: "Modalidades",
-    frequencia: "Frequência",
-    instrutores: "Instrutores",
-    usuarios: "Usuários",
-    alunos: "Alunos",
-    pagamentos: "Pagamentos",
-    relatorios: "Relatórios",
+    disciplines: "Modalidades",
+    attendance: "Frequência",
+    instructors: "Instrutores",
+    users: "Usuários",
+    students: "Alunos",
+    payments: "Pagamentos",
+    reports: "Relatórios",
   }
 
   return (

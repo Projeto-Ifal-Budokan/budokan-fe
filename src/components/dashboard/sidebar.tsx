@@ -42,37 +42,37 @@ const navItems = [
   },
   {
     title: "Modalidades",
-    href: "/dashboard/modalidades",
+    href: "/dashboard/disciplines",
     icon: BookOpen,
   },
   {
     title: "Frequência",
-    href: "/dashboard/frequencia",
+    href: "/dashboard/attendance",
     icon: Calendar,
   },
   {
     title: "Instrutores",
-    href: "/dashboard/instrutores",
+    href: "/dashboard/instructors",
     icon: UserCircle,
   },
   {
     title: "Usuários",
-    href: "/dashboard/usuarios",
+    href: "/dashboard/users",
     icon: Users,
   },
   {
     title: "Alunos",
-    href: "/dashboard/alunos",
+    href: "/dashboard/students",
     icon: Users,
   },
   {
     title: "Pagamentos",
-    href: "/dashboard/pagamentos",
+    href: "/dashboard/payments",
     icon: CreditCard,
   },
   {
     title: "Relatórios",
-    href: "/dashboard/relatorios",
+    href: "/dashboard/reports",
     icon: BarChart3,
   },
 ]
