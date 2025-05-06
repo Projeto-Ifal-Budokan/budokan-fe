@@ -17,38 +17,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-
-export type Student = {
-  id: string
-  name: string
-  email: string
-  profilePicture: string | null
-  enrolledDisciplines: string[] // IDs of disciplines the student is enrolled in
-}
-
-export type Discipline = {
-  id: string
-  name: string
-  description: string | null
-}
-
-export type Class = {
-  id: string
-  discipline: Discipline
-  date: Date
-  notes: string | null
-  createdAt: Date
-}
-
-export type AttendanceRecord = {
-  id: string
-  student: Student
-  classId: string
-  status: "present" | "absent"
-  notes: string | null
-  createdAt: Date
-  updatedAt: Date
-}
+import { Class, mockClasses } from "@/data/mocks/classes-mocks"
+import { Discipline, mockDisciplines } from "@/data/mocks/disciplines-mocks"
+import { Student, mockStudents } from "@/data/mocks/students-mocks"
+import { AttendanceRecord, mockAttendanceRecords } from "@/data/mocks/attendances-mocks"
 
 export type FilterState = {
   discipline: string
@@ -56,14 +28,6 @@ export type FilterState = {
     from: Date | undefined
     to: Date | undefined
   }
-}
-
-export interface Subject {
-  id: string
-  name: string
-  instructor: string
-  schedule: string
-  location: string
 }
 
 export function AttendanceManagement() {
@@ -82,6 +46,7 @@ export function AttendanceManagement() {
   const [newClass, setNewClass] = useState({
     disciplineId: "",
     date: new Date(),
+    sessionTime: "",
     notes: "",
   })
 
@@ -127,6 +92,7 @@ export function AttendanceManagement() {
       id: newClassId,
       discipline: disciplines.find((d) => d.id === newClass.disciplineId)!,
       date: newClass.date,
+      sessionTime: newClass.sessionTime,
       notes: newClass.notes || null,
       createdAt: new Date(),
     }
@@ -155,6 +121,7 @@ export function AttendanceManagement() {
     setNewClass({
       disciplineId: "",
       date: new Date(),
+      sessionTime: "",
       notes: "",
     })
   }
@@ -615,167 +582,5 @@ export function AttendanceManagement() {
     </div>
   )
 }
-
-// Mock data
-const mockDisciplines: Discipline[] = [
-  {
-    id: "discipline-1",
-    name: "Karate-Do",
-    description: "Arte marcial japonesa focada em golpes de impacto",
-  },
-  {
-    id: "discipline-2",
-    name: "Kendo",
-    description: "Arte marcial japonesa que utiliza espadas de bambu",
-  },
-  {
-    id: "discipline-3",
-    name: "Kyudo",
-    description: "Arte marcial japonesa de arco e flecha",
-  },
-]
-
-const mockStudents: Student[] = [
-  {
-    id: "student-1",
-    name: "Ana Silva",
-    email: "ana.silva@email.com",
-    profilePicture: "/placeholder.svg?height=40&width=40",
-    enrolledDisciplines: ["discipline-1", "discipline-3"],
-  },
-  {
-    id: "student-2",
-    name: "Bruno Oliveira",
-    email: "bruno.oliveira@email.com",
-    profilePicture: "/placeholder.svg?height=40&width=40",
-    enrolledDisciplines: ["discipline-1"],
-  },
-  {
-    id: "student-3",
-    name: "Carla Santos",
-    email: "carla.santos@email.com",
-    profilePicture: "/placeholder.svg?height=40&width=40",
-    enrolledDisciplines: ["discipline-2", "discipline-3"],
-  },
-  {
-    id: "student-4",
-    name: "Daniel Pereira",
-    email: "daniel.pereira@email.com",
-    profilePicture: "/placeholder.svg?height=40&width=40",
-    enrolledDisciplines: ["discipline-2"],
-  },
-  {
-    id: "student-5",
-    name: "Elena Costa",
-    email: "elena.costa@email.com",
-    profilePicture: "/placeholder.svg?height=40&width=40",
-    enrolledDisciplines: ["discipline-1", "discipline-2"],
-  },
-]
-
-const mockClasses: Class[] = [
-  {
-    id: "class-1",
-    discipline: mockDisciplines[0],
-    date: new Date(2023, 10, 15),
-    notes: "Introdução a kata básico",
-    createdAt: new Date(2023, 10, 14),
-  },
-  {
-    id: "class-2",
-    discipline: mockDisciplines[1],
-    date: new Date(2023, 10, 16),
-    notes: "Prática de kihon",
-    createdAt: new Date(2023, 10, 15),
-  },
-  {
-    id: "class-3",
-    discipline: mockDisciplines[2],
-    date: new Date(2023, 10, 17),
-    notes: null,
-    createdAt: new Date(2023, 10, 16),
-  },
-]
-
-// Generate attendance records for each student in each class they're enrolled in
-const mockAttendanceRecords: AttendanceRecord[] = [
-  // Class 1 - Karate-Do
-  {
-    id: "att-1",
-    student: mockStudents[0], // Ana - enrolled in Karate-Do
-    classId: "class-1",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 15),
-    updatedAt: new Date(2023, 10, 15),
-  },
-  {
-    id: "att-2",
-    student: mockStudents[1], // Bruno - enrolled in Karate-Do
-    classId: "class-1",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 15),
-    updatedAt: new Date(2023, 10, 15),
-  },
-  {
-    id: "att-3",
-    student: mockStudents[4], // Elena - enrolled in Karate-Do
-    classId: "class-1",
-    status: "absent",
-    notes: "Avisou com antecedência",
-    createdAt: new Date(2023, 10, 15),
-    updatedAt: new Date(2023, 10, 15),
-  },
-
-  // Class 2 - Kendo
-  {
-    id: "att-4",
-    student: mockStudents[2], // Carla - enrolled in Kendo
-    classId: "class-2",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 16),
-    updatedAt: new Date(2023, 10, 16),
-  },
-  {
-    id: "att-5",
-    student: mockStudents[3], // Daniel - enrolled in Kendo
-    classId: "class-2",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 16),
-    updatedAt: new Date(2023, 10, 16),
-  },
-  {
-    id: "att-6",
-    student: mockStudents[4], // Elena - enrolled in Kendo
-    classId: "class-2",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 16),
-    updatedAt: new Date(2023, 10, 16),
-  },
-
-  // Class 3 - Kyudo
-  {
-    id: "att-7",
-    student: mockStudents[0], // Ana - enrolled in Kyudo
-    classId: "class-3",
-    status: "absent",
-    notes: "Atestado médico",
-    createdAt: new Date(2023, 10, 17),
-    updatedAt: new Date(2023, 10, 17),
-  },
-  {
-    id: "att-8",
-    student: mockStudents[2], // Carla - enrolled in Kyudo
-    classId: "class-3",
-    status: "present",
-    notes: null,
-    createdAt: new Date(2023, 10, 17),
-    updatedAt: new Date(2023, 10, 17),
-  },
-]
 
 export default AttendanceManagement
