@@ -131,8 +131,8 @@ export function Sidebar({
                   className={cn(
                     'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                     pathname === item.href
-                      ? 'bg-primary-foreground/10 font-medium text-orange-400'
-                      : 'hover:bg-primary-foreground/10 text-white hover:text-orange-300',
+                      ? 'bg-primary-foreground/10 font-medium text-primary'
+                      : 'hover:bg-primary-foreground/10 text-white hover:text-primary/80',
                     isCollapsed && 'justify-center px-2'
                   )}
                 >
