@@ -37,18 +37,18 @@ export const FiltersCard = () => {
 
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
-    discipline: '',
+    discipline: 'all',
     dateRange: { from: undefined, to: undefined },
   });
 
   // Check if any filters are active
   const hasActiveFilters =
-    filters.discipline !== '' || filters.dateRange.from !== undefined;
+    filters.discipline !== '' && filters.discipline !== 'all' || filters.dateRange.from !== undefined;
 
   // Reset all filters
   const resetFilters = () => {
     setFilters({
-      discipline: '',
+      discipline: 'all',
       dateRange: { from: undefined, to: undefined },
     });
   };
