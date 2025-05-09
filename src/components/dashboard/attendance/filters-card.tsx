@@ -19,7 +19,7 @@ import { Discipline, mockDisciplines } from '@/data/mocks/disciplines-mocks';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, ChevronDown, Filter } from 'lucide-react';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 export type FilterState = {
   discipline: string;
@@ -29,29 +29,26 @@ export type FilterState = {
   };
 };
 
-export const FiltersCard = () => {
+export type FiltersCardProps = {
+  filters: FilterState;
+  setFilters: (filters: FilterState) => void;
+  children?: ReactNode;
+};
+
+export const FiltersCard = ({
+  filters,
+  setFilters,
+  children,
+}: FiltersCardProps) => {
   const [disciplines] = useState<Discipline[]>(mockDisciplines);
 
   // State for filter visibility
   const [showFilters, setShowFilters] = useState(false);
 
-  // Filter state
-  const [filters, setFilters] = useState<FilterState>({
-    discipline: 'all',
-    dateRange: { from: undefined, to: undefined },
-  });
-
   // Check if any filters are active
   const hasActiveFilters =
-    filters.discipline !== '' && filters.discipline !== 'all' || filters.dateRange.from !== undefined;
-
-  // Reset all filters
-  const resetFilters = () => {
-    setFilters({
-      discipline: 'all',
-      dateRange: { from: undefined, to: undefined },
-    });
-  };
+    (filters.discipline !== '' && filters.discipline !== 'all') ||
+    filters.dateRange.from !== undefined;
 
   return (
     <Card className='border-border/40 border shadow-sm'>
@@ -169,16 +166,7 @@ export const FiltersCard = () => {
             </div>
           </div>
 
-          <div className='mt-4 flex justify-end space-x-2'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={resetFilters}
-              className='h-8'
-            >
-              Limpar Filtros
-            </Button>
-          </div>
+          {children}
         </CardContent>
       )}
     </Card>

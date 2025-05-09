@@ -1,6 +1,4 @@
-import { mockStudents } from "./students-mocks"
-import { Student } from './students-mocks'
-
+import { Student, mockStudents } from "./students-mocks"
 
 export type AttendanceRecord = {
   id: string
