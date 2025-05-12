@@ -15,11 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Discipline, mockDisciplines } from '@/data/mocks/disciplines-mocks';
+import { Discipline } from '@/data/mocks/disciplines-mocks';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, ChevronDown, Filter } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 
 export type FilterState = {
   discipline: string;
@@ -31,17 +31,17 @@ export type FilterState = {
 
 export type FiltersCardProps = {
   filters: FilterState;
-  setFilters: (filters: FilterState) => void;
+  setFilters: Dispatch<SetStateAction<FilterState>>;
+  disciplines: Discipline[];
   children?: ReactNode;
 };
 
 export const FiltersCard = ({
   filters,
   setFilters,
+  disciplines,
   children,
 }: FiltersCardProps) => {
-  const [disciplines] = useState<Discipline[]>(mockDisciplines);
-
   // State for filter visibility
   const [showFilters, setShowFilters] = useState(false);
 
