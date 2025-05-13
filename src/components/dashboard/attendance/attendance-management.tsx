@@ -27,7 +27,7 @@ import { mockStudents, Student } from '@/data/mocks/students-mocks';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, PlusCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ClassesCard } from './classes-card';
 import { FiltersCard, FilterState } from './filters-card';
 
@@ -110,6 +110,34 @@ export function AttendanceManagement() {
       notes: '',
     });
   };
+
+  // Schedule list state
+  const [disciplineSchedules, setDisciplineSchedules] = useState<Set<string>>(
+    new Set()
+  );
+
+  useEffect(() => {
+    if (!newClass.disciplineId) {
+      setDisciplineSchedules(new Set());
+      return;
+    }
+
+    const selectedDiscipline = disciplines.find(
+      (d) => d.id === newClass.disciplineId
+    );
+
+    if (selectedDiscipline) {
+      const allTimes = new Set<string>();
+
+      selectedDiscipline.schedules.forEach((schedule) => {
+        schedule.time.forEach((period) => {
+          allTimes.add(period);
+        });
+      });
+
+      setDisciplineSchedules(allTimes);
+    }
+  }, [newClass.disciplineId, disciplines]);
 
   return (
     <div className='space-y-6'>
@@ -218,8 +246,7 @@ export function AttendanceManagement() {
                   </PopoverContent>
                 </Popover>
               </div>
-              
-              {/**TODO: ALTER THIS PART OF THE COMPONENT */}
+
               <div className='space-y-2'>
                 <Label htmlFor='sessionTime' className='text-sm font-medium'>
                   Horário da Aula
@@ -229,9 +256,9 @@ export function AttendanceManagement() {
                     <SelectValue placeholder='Selecione um horário' />
                   </SelectTrigger>
                   <SelectContent>
-                    {disciplines.map((discipline) => (
-                      <SelectItem key={discipline.id} value={discipline.id}>
-                        {discipline.name}
+                    {[...disciplineSchedules].map((schedule, index) => (
+                      <SelectItem key={index} value={schedule}>
+                        {schedule}
                       </SelectItem>
                     ))}
                   </SelectContent>
