@@ -13,11 +13,11 @@ export function ProgressIndicator({
   currentStep,
 }: ProgressIndicatorProps) {
   return (
-    <div className='rounded-xl border bg-gradient-to-r from-blue-900/90 to-blue-700 px-6 py-4 shadow-xl'>
+    <div className='rounded-xl border bg-gradient-to-r from-blue-900/90 to-blue-950/50 px-6 py-4 shadow-xl'>
       <div className='mb-4 flex items-center justify-between'>
         {steps.map((step, index) => (
-          <>
-            <div key={`step-${index}`} className='flex flex-col items-center'>
+          <div key={`step-${index}`}>
+            <div className='flex flex-col items-center'>
               <div
                 className={`mb-2 flex h-10 w-10 rounded-full ${
                   currentStep >= index + 1 ? 'bg-primary' : 'bg-white/30'
@@ -40,7 +40,7 @@ export function ProgressIndicator({
                 }`}
               ></div>
             )}
-          </>
+          </div>
         ))}
       </div>
     </div>
