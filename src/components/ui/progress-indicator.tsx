@@ -1,3 +1,5 @@
+import { Progress } from './progress';
+
 interface Step {
   icon: React.ReactNode;
   label: string;
@@ -12,6 +14,7 @@ export function ProgressIndicator({
   steps,
   currentStep,
 }: ProgressIndicatorProps) {
+  const progressPercentage = ((currentStep - 1) / (steps.length - 1)) * 100;
   return (
     <div className='rounded-xl border bg-gradient-to-r from-blue-900/90 to-blue-950/50 px-6 py-4 shadow-xl'>
       <div className='mb-4 flex items-center justify-between'>
@@ -33,15 +36,12 @@ export function ProgressIndicator({
               </div>
               <span className='text-sm text-white'>{step.label}</span>
             </div>
-            {index < steps.length - 1 && (
-              <div
-                className={`mx-2 h-1 flex-1 ${
-                  currentStep >= index + 2 ? 'bg-primary' : 'bg-white/30'
-                }`}
-              ></div>
-            )}
           </div>
         ))}
+      </div>
+      <Progress value={progressPercentage} className='h-2' />
+      <div className='mt-1 text-right text-sm text-white'>
+        {Math.round(progressPercentage)}%
       </div>
     </div>
   );

@@ -28,6 +28,21 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+const steps = [
+  {
+    icon: <User />,
+    label: 'Dados Pessoais',
+  },
+  {
+    icon: <Lock />,
+    label: 'Acesso',
+  },
+  {
+    icon: <CheckCircle2 />,
+    label: 'Confirmação',
+  },
+];
+
 export default function SignupPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
@@ -36,6 +51,7 @@ export default function SignupPage() {
   // Create form methods with React Hook Form and Zod resolver
   const methods = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
+
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -65,28 +81,42 @@ export default function SignupPage() {
 
   // Handle next step
   const handleNextStep = async () => {
-    const schema = getCurrentSchema();
-    const formData = methods.getValues();
+    let isValid = false;
 
-    // Extract only the fields for the current step
-    const currentStepData: any = {};
-    Object.keys(schema.shape).forEach((key) => {
-      currentStepData[key] = formData[key as keyof SignupFormData];
-    });
+    // Validate only the fields in the current step
+    if (currentStep === 1) {
+      const result = await methods.trigger(
+        ['firstName', 'lastName', 'phone', 'birthDate'],
+        { shouldFocus: true }
+      );
+      isValid = result;
+    } else if (currentStep === 2) {
+      const result = await methods.trigger(
+        ['email', 'password', 'confirmPassword'],
+        { shouldFocus: true }
+      );
 
-    try {
-      // Validate only the current step fields
-      await schema.parseAsync(currentStepData);
-      setCurrentStep((prev) => prev + 1);
-    } catch (error) {
-      // Trigger validation for the fields in the current step
-      if (currentStep === 1) {
-        methods.trigger(['firstName', 'lastName', 'phone', 'birthDate']);
-      } else if (currentStep === 2) {
-        methods.trigger(['email', 'password', 'confirmPassword']);
-      } else if (currentStep === 3) {
-        methods.trigger(['isStudent', 'termsAccepted']);
+      // Additional check for password matching
+      const { password, confirmPassword } = methods.getValues();
+      if (result && password !== confirmPassword) {
+        methods.setError('confirmPassword', {
+          type: 'manual',
+          message: 'Senhas não coincidem',
+        });
+        isValid = false;
+      } else {
+        isValid = result;
       }
+    } else if (currentStep === 3) {
+      const result = await methods.trigger(['termsAccepted'], {
+        shouldFocus: true,
+      });
+      isValid = result;
+    }
+
+    // If current step is valid, move to next step
+    if (isValid) {
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
@@ -107,21 +137,6 @@ export default function SignupPage() {
     }
   };
 
-  const steps = [
-    {
-      icon: <User />,
-      label: 'Dados Pessoais',
-    },
-    {
-      icon: <Lock />,
-      label: 'Acesso',
-    },
-    {
-      icon: <CheckCircle2 />,
-      label: 'Confirmação',
-    },
-  ];
-
   return (
     <div className='flex w-full items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-8 lg:w-1/2'>
       {/* Back to home link for mobile */}
@@ -141,11 +156,11 @@ export default function SignupPage() {
             <div className='absolute -inset-1 rounded-full bg-orange-200 blur-sm'></div>
             <Link href='/'>
               <Image
-                src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/budokan.jpg-agJBqgCaSEzyDWGHfvAUrKFDnFWaS2.jpeg'
+                src='/logo.jpg'
                 alt='Budokan Logo'
                 width={60}
                 height={60}
-                className='relative rounded-full ring-2 ring-orange-500/30 transition-transform duration-300 hover:scale-105'
+                className='relative rounded-full transition-transform duration-300 hover:scale-105'
               />
             </Link>
           </div>
@@ -206,7 +221,7 @@ export default function SignupPage() {
           </form>
         </FormProvider>
 
-        <div className='mt-8 text-center'>
+        <div className='mt-6 text-center'>
           <p className='text-gray-600'>
             Já tem uma conta?{' '}
             <Link
@@ -218,7 +233,7 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <div className='mt-12 border-t border-gray-200 pt-6'>
+        <div className='mt-4 border-t border-gray-200 pt-4'>
           <p className='text-center text-sm text-gray-500'>
             &copy; {new Date().getFullYear()} Associação de Artes Marciais
             Budokan.

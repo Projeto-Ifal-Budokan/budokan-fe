@@ -1,8 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { motion } from 'framer-motion';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
@@ -46,7 +44,8 @@ export function ConfirmationForm() {
             <span className='text-gray-600'>Data de nascimento:</span>
             <span className='font-medium text-blue-900'>
               {birthDate
-                ? format(new Date(birthDate), 'PPP', { locale: ptBR })
+                ? // ?
+                  birthDate
                 : ''}
             </span>
           </div>
@@ -108,7 +107,7 @@ export function ConfirmationForm() {
                 errors.termsAccepted && 'text-red-500'
               )}
             >
-              Concordo com os{' '}
+              Concordo com os
               <Link href='/terms' className='text-blue-600 hover:underline'>
                 Termos de Uso
               </Link>{' '}

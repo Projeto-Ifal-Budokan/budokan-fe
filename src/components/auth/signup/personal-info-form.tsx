@@ -2,9 +2,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import IMask from 'imask';
 import { AlertCircle, Calendar, Phone } from 'lucide-react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { PatternFormat } from 'react-number-format';
 import { SignupFormData } from '../../../types/signup-types';
 
 export function PersonalInfoForm() {
@@ -103,22 +103,27 @@ export function PersonalInfoForm() {
           <Controller
             name='phone'
             control={control}
-            render={({ field }) => (
-              <PatternFormat
+            render={({ field: { ref, ...field } }) => (
+              <Input
                 id='phone'
                 placeholder='(99) 99999-9999'
-                format='(##) #####-####'
-                mask='_'
+                type='tel'
                 className={cn(
                   'w-full rounded-lg border py-3 pr-4 pl-4 text-sm transition-all duration-200',
                   errors.phone
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                     : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
                 )}
-                onValueChange={(values) => {
-                  field.onChange(values.value);
+                {...field}
+                onFocus={(e) => {
+                  const mask = IMask(e.target, {
+                    mask: '(00) 00000-0000',
+                  });
+                  field.onChange(mask.value);
+                  mask.on('accept', () => {
+                    field.onChange(mask.value);
+                  });
                 }}
-                value={field.value}
               />
             )}
           />
@@ -143,22 +148,27 @@ export function PersonalInfoForm() {
           <Controller
             name='birthDate'
             control={control}
-            render={({ field }) => (
-              <PatternFormat
+            render={({ field: { ref, ...field } }) => (
+              <Input
                 id='birthDate'
                 placeholder='DD/MM/AAAA'
-                format='##/##/####'
-                mask='_'
+                type='text'
                 className={cn(
                   'w-full rounded-lg border py-3 pr-4 pl-4 text-sm transition-all duration-200',
                   errors.birthDate
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                     : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
                 )}
-                onValueChange={(values) => {
-                  field.onChange(values.value);
+                {...field}
+                onFocus={(e) => {
+                  const mask = IMask(e.target, {
+                    mask: '00/00/0000',
+                  });
+                  field.onChange(mask.value);
+                  mask.on('accept', () => {
+                    field.onChange(mask.value);
+                  });
                 }}
-                value={field.value}
               />
             )}
           />

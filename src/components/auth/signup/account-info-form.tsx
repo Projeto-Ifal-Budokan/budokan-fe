@@ -93,45 +93,48 @@ export function AccountInfoForm() {
             </Tooltip>
           </TooltipProvider>
         </Label>
-        <div className='relative'>
-          <Controller
-            name='password'
-            control={control}
-            render={({ field }) => (
-              <Input
-                id='password'
-                type={showPassword ? 'text' : 'password'}
-                placeholder='••••••••'
-                className={cn(
-                  'w-full rounded-lg border py-3 pr-10 pl-4 transition-all duration-200',
-                  errors.password
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                )}
-                autoComplete='new-password'
-                {...field}
-              />
-            )}
-          />
-          <button
-            type='button'
-            onClick={() => setShowPassword(!showPassword)}
-            className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none'
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-          >
-            {showPassword ? (
-              <EyeOff className='h-5 w-5' />
-            ) : (
-              <Eye className='h-5 w-5' />
-            )}
-          </button>
+        <>
+          <div className='relative'>
+            <Controller
+              name='password'
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id='password'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='••••••••'
+                  className={cn(
+                    'w-full rounded-lg border py-3 pr-10 pl-4 transition-all duration-200',
+                    errors.password
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  )}
+                  autoComplete='new-password'
+                  {...field}
+                />
+              )}
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none'
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? (
+                <EyeOff className='h-5 w-5' />
+              ) : (
+                <Eye className='h-5 w-5' />
+              )}
+            </button>
+          </div>
+
           {errors.password && (
             <div className='mt-1 flex items-center text-xs text-red-500'>
               <AlertCircle className='mr-1 h-3 w-3' />
               {errors.password.message}
             </div>
           )}
-        </div>
+        </>
 
         <PasswordStrengthMeter password={password} />
       </div>
@@ -144,38 +147,42 @@ export function AccountInfoForm() {
           <Lock className='text-primary mr-2 h-4 w-4' />
           Confirmar Senha<span className='ml-1 text-red-500'>*</span>
         </Label>
-        <div className='relative'>
-          <Controller
-            name='confirmPassword'
-            control={control}
-            render={({ field }) => (
-              <Input
-                id='confirmPassword'
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder='••••••••'
-                className={cn(
-                  'w-full rounded-lg border py-3 pr-10 pl-4 transition-all duration-200',
-                  errors.confirmPassword
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                )}
-                autoComplete='new-password'
-                {...field}
-              />
-            )}
-          />
-          <button
-            type='button'
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none'
-            aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-          >
-            {showConfirmPassword ? (
-              <EyeOff className='h-5 w-5' />
-            ) : (
-              <Eye className='h-5 w-5' />
-            )}
-          </button>
+        <div>
+          <div className='relative'>
+            <Controller
+              name='confirmPassword'
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id='confirmPassword'
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder='••••••••'
+                  className={cn(
+                    'w-full rounded-lg border py-3 pr-10 pl-4 transition-all duration-200',
+                    errors.confirmPassword
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
+                  )}
+                  autoComplete='new-password'
+                  {...field}
+                />
+              )}
+            />
+            <button
+              type='button'
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none'
+              aria-label={
+                showConfirmPassword ? 'Hide password' : 'Show password'
+              }
+            >
+              {showConfirmPassword ? (
+                <EyeOff className='h-5 w-5' />
+              ) : (
+                <Eye className='h-5 w-5' />
+              )}
+            </button>
+          </div>
           {errors.confirmPassword && (
             <div className='mt-1 flex items-center text-xs text-red-500'>
               <AlertCircle className='mr-1 h-3 w-3' />
