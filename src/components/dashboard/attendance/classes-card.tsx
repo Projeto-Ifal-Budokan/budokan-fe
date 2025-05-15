@@ -33,12 +33,14 @@ export type ClassesCardProps = {
   filters: FilterState;
   classes: Class[];
   attendanceRecords: AttendanceRecord[];
+  onManageAttendance: (cls: Class) => void;
 };
 
 export const ClassesCard = ({
   filters,
   classes,
-  attendanceRecords
+  attendanceRecords,
+  onManageAttendance
 }: ClassesCardProps) => {
   // Get attendance records for a specific class
   const getClassAttendanceRecords = (classId: string) => {
@@ -163,8 +165,7 @@ export const ClassesCard = ({
                         <Button
                           variant='outline'
                           size='sm'
-                          /**onClick={() => handleManageAttendance(cls)}*/
-                          onClick={() => {}}
+                          onClick={() => onManageAttendance(cls)}
                           className='h-8 w-full'
                         >
                           Gerenciar

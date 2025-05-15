@@ -1,8 +1,11 @@
 'use client';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -17,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 import {
   AttendanceRecord,
   mockAttendanceRecords,
@@ -24,9 +28,10 @@ import {
 import { Class, mockClasses } from '@/data/mocks/classes-mocks';
 import { Discipline, mockDisciplines } from '@/data/mocks/disciplines-mocks';
 import { mockStudents, Student } from '@/data/mocks/students-mocks';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { CalendarIcon, PlusCircle } from 'lucide-react';
+import { CalendarIcon, Check, PlusCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { ClassesCard } from './classes-card';
 import { FiltersCard, FilterState } from './filters-card';
@@ -139,6 +144,45 @@ export function AttendanceManagement() {
     }
   }, [newClass.disciplineId, disciplines]);
 
+  // Get attendance records for a specific class
+  const getClassAttendanceRecords = (classId: string) => {
+    return attendanceRecords.filter((record) => record.classId === classId);
+  };
+
+  // Handle updating attendance status
+  const handleUpdateAttendanceStatus = (
+    recordId: string,
+    status: 'present' | 'absent'
+  ) => {
+    setAttendanceRecords(
+      attendanceRecords.map((record) =>
+        record.id === recordId
+          ? { ...record, status, updatedAt: new Date() }
+          : record
+      )
+    );
+  };
+
+  // Handle batch update of attendance status
+  const handleBatchUpdateStatus = (
+    classId: string,
+    status: 'present' | 'absent'
+  ) => {
+    setAttendanceRecords(
+      attendanceRecords.map((record) =>
+        record.classId === classId
+          ? { ...record, status, updatedAt: new Date() }
+          : record
+      )
+    );
+  };
+
+  // Handle opening attendance management for a class
+  const handleManageAttendance = (cls: Class) => {
+    setSelectedClass(cls);
+    setIsAttendanceDialogOpen(true);
+  };
+
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
@@ -174,6 +218,7 @@ export function AttendanceManagement() {
         filters={filters}
         classes={classes}
         attendanceRecords={attendanceRecords}
+        onManageAttendance={(cls) => handleManageAttendance(cls)}
       />
 
       {/* New Class Dialog */}
@@ -184,7 +229,7 @@ export function AttendanceManagement() {
         <DialogContent className='sm:max-w-[500px]'>
           <div className='space-y-6'>
             <div>
-              <h2 className='text-xl font-bold'>Nova Aula</h2>
+              <DialogTitle className='text-xl font-bold'>Nova Aula</DialogTitle>
               <p className='text-muted-foreground mt-1 text-sm'>
                 Crie uma nova aula para registrar a frequência dos alunos.
               </p>
@@ -303,6 +348,158 @@ export function AttendanceManagement() {
       </Dialog>
 
       {/* Attendance Management Dialog */}
+      <Dialog
+        open={isAttendanceDialogOpen}
+        onOpenChange={setIsAttendanceDialogOpen}
+      >
+        <DialogContent className='max-h-[80vh] overflow-y-auto sm:max-w-[700px]'>
+          {selectedClass && (
+            <div className='space-y-6'>
+              <div>
+                <DialogTitle className='text-xl font-bold'>Gerenciar Frequência</DialogTitle>
+                <div className='text-muted-foreground mt-2 flex items-center text-sm'>
+                  <Badge variant='outline' className='mr-2 font-normal'>
+                    {selectedClass.discipline.name}
+                  </Badge>
+                  <span>
+                    {format(selectedClass.date, "dd 'de' MMMM 'de' yyyy", {
+                      locale: ptBR,
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              <div className='flex items-center justify-between'>
+                <div className='text-muted-foreground text-sm'>
+                  {getClassAttendanceRecords(selectedClass.id).length} alunos
+                  matriculados
+                </div>
+                <div className='flex space-x-2'>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    className='h-8 border-green-200 bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700'
+                    onClick={() =>
+                      handleBatchUpdateStatus(selectedClass.id, 'present')
+                    }
+                  >
+                    <Check className='mr-1 h-4 w-4' />
+                    Todos Presentes
+                  </Button>
+                  <Button
+                    size='sm'
+                    variant='outline'
+                    className='h-8 border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'
+                    onClick={() =>
+                      handleBatchUpdateStatus(selectedClass.id, 'absent')
+                    }
+                  >
+                    <X className='mr-1 h-4 w-4' />
+                    Todos Ausentes
+                  </Button>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className='space-y-4'>
+                {getClassAttendanceRecords(selectedClass.id).length === 0 ? (
+                  <div className='text-muted-foreground py-8 text-center'>
+                    Nenhum aluno matriculado nesta modalidade.
+                  </div>
+                ) : (
+                  getClassAttendanceRecords(selectedClass.id).map((record) => (
+                    <Card
+                      key={record.id}
+                      className='border-border/40 overflow-hidden border'
+                    >
+                      <CardContent className='p-0'>
+                        <div className='flex items-center p-4'>
+                          <Avatar className='h-10 w-10 border'>
+                            <AvatarImage
+                              src={record.student.profilePicture || undefined}
+                              alt={record.student.name}
+                            />
+                            <AvatarFallback className='bg-primary/10 text-primary'>
+                              {record.student.name
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .toUpperCase()
+                                .substring(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className='ml-4 flex-1'>
+                            <p className='font-medium'>{record.student.name}</p>
+                            <p className='text-muted-foreground text-sm'>
+                              {record.student.email}
+                            </p>
+                          </div>
+                          <div className='flex items-center space-x-2'>
+                            <Button
+                              size='sm'
+                              variant={
+                                record.status === 'present'
+                                  ? 'default'
+                                  : 'outline'
+                              }
+                              className={cn(
+                                'h-9 rounded-l-md rounded-r-none px-3',
+                                record.status === 'present' &&
+                                  'bg-green-600 hover:bg-green-700'
+                              )}
+                              onClick={() =>
+                                handleUpdateAttendanceStatus(
+                                  record.id,
+                                  'present'
+                                )
+                              }
+                            >
+                              <Check className='mr-1 h-4 w-4' />
+                              Presente
+                            </Button>
+                            <Button
+                              size='sm'
+                              variant={
+                                record.status === 'absent'
+                                  ? 'default'
+                                  : 'outline'
+                              }
+                              className={cn(
+                                'h-9 rounded-l-none rounded-r-md px-3',
+                                record.status === 'absent' &&
+                                  'bg-red-600 hover:bg-red-700'
+                              )}
+                              onClick={() =>
+                                handleUpdateAttendanceStatus(
+                                  record.id,
+                                  'absent'
+                                )
+                              }
+                            >
+                              <X className='mr-1 h-4 w-4' />
+                              Ausente
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+
+              <div className='flex justify-end gap-2 pt-2'>
+                <Button
+                  onClick={() => setIsAttendanceDialogOpen(false)}
+                  className='bg-primary hover:bg-primary/90'
+                >
+                  Salvar e Fechar
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
