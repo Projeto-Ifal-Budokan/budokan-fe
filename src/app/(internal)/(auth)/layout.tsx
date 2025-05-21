@@ -1,4 +1,4 @@
-import { LoginImageSection } from '@/components/auth/login/LoginImageSection';
+import { LoginImageSection } from '@/components/auth/login/image-section';
 
 export default function AuthLayout({
   children,
