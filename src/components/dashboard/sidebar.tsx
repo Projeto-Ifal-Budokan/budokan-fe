@@ -1,5 +1,6 @@
 'use client';
 
+import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -131,8 +132,8 @@ export function Sidebar({
                   className={cn(
                     'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                     pathname === item.href
-                      ? 'bg-primary-foreground/10 font-medium text-primary'
-                      : 'hover:bg-primary-foreground/10 text-white hover:text-primary/80',
+                      ? 'bg-primary-foreground/10 text-primary font-medium'
+                      : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
                     isCollapsed && 'justify-center px-2'
                   )}
                 >
@@ -167,9 +168,14 @@ export function Sidebar({
                 </div>
               )}
               {!isCollapsed && (
-                <Link href='/login' className='ml-auto'>
-                  <LogOut className='h-4 w-4 text-white/70 hover:text-orange-300' />
-                </Link>
+                // <Link href='/login' className='ml-auto'>
+                <LogOut
+                  className='h-4 w-4 text-white/70 hover:text-orange-300'
+                  onClick={() => {
+                    logoutAction();
+                  }}
+                />
+                // </Link>
               )}
             </div>
           </div>
