@@ -1,5 +1,6 @@
 'use server';
 
+import { parseCookie } from '@/lib/auth';
 import { LoginFormData } from '@/types/login';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -35,16 +36,27 @@ export async function loginAction(data: LoginFormData) {
 
     if (setCookieHeader) {
       // Parse the cookie value from the Set-Cookie header
-      const cookieValue = setCookieHeader.split(';')[0].split('=')[1];
+      const cookieValue = parseCookie(setCookieHeader);
 
       // Set the cookie in the response
-      (await cookies()).set('authToken', cookieValue, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-      });
+      (await cookies()).set(
+        'access_token',
+        String(cookieValue['access_token']),
+        {
+          httpOnly: cookieValue.HttpOnly,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: cookieValue['SameSite'] as
+            | true
+            | false
+            | 'lax'
+            | 'strict'
+            | 'none'
+            | undefined,
+          path: cookieValue.Path,
+          maxAge: Number(cookieValue['Max-age']),
+          expires: new Date(String(cookieValue['Expires'])),
+        }
+      );
 
       // Revalidate relevant paths after login
       revalidatePath('/dashboard');

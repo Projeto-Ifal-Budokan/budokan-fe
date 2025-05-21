@@ -55,3 +55,30 @@ export async function getCurrentUser() {
     return null;
   }
 }
+
+type CookieData = {
+  access_token?: string;
+  'Max-Age'?: string;
+  Path?: string;
+  Expires?: string;
+  HttpOnly?: boolean;
+  SameSite?: 'Strict' | 'Lax' | 'None';
+  [key: string]: string | boolean | undefined;
+};
+
+export const parseCookie = (cookieStr: string): CookieData => {
+  const parts = cookieStr.split(';').map((part) => part.trim());
+  const result: CookieData = {};
+
+  for (const part of parts) {
+    const [key, ...valParts] = part.split('=');
+    if (valParts.length > 0) {
+      result[key] = valParts.join('=');
+    } else {
+      // Handle flags like HttpOnly with no "="
+      result[key] = true;
+    }
+  }
+
+  return result;
+};
