@@ -9,13 +9,16 @@ import { LoginFormData } from '@/types/login';
 import { ArrowRight, ChevronLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 export function LoginFormSection() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from') || '/dashboard';
 
   // Initialize react-hook-form
   const {
@@ -31,9 +34,12 @@ export function LoginFormSection() {
       const result = await loginAction(data);
 
       if (result.success) {
-        // TODO: Add a success message
-        redirect('/dashboard');
+        // Redirect to the original page or dashboard
+        toast.success('Login com sucesso!');
+        redirect(from);
       }
+
+      toast.error('Credenciais inválidas!');
     } finally {
       setIsLoading(false);
     }

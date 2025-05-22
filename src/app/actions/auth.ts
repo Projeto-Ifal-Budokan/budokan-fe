@@ -1,5 +1,6 @@
 'use server';
 
+import { parseCookie } from '@/lib/auth';
 import { LoginFormData } from '@/types/login';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -11,6 +12,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 export async function loginAction(data: LoginFormData) {
   const email = data.email;
   const password = data.password;
+  const cookieStore = await cookies();
 
   if (!email || !password) {
     return { success: false, error: 'Email and password are required' };
@@ -35,15 +37,17 @@ export async function loginAction(data: LoginFormData) {
 
     if (setCookieHeader) {
       // Parse the cookie value from the Set-Cookie header
-      const cookieValue = setCookieHeader.split(';')[0].split('=')[1];
+      const cookieAuth = parseCookie(setCookieHeader);
 
       // Set the cookie in the response
-      (await cookies()).set('authToken', cookieValue, {
-        httpOnly: true,
+      cookieStore.set({
+        name: 'authToken',
+        value: cookieAuth.access_token as string,
+        httpOnly: cookieAuth.HttpOnly,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: cookieAuth.Path,
+        maxAge: Number(cookieAuth['Max-Age']),
       });
 
       // Revalidate relevant paths after login

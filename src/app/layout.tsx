@@ -1,8 +1,8 @@
 import '@/app/globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 import { Inter } from 'next/font/google';
 import type React from 'react';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -30,6 +30,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
