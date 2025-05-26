@@ -1,10 +1,10 @@
 'use client';
 
-import { loginAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { authService } from '@/lib/api/services/auth-service';
 import { LoginFormData } from '@/types/login';
 import { ArrowRight, ChevronLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
@@ -31,9 +31,9 @@ export function LoginFormSection() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      const result = await loginAction(data);
+      const response = await authService.login(data);
 
-      if (result.success) {
+      if (response.data) {
         // Redirect to the original page or dashboard
         toast.success('Login com sucesso!');
         redirect(from);
