@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com';
 
+const DEBUG = process.env.NODE_ENV === 'development';
+
 // Default timeout in milliseconds
 const DEFAULT_TIMEOUT = 10000;
 
@@ -42,12 +44,13 @@ export async function apiRequest<T>(
   } = options;
 
   // Debug logging
-  console.log('🚀 API Request:', {
-    url,
-    method: requestOptions.method || 'GET',
-    headers: requestOptions.headers,
-    body: requestOptions.body,
-  });
+  DEBUG &&
+    console.log('🚀 API Request:', {
+      url,
+      method: requestOptions.method || 'GET',
+      headers: requestOptions.headers,
+      body: requestOptions.body,
+    });
 
   // Create AbortController for timeout
   const controller = new AbortController();
@@ -68,12 +71,13 @@ export async function apiRequest<T>(
     clearTimeout(timeoutId);
 
     // Debug logging for response
-    console.log('📥 API Response:', {
-      url,
-      status: response.status,
-      statusText: response.statusText,
-      headers: Object.fromEntries(response.headers.entries()),
-    });
+    DEBUG &&
+      console.log('📥 API Response:', {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+      });
 
     // Parse response data regardless of status
     const contentLength = response.headers.get('content-length');
@@ -86,7 +90,7 @@ export async function apiRequest<T>(
       try {
         data = await response.clone().json(); // Use clone() to allow re-reading
       } catch (parseError) {
-        console.warn('Failed to parse JSON response:', parseError);
+        DEBUG && console.warn('Failed to parse JSON response:', parseError);
         data = (await response.text()) as T;
       }
     } else {
@@ -112,16 +116,17 @@ export async function apiRequest<T>(
       }
 
       toast.error(errorMessage);
-      console.error('❌ API Error:', {
-        url,
-        status: response.status,
-        errorMessage,
-        data,
-      });
+      DEBUG &&
+        console.error('❌ API Error:', {
+          url,
+          status: response.status,
+          errorMessage,
+          data,
+        });
 
       // If throwOnHttpError is false, return the response even for errors
       if (!throwOnHttpError) {
-        console.log('🔄 Returning error response without throwing');
+        DEBUG && console.log('🔄 Returning error response without throwing');
         return apiResponse;
       }
 
@@ -170,10 +175,11 @@ export async function apiRequest<T>(
       throw apiError;
     }
 
-    console.log('✅ API Success:', {
-      url,
-      data,
-    });
+    DEBUG &&
+      console.log('✅ API Success:', {
+        url,
+        data,
+      });
 
     return apiResponse;
   } catch (error) {
@@ -183,16 +189,17 @@ export async function apiRequest<T>(
 
     // Handle AbortError (timeout)
     if (error instanceof Error && error.name === 'AbortError') {
-      console.error('⏰ Request timeout:', url);
+      DEBUG && console.error('⏰ Request timeout:', url);
       throw new ApiError(408, 'Request timeout');
     }
 
     // Handle CORS and network errors
-    console.error('🌐 Network/CORS Error:', {
-      url,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      name: error instanceof Error ? error.name : 'Unknown',
-    });
+    DEBUG &&
+      console.error('🌐 Network/CORS Error:', {
+        url,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        name: error instanceof Error ? error.name : 'Unknown',
+      });
 
     throw new ApiError(0, 'Network error or CORS issue');
   }
