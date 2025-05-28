@@ -41,7 +41,7 @@ const steps = [
 
 const SignupSuccessPage = () => {
   return (
-    <div className='flex min-h-screen w-full items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-8'>
+    <div className='flex min-h-screen w-full items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-8 lg:w-1/2'>
       <div className='w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg'>
         <div className='mb-6 flex justify-center'>
           <div className='rounded-full bg-green-100 p-3'>
