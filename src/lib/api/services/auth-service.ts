@@ -1,4 +1,4 @@
-import { api } from '@/lib/api/client';
+import { api, ApiResponse } from '@/lib/api/client';
 import { CreateUserData, User } from '@/types/user';
 
 // Types for API responses
@@ -14,15 +14,18 @@ export interface ApiError {
 
 export const authService = {
   me: async (): Promise<User> => {
-    const { data, response } = await api.get<User>('/auth/me');
-
+    const { data } = await api.get<User>('/auth/me');
     return data;
   },
 
   login: async (credentials: {
     email: string;
     password: string;
-  }): Promise<{ data: { message: string }; response: ResponseInit }> => {
+  }): Promise<
+    ApiResponse<{
+      message: string;
+    }>
+  > => {
     const response = await api.post<{ message: string }>(
       '/auth/login',
       credentials
@@ -30,32 +33,29 @@ export const authService = {
     return response;
   },
 
-  register: async (userData: CreateUserData): Promise<ResponseInit> => {
-    const { response } = await api.post<ResponseInit>(
-      '/auth/register',
-      userData
-    );
-    return response;
+  register: async (userData: CreateUserData): Promise<any> => {
+    const { data } = await api.post<any>('/auth/register', userData);
+    return data;
   },
 
   forgotPassword: async (data: {
     email: string;
   }): Promise<{ message: string }> => {
-    const response = await api.post<{ message: string }>(
+    const { data: responseData } = await api.post<{ message: string }>(
       '/auth/forgot-password',
       data
     );
-    return response.data;
+    return responseData;
   },
 
   resetPassword: async (data: {
     token: string;
     password: string;
   }): Promise<{ message: string }> => {
-    const response = await api.post<{ message: string }>(
+    const { data: responseData } = await api.post<{ message: string }>(
       '/auth/reset-password',
       data
     );
-    return response.data;
+    return responseData;
   },
 };

@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com';
 
@@ -8,7 +10,8 @@ class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
-    public response?: Response
+    public response?: Response,
+    public data?: any // Add data property to store response data
   ) {
     super(message);
     this.name = 'ApiError';
@@ -17,14 +20,26 @@ class ApiError extends Error {
 
 interface ApiRequestOptions extends Omit<RequestInit, 'signal'> {
   timeout?: number;
+  throwOnHttpError?: boolean; // New option to control error throwing
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  response: Response;
+  status: number;
+  ok: boolean;
 }
 
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {}
-): Promise<{ data: T; response: ResponseInit }> {
+): Promise<ApiResponse<T>> {
   const url = `${API_BASE_URL}${endpoint}`;
-  const { timeout = DEFAULT_TIMEOUT, ...requestOptions } = options;
+  const {
+    timeout = DEFAULT_TIMEOUT,
+    throwOnHttpError = true, // Default to true for backward compatibility
+    ...requestOptions
+  } = options;
 
   // Debug logging
   console.log('🚀 API Request:', {
@@ -60,56 +75,7 @@ export async function apiRequest<T>(
       headers: Object.fromEntries(response.headers.entries()),
     });
 
-    if (!response.ok) {
-      // Try to extract error message from response body
-      let errorMessage = `HTTP ${response.status}`;
-      let errorData: any = null;
-
-      try {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          errorData = await response.json();
-          errorMessage = errorData.message || errorData.error || errorMessage;
-        } else {
-          const textError = await response.text();
-          if (textError) errorMessage = textError;
-        }
-      } catch (parseError) {
-        console.warn('Failed to parse error response:', parseError);
-      }
-
-      console.error('❌ API Error:', {
-        url,
-        status: response.status,
-        errorMessage,
-        errorData,
-      });
-
-      if (response.status === 401) {
-        throw new ApiError(
-          401,
-          errorMessage || 'Authentication required',
-          response
-        );
-      }
-      if (response.status === 403) {
-        throw new ApiError(403, errorMessage || 'Access forbidden', response);
-      }
-      if (response.status === 404) {
-        throw new ApiError(404, errorMessage || 'Resource not found', response);
-      }
-      if (response.status >= 500) {
-        throw new ApiError(
-          response.status,
-          errorMessage || 'Server error',
-          response
-        );
-      }
-
-      throw new ApiError(response.status, errorMessage, response);
-    }
-
-    // Handle empty responses (204 No Content, etc.)
+    // Parse response data regardless of status
     const contentLength = response.headers.get('content-length');
     const contentType = response.headers.get('content-type');
 
@@ -117,17 +83,99 @@ export async function apiRequest<T>(
     if (contentLength === '0' || response.status === 204) {
       data = null as T;
     } else if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
+      try {
+        data = await response.clone().json(); // Use clone() to allow re-reading
+      } catch (parseError) {
+        console.warn('Failed to parse JSON response:', parseError);
+        data = (await response.text()) as T;
+      }
     } else {
-      // For non-JSON responses, return as text
       data = (await response.text()) as T;
+    }
+
+    const apiResponse: ApiResponse<T> = {
+      data,
+      response,
+      status: response.status,
+      ok: response.ok,
+    };
+
+    if (!response.ok) {
+      // Extract error message
+      let errorMessage = `HTTP ${response.status}`;
+
+      if (data && typeof data === 'object') {
+        const errorData = data as any;
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } else if (typeof data === 'string') {
+        errorMessage = data || errorMessage;
+      }
+
+      toast.error(errorMessage);
+      console.error('❌ API Error:', {
+        url,
+        status: response.status,
+        errorMessage,
+        data,
+      });
+
+      // If throwOnHttpError is false, return the response even for errors
+      if (!throwOnHttpError) {
+        console.log('🔄 Returning error response without throwing');
+        return apiResponse;
+      }
+
+      // Create error with data attached
+      const apiError = new ApiError(
+        response.status,
+        errorMessage,
+        response,
+        data
+      );
+
+      // Specific error handling
+      if (response.status === 401) {
+        throw new ApiError(
+          401,
+          errorMessage || 'Authentication required',
+          response,
+          data
+        );
+      }
+      if (response.status === 403) {
+        throw new ApiError(
+          403,
+          errorMessage || 'Access forbidden',
+          response,
+          data
+        );
+      }
+      if (response.status === 404) {
+        throw new ApiError(
+          404,
+          errorMessage || 'Resource not found',
+          response,
+          data
+        );
+      }
+      if (response.status >= 500) {
+        throw new ApiError(
+          response.status,
+          errorMessage || 'Server error',
+          response,
+          data
+        );
+      }
+
+      throw apiError;
     }
 
     console.log('✅ API Success:', {
       url,
       data,
     });
-    return { data, response };
+
+    return apiResponse;
   } catch (error) {
     clearTimeout(timeoutId);
 
@@ -150,7 +198,7 @@ export async function apiRequest<T>(
   }
 }
 
-// Helper methods for different HTTP verbs
+// Helper methods for different HTTP verbs with both throwing and non-throwing variants
 export const api = {
   get: <T>(endpoint: string, options?: ApiRequestOptions) =>
     apiRequest<T>(endpoint, options),
