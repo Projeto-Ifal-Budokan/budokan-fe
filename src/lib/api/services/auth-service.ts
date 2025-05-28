@@ -33,9 +33,18 @@ export const authService = {
     return response;
   },
 
-  register: async (userData: CreateUserData): Promise<any> => {
-    const { data } = await api.post<any>('/auth/register', userData);
-    return data;
+  register: async (
+    userData: CreateUserData
+  ): Promise<
+    ApiResponse<{
+      message: string;
+    }>
+  > => {
+    const response = await api.post<{ message: string }>(
+      '/auth/register',
+      userData
+    );
+    return response;
   },
 
   forgotPassword: async (data: {
