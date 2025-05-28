@@ -2,7 +2,7 @@
 
 import { CreateUserData, User } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ApiError, AuthResponse, authService } from '../services/auth-service';
+import { ApiError, authService } from '../services/auth-service';
 
 export function useAuth() {
   const me = useQuery<User, ApiError>({
@@ -12,14 +12,14 @@ export function useAuth() {
   });
 
   const login = useMutation<
-    { data: AuthResponse; headers: Headers },
+    ResponseInit,
     ApiError,
     { email: string; password: string }
   >({
     mutationFn: authService.login,
   });
 
-  const register = useMutation<AuthResponse, ApiError, CreateUserData>({
+  const register = useMutation<ResponseInit, ApiError, CreateUserData>({
     mutationFn: authService.register,
   });
 

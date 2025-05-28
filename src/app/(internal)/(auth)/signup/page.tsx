@@ -5,13 +5,8 @@ import { ConfirmationForm } from '@/components/auth/signup/confirmation-form';
 import { PersonalInfoForm } from '@/components/auth/signup/personal-info-form';
 import { Button } from '@/components/ui/button';
 import { ProgressIndicator } from '@/components/ui/progress-indicator';
-import {
-  SignupFormData,
-  accountInfoSchema,
-  confirmationSchema,
-  personalInfoSchema,
-  signupSchema,
-} from '@/types/signup-types';
+import { useAuth } from '@/lib/api/queries/useAuth';
+import { SignupFormData, signupSchema } from '@/types/signup-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence } from 'framer-motion';
 import {
@@ -27,6 +22,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const steps = [
   {
@@ -45,6 +41,7 @@ const steps = [
 
 export default function SignupPage() {
   const router = useRouter();
+  const { register: registerAccount } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -54,30 +51,16 @@ export default function SignupPage() {
 
     defaultValues: {
       firstName: '',
-      lastName: '',
+      surname: '',
       phone: '',
       birthDate: '',
       email: '',
       password: '',
       confirmPassword: '',
-      isStudent: false,
+      isPractitioner: false,
     },
     mode: 'onChange',
   });
-
-  // Get current schema based on step
-  const getCurrentSchema = () => {
-    switch (currentStep) {
-      case 1:
-        return personalInfoSchema;
-      case 2:
-        return accountInfoSchema;
-      case 3:
-        return confirmationSchema;
-      default:
-        return personalInfoSchema;
-    }
-  };
 
   // Handle next step
   const handleNextStep = async () => {
@@ -86,9 +69,10 @@ export default function SignupPage() {
     // Validate only the fields in the current step
     if (currentStep === 1) {
       const result = await methods.trigger(
-        ['firstName', 'lastName', 'phone', 'birthDate'],
+        ['firstName', 'surname', 'phone', 'birthDate'],
         { shouldFocus: true }
       );
+
       isValid = result;
     } else if (currentStep === 2) {
       const result = await methods.trigger(
@@ -123,16 +107,21 @@ export default function SignupPage() {
   // Handle form submission
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
-
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log('Form submitted successfully:', data);
+      const response = await registerAccount.mutateAsync({
+        ...data,
+        birthDate: new Date(data.birthDate),
+        healthObservations: data.healthObservations || '',
+      });
 
-      // Redirect to success page
-      router.push('/signup/success');
+      if (response.status === 201) {
+        toast.success('Conta criada com sucesso!');
+        router.push('/signup/success');
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
+      setIsSubmitting(false);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -189,32 +178,49 @@ export default function SignupPage() {
 
             {/* Navigation buttons */}
             <div className='mt-8 flex justify-between'>
+              {currentStep > 1 && (
+                <Button
+                  onClick={() => setCurrentStep((prev) => prev - 1)}
+                  className='flex items-center text-white hover:text-gray-800'
+                >
+                  <ChevronLeft className='mr-2 h-4 w-4' />
+                  Voltar
+                </Button>
+              )}
+
               {currentStep < 3 ? (
+                // Next Step Button
                 <Button
                   type='button'
                   onClick={handleNextStep}
-                  className='group hover:from-primary hover:to-primary/80 flex items-center justify-center bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md transition-all duration-300 hover:shadow-lg'
+                  className='group flex items-center justify-center bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md transition-all duration-300 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg'
                 >
-                  Próximo
-                  <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
+                  <span className='flex items-center'>
+                    Próximo
+                    <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
+                  </span>
                 </Button>
               ) : (
+                // Submit Button
                 <Button
                   type='submit'
                   disabled={isSubmitting}
-                  className='group flex items-center justify-center bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-lg'
+                  aria-label='Cadastrar conta'
+                  className='group flex items-center justify-center bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md transition-all duration-300 hover:from-green-500 hover:to-green-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70'
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className='animate-spin' />
-                      Cadastrando...
-                    </>
-                  ) : (
-                    <>
-                      Cadastrar
-                      <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
-                    </>
-                  )}
+                  <span className='flex items-center'>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                        Cadastrando...
+                      </>
+                    ) : (
+                      <>
+                        Cadastrar
+                        <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
+                      </>
+                    )}
+                  </span>
                 </Button>
               )}
             </div>

@@ -22,7 +22,7 @@ interface ApiRequestOptions extends Omit<RequestInit, 'signal'> {
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {}
-): Promise<{ data: T; headers: Headers }> {
+): Promise<{ data: T; response: ResponseInit }> {
   const url = `${API_BASE_URL}${endpoint}`;
   const { timeout = DEFAULT_TIMEOUT, ...requestOptions } = options;
 
@@ -127,8 +127,7 @@ export async function apiRequest<T>(
       url,
       data,
     });
-
-    return { data, headers: response.headers };
+    return { data, response };
   } catch (error) {
     clearTimeout(timeoutId);
 

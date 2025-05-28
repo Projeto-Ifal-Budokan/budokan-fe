@@ -33,7 +33,9 @@ export function LoginFormSection() {
     try {
       const response = await authService.login(data);
 
-      if (response.data) {
+      console.log({ response });
+
+      if (response.status === 201 || response.status === 200) {
         // Redirect to the original page or dashboard
         toast.success('Login com sucesso!');
         redirect(from);

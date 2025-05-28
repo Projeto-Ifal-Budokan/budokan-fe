@@ -13,7 +13,7 @@ export function ConfirmationForm() {
     watch,
     formState: { errors },
   } = useFormContext<SignupFormData>();
-  const { firstName, lastName, phone, birthDate, email } = watch();
+  const { firstName, surname, phone, birthDate, email } = watch();
 
   return (
     <motion.div
@@ -33,7 +33,7 @@ export function ConfirmationForm() {
           <div className='flex items-center justify-between border-b border-blue-100 pb-2'>
             <span className='text-gray-600'>Nome completo:</span>
             <span className='font-medium text-blue-900'>
-              {firstName} {lastName}
+              {firstName} {surname}
             </span>
           </div>
           <div className='flex items-center justify-between border-b border-blue-100 pb-2'>
@@ -59,11 +59,11 @@ export function ConfirmationForm() {
       <div className='space-y-4'>
         <div className='flex items-center space-x-2'>
           <Controller
-            name='isStudent'
+            name='isPractitioner'
             control={control}
             render={({ field }) => (
               <Checkbox
-                id='isStudent'
+                id='isPractitioner'
                 checked={field.value}
                 onCheckedChange={field.onChange}
                 className='text-primary rounded border-gray-300 focus:ring-orange-500'
@@ -71,7 +71,7 @@ export function ConfirmationForm() {
             )}
           />
           <Label
-            htmlFor='isStudent'
+            htmlFor='isPractitioner'
             className='text-sm font-medium text-gray-700'
           >
             Sou o aluno

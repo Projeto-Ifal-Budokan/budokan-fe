@@ -65,7 +65,7 @@ export function PersonalInfoForm() {
           </Label>
           <div className='relative'>
             <Controller
-              name='lastName'
+              name='surname'
               control={control}
               render={({ field }) => (
                 <Input
@@ -73,7 +73,7 @@ export function PersonalInfoForm() {
                   placeholder='Silva'
                   className={cn(
                     'w-full rounded-lg border py-3 pr-4 pl-4 transition-all duration-200',
-                    errors.lastName
+                    errors.surname
                       ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                       : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
                   )}
@@ -81,10 +81,10 @@ export function PersonalInfoForm() {
                 />
               )}
             />
-            {errors.lastName && (
+            {errors.surname && (
               <div className='mt-1 flex items-center text-xs text-red-500'>
                 <AlertCircle className='mr-1 h-3 w-3' />
-                {errors.lastName.message}
+                {errors.surname.message}
               </div>
             )}
           </div>

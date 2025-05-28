@@ -14,45 +14,48 @@ export interface ApiError {
 
 export const authService = {
   me: async (): Promise<User> => {
-    const { data } = await api.get<User>('/auth/me');
-    console.log('authservice', data);
+    const { data, response } = await api.get<User>('/auth/me');
+
     return data;
   },
 
   login: async (credentials: {
     email: string;
     password: string;
-  }): Promise<{ data: AuthResponse; headers: Headers }> => {
-    const { data, headers } = await api.post<AuthResponse>(
+  }): Promise<ResponseInit> => {
+    const { response } = await api.post<ResponseInit>(
       '/auth/login',
       credentials
     );
-    return { data, headers };
+    return response;
   },
 
-  register: async (userData: CreateUserData): Promise<AuthResponse> => {
-    const { data } = await api.post<AuthResponse>('/auth/register', userData);
-    return data;
+  register: async (userData: CreateUserData): Promise<ResponseInit> => {
+    const { response } = await api.post<ResponseInit>(
+      '/auth/register',
+      userData
+    );
+    return response;
   },
 
   forgotPassword: async (data: {
     email: string;
   }): Promise<{ message: string }> => {
-    const { data: response } = await api.post<{ message: string }>(
+    const response = await api.post<{ message: string }>(
       '/auth/forgot-password',
       data
     );
-    return response;
+    return response.data;
   },
 
   resetPassword: async (data: {
     token: string;
     password: string;
   }): Promise<{ message: string }> => {
-    const { data: response } = await api.post<{ message: string }>(
+    const response = await api.post<{ message: string }>(
       '/auth/reset-password',
       data
     );
-    return response;
+    return response.data;
   },
 };
