@@ -5,7 +5,7 @@ import { ConfirmationForm } from '@/components/auth/signup/confirmation-form';
 import { PersonalInfoForm } from '@/components/auth/signup/personal-info-form';
 import { Button } from '@/components/ui/button';
 import { ProgressIndicator } from '@/components/ui/progress-indicator';
-import { useAuth } from '@/lib/api/queries/useAuth';
+import { authService } from '@/lib/api/services/auth-service';
 import { SignupFormData, signupSchema } from '@/types/signup-types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence } from 'framer-motion';
@@ -41,7 +41,7 @@ const steps = [
 
 export default function SignupPage() {
   const router = useRouter();
-  const { register: registerAccount } = useAuth();
+
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -108,7 +108,7 @@ export default function SignupPage() {
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
     try {
-      const response = await registerAccount.mutateAsync({
+      const response = await authService.register({
         ...data,
         birthDate: new Date(data.birthDate),
         healthObservations: data.healthObservations || '',

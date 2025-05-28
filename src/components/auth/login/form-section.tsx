@@ -9,13 +9,15 @@ import { LoginFormData } from '@/types/login';
 import { ArrowRight, ChevronLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export function LoginFormSection() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || '/dashboard';
@@ -31,17 +33,14 @@ export function LoginFormSection() {
   const onSubmit = async (credentials: LoginFormData) => {
     setIsLoading(true);
     try {
-      const { response, data } = await authService.login(credentials);
-
-      console.log({ response, data });
-
-      if (response.status === 201 || response.status === 200) {
-        // Redirect to the original page or dashboard
-        toast.success('Login com sucesso!');
-        redirect(from);
+      const response = await authService.login(credentials);
+      console.log({ response });
+      if (!response.ok) {
+        return toast.error(response.data.message);
       }
 
-      return toast.error(data.message);
+      toast.success('Login com sucesso!');
+      router.push(from);
     } finally {
       setIsLoading(false);
     }
