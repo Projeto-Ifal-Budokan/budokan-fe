@@ -12,6 +12,10 @@ export interface ApiError {
   statusCode: number;
 }
 
+interface ResponseApi {
+  message: string;
+}
+
 export const authService = {
   me: async (): Promise<User> => {
     const { data } = await api.get<User>('/auth/me');
@@ -21,11 +25,7 @@ export const authService = {
   login: async (credentials: {
     email: string;
     password: string;
-  }): Promise<
-    ApiResponse<{
-      message: string;
-    }>
-  > => {
+  }): Promise<ApiResponse<ResponseApi>> => {
     const response = await api.post<{ message: string }>(
       '/auth/login',
       credentials
@@ -35,22 +35,13 @@ export const authService = {
 
   register: async (
     userData: CreateUserData
-  ): Promise<
-    ApiResponse<{
-      message: string;
-    }>
-  > => {
-    const response = await api.post<{ message: string }>(
-      '/auth/register',
-      userData
-    );
+  ): Promise<ApiResponse<ResponseApi>> => {
+    const response = await api.post<ResponseApi>('/auth/register', userData);
     return response;
   },
 
-  forgotPassword: async (data: {
-    email: string;
-  }): Promise<{ message: string }> => {
-    const { data: responseData } = await api.post<{ message: string }>(
+  forgotPassword: async (data: { email: string }): Promise<ResponseApi> => {
+    const { data: responseData } = await api.post<ResponseApi>(
       '/auth/forgot-password',
       data
     );
@@ -60,8 +51,8 @@ export const authService = {
   resetPassword: async (data: {
     token: string;
     password: string;
-  }): Promise<{ message: string }> => {
-    const { data: responseData } = await api.post<{ message: string }>(
+  }): Promise<ResponseApi> => {
+    const { data: responseData } = await api.post<ResponseApi>(
       '/auth/reset-password',
       data
     );
