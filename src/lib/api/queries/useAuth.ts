@@ -1,6 +1,6 @@
 'use client';
 
-import { CreateUserData, User } from '@/types/user';
+import { User } from '@/types/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiError, authService } from '../services/auth-service';
 
@@ -11,31 +11,19 @@ export function useAuth() {
     retry: 1,
   });
 
-  const login = useMutation<
-    ResponseInit,
-    ApiError,
-    { email: string; password: string }
-  >({
+  const login = useMutation({
     mutationFn: authService.login,
   });
 
-  const register = useMutation<ResponseInit, ApiError, CreateUserData>({
+  const register = useMutation({
     mutationFn: authService.register,
   });
 
-  const forgotPassword = useMutation<
-    { message: string },
-    ApiError,
-    { email: string }
-  >({
+  const forgotPassword = useMutation({
     mutationFn: authService.forgotPassword,
   });
 
-  const resetPassword = useMutation<
-    { message: string },
-    ApiError,
-    { token: string; password: string }
-  >({
+  const resetPassword = useMutation({
     mutationFn: authService.resetPassword,
   });
 

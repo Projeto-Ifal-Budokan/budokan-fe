@@ -17,7 +17,7 @@ export async function loginAction(data: LoginFormData) {
   }
 
   try {
-    const { data } = await authService.login({
+    await authService.login({
       email,
       password,
     });

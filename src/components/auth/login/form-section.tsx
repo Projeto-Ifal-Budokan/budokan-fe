@@ -28,12 +28,12 @@ export function LoginFormSection() {
   } = useForm<LoginFormData>();
 
   // Placeholder onSubmit function
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (credentials: LoginFormData) => {
     setIsLoading(true);
     try {
-      const response = await authService.login(data);
+      const { response, data } = await authService.login(credentials);
 
-      console.log({ response });
+      console.log({ response, data });
 
       if (response.status === 201 || response.status === 200) {
         // Redirect to the original page or dashboard
@@ -41,7 +41,7 @@ export function LoginFormSection() {
         redirect(from);
       }
 
-      toast.error('Credenciais inválidas!');
+      return toast.error(data.message);
     } finally {
       setIsLoading(false);
     }
