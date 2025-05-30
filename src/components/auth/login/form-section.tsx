@@ -4,21 +4,23 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { authService } from '@/lib/api/services/auth-service';
+import { LoginFormData } from '@/types/login';
 import { ArrowRight, ChevronLeft, Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-// Define the shape of our form data
-type LoginFormData = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};
+import { toast } from 'sonner';
 
 export function LoginFormSection() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from') || '/dashboard';
 
   // Initialize react-hook-form
   const {
@@ -28,9 +30,20 @@ export function LoginFormSection() {
   } = useForm<LoginFormData>();
 
   // Placeholder onSubmit function
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
-    // Handle form submission logic here (e.g., API call)
+  const onSubmit = async (credentials: LoginFormData) => {
+    setIsLoading(true);
+    try {
+      const response = await authService.login(credentials);
+      console.log({ response });
+      if (!response.ok) {
+        return toast.error(response.data.message);
+      }
+
+      toast.success('Login com sucesso!');
+      router.push(from);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -89,8 +102,11 @@ export function LoginFormSection() {
                   // Register email input
                   {...register('email', { required: 'Email is required' })}
                 />
-                {/* Add error display if needed */}
-                {/* {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>} */}
+                {errors.email && (
+                  <p className='mt-1 text-sm text-red-500'>
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -135,8 +151,11 @@ export function LoginFormSection() {
                     <Eye className='h-5 w-5' />
                   )}
                 </button>
-                {/* Add error display if needed */}
-                {/* {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>} */}
+                {errors.password && (
+                  <p className='mt-1 text-sm text-red-500'>
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -144,7 +163,6 @@ export function LoginFormSection() {
               <Checkbox
                 id='remember'
                 className='text-primary focus:ring-primary rounded border-gray-300'
-                // Register checkbox
                 {...register('rememberMe')}
               />
               <Label
@@ -156,11 +174,14 @@ export function LoginFormSection() {
             </div>
 
             <Button
-              type='submit' // Change button type to submit
+              type='submit'
+              disabled={isLoading}
               className='group hover:from-primary/80 hover:to-primary flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-blue-800 to-blue-900 py-6 text-base font-medium text-white shadow-md transition-all duration-300 hover:shadow-lg'
             >
-              Entrar
-              <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
+              {isLoading ? 'Entrando...' : 'Entrar'}
+              {!isLoading && (
+                <ArrowRight className='ml-2 h-4 w-4 transition-transform duration-200 group-hover:translate-x-1' />
+              )}
             </Button>
           </form>
         </div>
