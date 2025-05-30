@@ -1,0 +1,31 @@
+# Node modules (will be installed in container)
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Local environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build output
+.next
+out
+dist
+
+# OS and IDE-specific files
+.DS_Store
+.vscode
+.idea
+
+# Docker-related
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# Git
+.git
+.gitignore
