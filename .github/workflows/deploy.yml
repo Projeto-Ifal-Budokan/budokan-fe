@@ -1,0 +1,97 @@
+jobs:
+  deploy:
+    name: Deploy to Contabo via HTTPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Start timer
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: SSH Deploy
+        id: deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.CONTABO_HOST }}
+          username: ${{ secrets.CONTABO_USER }}
+          key: ${{ secrets.CONTABO_KEY }}
+          script: |
+            cd /home/budokan/budokan-fe
+            ./deploy.sh
+
+      - name: Calculate duration
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "DEPLOY_DURATION=${DURATION}" >> $GITHUB_ENV
+
+      - name: Notify Discord (success)
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "username": "Deploy Bot",
+                 "content": "<@123456789012345678>",
+                 "embeds": [{
+                   "title": "✅ Deploy realizado com sucesso",
+                   "color": 5814783,
+                   "fields": [
+                     {
+                       "name": "🛠️ Repositório",
+                       "value": "'"${{ github.repository }}"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "🌿 Branch",
+                       "value": "'"${{ github.ref_name }}"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "⏱️ Duração",
+                       "value": "'"${{ env.DEPLOY_DURATION }} segundos"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "🔗 Ver Job",
+                       "value": "[Abrir Job](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                     }
+                   ],
+                   "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Notify Discord (failure)
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "username": "Deploy Bot",
+                 "content": "<@123456789012345678>",
+                 "embeds": [{
+                   "title": "❌ Deploy falhou",
+                   "color": 16711680,
+                   "fields": [
+                     {
+                       "name": "🛠️ Repositório",
+                       "value": "'"${{ github.repository }}"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "🌿 Branch",
+                       "value": "'"${{ github.ref_name }}"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "🔗 Ver Job",
+                       "value": "[Abrir Job](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                     }
+                   ],
+                   "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
+                 }]
+               }' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
