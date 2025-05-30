@@ -20,6 +20,4 @@ WORKDIR /opt/budokan-fe
 # Expõe a porta padrão da aplicação (altere se necessário)
 EXPOSE 3000
 
-# Comando para iniciar o app
-#ENTRYPOINT ["pnpm", "dev"]
-ENTRYPOINT ["pnpm", "build"]
+ENTRYPOINT ["pnpm", "start"]
