@@ -1,5 +1,5 @@
-import { LoginFormSection } from '@/components/auth/login/LoginFormSection';
+import { LoginFormSection } from '@/components/auth/login/form-section';
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return <LoginFormSection />;
 }

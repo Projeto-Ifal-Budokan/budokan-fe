@@ -5,11 +5,13 @@ export const personalInfoSchema = z.object({
   firstName: z
     .string()
     .min(2, { message: 'Nome deve ter pelo menos 2 caracteres' }),
-  lastName: z
+  surname: z
     .string()
     .min(2, { message: 'Sobrenome deve ter pelo menos 2 caracteres' }),
   phone: z.string().min(1, { message: 'Telefone é obrigatório' }),
   birthDate: z.string().min(1, { message: 'Data de nascimento é obrigatória' }),
+  isPractitioner: z.boolean(),
+  healthObservations: z.string().optional(),
 });
 
 export const accountInfoSchema = z
@@ -43,22 +45,18 @@ export const confirmationSchema = z.object({
 });
 
 // Combined schema for the entire form
-export const signupSchema = z
-  .object({
-    firstName: personalInfoSchema.shape.firstName,
-    lastName: personalInfoSchema.shape.lastName,
-    phone: personalInfoSchema.shape.phone,
-    birthDate: personalInfoSchema.shape.birthDate,
-    email: accountInfoSchema.innerType().shape.email,
-    password: accountInfoSchema.innerType().shape.password,
-    confirmPassword: accountInfoSchema.innerType().shape.confirmPassword,
-    isStudent: confirmationSchema.shape.isStudent,
-    termsAccepted: confirmationSchema.shape.termsAccepted,
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Senhas não coincidem',
-    path: ['confirmPassword'],
-  });
+export const signupSchema = z.object({
+  firstName: personalInfoSchema.shape.firstName,
+  surname: personalInfoSchema.shape.surname,
+  phone: personalInfoSchema.shape.phone,
+  birthDate: personalInfoSchema.shape.birthDate,
+  email: accountInfoSchema.innerType().shape.email,
+  password: accountInfoSchema.innerType().shape.password,
+  confirmPassword: accountInfoSchema.innerType().shape.confirmPassword,
+  isPractitioner: z.boolean(),
+  termsAccepted: confirmationSchema.shape.termsAccepted,
+  healthObservations: z.string().optional(),
+});
 
 // Type for the form data
 export type SignupFormData = z.infer<typeof signupSchema>;
