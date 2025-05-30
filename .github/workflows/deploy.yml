@@ -26,7 +26,7 @@ jobs:
           username: ${{ secrets.CONTABO_USER }}
           key: ${{ secrets.CONTABO_KEY }}
           script: |
-            cd /home/budokan/budokan-fe
+            cd /home/budokan
             ./deploy.sh
 
       - name: Calculate duration
