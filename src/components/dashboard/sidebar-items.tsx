@@ -4,11 +4,92 @@ import { User } from '@/types/user';
 export interface SidebarItem {
   label: string;
   href: string;
-  // icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: string;
   privilege?: string;
   privileges?: string[];
   requireAll?: boolean;
 }
+
+const sidebarItems: SidebarItem[] = [
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'Home',
+    privilege: 'view_discipline',
+  },
+
+  // Seção Aluno
+  {
+    label: 'Modalidades',
+    href: '/dashboard/modalidades',
+    icon: 'BookOpen',
+    privilege: 'view_discipline',
+  },
+  {
+    label: 'Aulas',
+    href: '/dashboard/aulas',
+    icon: 'Calendar',
+    privileges: ['view_matriculation', 'view_instructor_discipline'],
+  },
+  {
+    label: 'Frequência',
+    href: '/dashboard/frequencia',
+    icon: 'UserCheck',
+    privilege: 'view_matriculation',
+  },
+  {
+    label: 'Pagamentos',
+    href: '/dashboard/pagamentos',
+    icon: 'CreditCard',
+    privilege: 'view_matriculation',
+  },
+  {
+    label: 'Ranking',
+    href: '/dashboard/ranking',
+    icon: 'Trophy',
+    privilege: 'view_rank',
+  },
+
+  // Seção Instrutor
+  {
+    label: 'Gerenciar Aulas',
+    href: '/dashboard/instrutor/aulas',
+    icon: 'Calendar',
+    privilege: 'view_instructor_discipline',
+  },
+  {
+    label: 'Frequência das Turmas',
+    href: '/dashboard/instrutor/frequencias',
+    icon: 'UserCheck',
+    privilege: 'view_matriculation',
+  },
+  {
+    label: 'Pagamentos dos Alunos',
+    href: '/instrutor/pagamentos',
+    icon: 'DollarSign',
+    privilege: 'view_matriculation',
+  },
+  {
+    label: 'Horários das Disciplinas',
+    href: '/instrutor/horarios',
+    icon: 'Clock',
+    privilege: 'view_instructor_discipline',
+  },
+
+  // Compartilhados
+  {
+    label: 'Instrutores',
+    href: '/instrutores',
+    icon: 'Users',
+    privilege: 'list_users',
+  },
+  {
+    label: 'Horários de Treino',
+    href: '/horarios',
+    icon: 'Clock',
+    privilege: 'view_discipline',
+  },
+];
 
 export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
   try {
@@ -35,87 +116,6 @@ export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
     }
 
     const user = response.data;
-
-    const sidebarItems: SidebarItem[] = [
-      {
-        label: 'Dashboard',
-        href: '/dashboard',
-        // icon: Home,
-        privilege: 'view_discipline',
-      },
-
-      // Seção Aluno
-      {
-        label: 'Minhas Modalidades',
-        href: '/modalidades',
-        // icon: BookOpen,
-        privilege: 'view_discipline',
-      },
-      {
-        label: 'Minhas Aulas',
-        href: '/aulas',
-        // icon: Calendar,
-        privileges: ['view_matriculation', 'view_instructor_discipline'],
-      },
-      {
-        label: 'Minha Frequência',
-        href: '/frequencia',
-        // icon: UserCheck,
-        privilege: 'view_matriculation',
-      },
-      {
-        label: 'Meus Pagamentos',
-        href: '/pagamentos',
-        // icon: CreditCard,
-        privilege: 'view_matriculation',
-      },
-      {
-        label: 'Meu Ranking',
-        href: '/ranking',
-        // icon: Trophy,
-        privilege: 'view_rank',
-      },
-
-      // Seção Instrutor
-      {
-        label: 'Gerenciar Aulas',
-        href: '/instrutor/aulas',
-        // icon: Calendar,
-        privilege: 'view_instructor_discipline',
-      },
-      {
-        label: 'Frequência das Turmas',
-        href: '/instrutor/frequencias',
-        // icon: UserCheck,
-        privilege: 'view_matriculation',
-      },
-      {
-        label: 'Pagamentos dos Alunos',
-        href: '/instrutor/pagamentos',
-        // icon: DollarSign,
-        privilege: 'view_matriculation',
-      },
-      {
-        label: 'Horários das Disciplinas',
-        href: '/instrutor/horarios',
-        // icon: Clock,
-        privilege: 'view_instructor_discipline',
-      },
-
-      // Compartilhados
-      {
-        label: 'Instrutores',
-        href: '/instrutores',
-        // icon: Users,
-        privilege: 'list_users',
-      },
-      {
-        label: 'Horários de Treino',
-        href: '/horarios',
-        // icon: Clock,
-        privilege: 'view_discipline',
-      },
-    ];
 
     // Filter items based on user privileges
     const visibleItems = sidebarItems.filter((item) => {

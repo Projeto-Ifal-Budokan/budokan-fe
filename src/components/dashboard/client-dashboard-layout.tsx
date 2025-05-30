@@ -14,7 +14,7 @@ import Sidebar from './sidebar';
 export interface SidebarItem {
   label: string;
   href: string;
-  // icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: string;
   privilege?: string;
   privileges?: string[];
   requireAll?: boolean;

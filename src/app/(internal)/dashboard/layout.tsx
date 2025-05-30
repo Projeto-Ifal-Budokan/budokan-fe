@@ -1,23 +1,23 @@
 import type React from 'react';
 
 import { Breadcrumb } from '@/components/dashboard/breadcrumb';
+import { ClientDashboardLayout } from '@/components/dashboard/client-dashboard-layout';
+import { getSidebarItems } from '@/components/dashboard/sidebar-items';
+import { cookies } from 'next/headers';
 // import { Sidebar } from '@/components/dashboard/sidebar';
-
-import { ClientDashboardLayout } from './client-dashboard-layout';
-import { getSidebarItems } from './sidebar-items';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  cookies: string;
 }
 
 // This is now a Server Component (no 'use client')
-export async function DashboardLayout({
+export default async function DashboardLayout({
   children,
-  cookies,
-}: DashboardLayoutProps) {
+}: Readonly<DashboardLayoutProps>) {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
   // Fetch sidebar items on the server
-  const items = await getSidebarItems(cookies);
+  const items = await getSidebarItems(cookieHeader);
 
   return (
     <ClientDashboardLayout items={items}>
