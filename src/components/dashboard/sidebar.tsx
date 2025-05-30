@@ -21,18 +21,13 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { SidebarItem } from './sidebar-items';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   onToggle: () => void;
+  items: SidebarItem[];
 }
-
-// Mock user data - in a real app, this would come from authentication
-// const user = {
-//   name: 'João Silva',
-//   role: 'Administrador',
-//   avatar: '/placeholder.svg?height=32&width=32',
-// };
 
 // Navigation items
 const navItems = [
@@ -116,6 +111,7 @@ export default function Sidebar({
   className,
   isCollapsed,
   onToggle,
+  items,
   ...props
 }: SidebarProps) {
   const pathname = usePathname();
@@ -160,7 +156,7 @@ export default function Sidebar({
           {/* Navigation */}
           <ScrollArea className='flex-1 px-1'>
             <div className='flex flex-col gap-0.5 py-2'>
-              {navItems.map((item) => (
+              {items.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -172,10 +168,10 @@ export default function Sidebar({
                     isCollapsed && 'justify-center px-2'
                   )}
                 >
-                  <item.icon
+                  {/* <item.icon
                     className={cn('h-4 w-4', isCollapsed && 'h-5 w-5')}
-                  />
-                  {!isCollapsed && <span>{item.title}</span>}
+                  /> */}
+                  {!isCollapsed && <span>{item.label}</span>}
                 </Link>
               ))}
             </div>

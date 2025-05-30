@@ -4,6 +4,8 @@ export interface Role {
   description: string;
 }
 
+export interface Privilege extends Role {}
+
 export interface User {
   id: number;
   email: string;
@@ -11,6 +13,7 @@ export interface User {
   surname: string;
   status: 'active' | 'inactive';
   roles: Role[];
+  privileges: Privilege[];
 }
 
 export type CreateUserData = Omit<User, 'id' | 'roles' | 'status'> & {

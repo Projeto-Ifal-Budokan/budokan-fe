@@ -7,7 +7,10 @@ import { ApiError, authService } from '../services/auth-service';
 export function useAuth() {
   const me = useQuery<User, ApiError>({
     queryKey: ['auth', 'me'],
-    queryFn: authService.me,
+    queryFn: async () => {
+      const response = await authService.me();
+      return response.data;
+    },
     retry: 1,
   });
 
