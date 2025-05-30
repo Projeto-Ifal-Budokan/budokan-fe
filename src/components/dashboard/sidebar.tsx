@@ -1,7 +1,10 @@
 'use client';
 
+import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useAuth } from '@/lib/api/queries/useAuth';
+
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
@@ -18,7 +21,6 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type * as React from 'react';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
@@ -26,11 +28,11 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 // Mock user data - in a real app, this would come from authentication
-const user = {
-  name: 'João Silva',
-  role: 'Administrador',
-  avatar: '/placeholder.svg?height=32&width=32',
-};
+// const user = {
+//   name: 'João Silva',
+//   role: 'Administrador',
+//   avatar: '/placeholder.svg?height=32&width=32',
+// };
 
 // Navigation items
 const navItems = [
@@ -76,7 +78,41 @@ const navItems = [
   },
 ];
 
-export function Sidebar({
+export function UserInfo() {
+  const { me } = useAuth();
+  const { data: user, isLoading } = me;
+
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  return (
+    <div className='flex items-center gap-2'>
+      <div className='relative h-7 w-7 overflow-hidden rounded-full'>
+        {/* {user.avatar ? (
+          <Image
+            src={user.avatar}
+            alt={`${me.data?.firstName} ${me.data?.surname}`}
+            fill
+            className='object-cover'
+          />
+        ) : ( */}
+        <UserCircle className='h-full w-full text-white/70' />
+        {/* )} */}
+      </div>
+      <div className='flex flex-col'>
+        <span className='text-sm font-medium text-orange-300'>
+          {user?.firstName} {user?.surname}
+        </span>
+        <span className='text-xs text-white/70'>
+          {user?.roles[0]?.name || 'Usuário'}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export default function Sidebar({
   className,
   isCollapsed,
   onToggle,
@@ -131,8 +167,8 @@ export function Sidebar({
                   className={cn(
                     'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
                     pathname === item.href
-                      ? 'bg-primary-foreground/10 font-medium text-primary'
-                      : 'hover:bg-primary-foreground/10 text-white hover:text-primary/80',
+                      ? 'bg-primary-foreground/10 text-primary font-medium'
+                      : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
                     isCollapsed && 'justify-center px-2'
                   )}
                 >
@@ -145,31 +181,21 @@ export function Sidebar({
             </div>
           </ScrollArea>
 
-          {/* User section */}
           <div className='border-t p-3'>
             <div
               className={cn(
-                'flex items-center gap-2',
+                'flex items-center justify-between gap-2',
                 isCollapsed && 'justify-center'
               )}
             >
-              <img
-                src={user.avatar || '/placeholder.svg'}
-                alt={user.name}
-                className='h-7 w-7 rounded-full'
-              />
+              <UserInfo />
               {!isCollapsed && (
-                <div className='flex flex-col'>
-                  <span className='text-sm font-medium text-orange-300'>
-                    {user.name}
-                  </span>
-                  <span className='text-xs text-white/70'>{user.role}</span>
-                </div>
-              )}
-              {!isCollapsed && (
-                <Link href='/login' className='ml-auto'>
-                  <LogOut className='h-4 w-4 text-white/70 hover:text-orange-300' />
-                </Link>
+                <LogOut
+                  className='h-4 w-4 text-white/70 hover:text-orange-300'
+                  onClick={() => {
+                    logoutAction();
+                  }}
+                />
               )}
             </div>
           </div>

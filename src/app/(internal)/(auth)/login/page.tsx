@@ -1,11 +1,5 @@
-import { LoginFormSection } from '@/components/auth/login/LoginFormSection';
-import { LoginImageSection } from '@/components/auth/login/LoginImageSection';
+import { LoginFormSection } from '@/components/auth/login/form-section';
 
-export default function LoginPage() {
-  return (
-    <div className='flex min-h-screen'>
-      <LoginImageSection />
-      <LoginFormSection />
-    </div>
-  );
+export default async function LoginPage() {
+  return <LoginFormSection />;
 }
