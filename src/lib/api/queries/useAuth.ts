@@ -1,8 +1,9 @@
 'use client';
 
+import { ApiError } from '@/types/api';
 import { User } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ApiError, authService } from '../services/auth-service';
+import { authService } from '../services/auth-service';
 
 export function useAuth() {
   const queryClient = useQueryClient();
