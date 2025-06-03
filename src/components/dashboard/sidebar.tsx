@@ -114,7 +114,13 @@ export default function Sidebar({
   items,
   ...props
 }: SidebarProps) {
+  const { clearAuthCache } = useAuth();
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    clearAuthCache(); // Clear the cache before logging out
+    await logoutAction();
+  };
 
   return (
     <div className='relative h-full'>
@@ -188,9 +194,7 @@ export default function Sidebar({
               {!isCollapsed && (
                 <LogOut
                   className='h-4 w-4 text-white/70 hover:text-orange-300'
-                  onClick={() => {
-                    logoutAction();
-                  }}
+                  onClick={handleLogout}
                 />
               )}
             </div>

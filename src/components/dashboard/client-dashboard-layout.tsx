@@ -10,15 +10,7 @@ import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Sidebar from './sidebar';
-
-export interface SidebarItem {
-  label: string;
-  href: string;
-  icon: string;
-  privilege?: string;
-  privileges?: string[];
-  requireAll?: boolean;
-}
+import { type SidebarItem } from './sidebar-items';
 
 interface ClientDashboardLayoutProps {
   children: React.ReactNode;

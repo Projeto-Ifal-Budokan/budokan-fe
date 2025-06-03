@@ -1,144 +1,265 @@
 import { api } from '@/lib/api/client';
+import { PRIVILEGES, type PrivilegeType } from '@/types/privileges';
 import { User } from '@/types/user';
 
 export interface SidebarItem {
   label: string;
   href: string;
   icon: string;
-  privilege?: string;
-  privileges?: string[];
+  privilege?: PrivilegeType;
+  privileges?: PrivilegeType[];
   requireAll?: boolean;
 }
 
-const sidebarItems: SidebarItem[] = [
+const studentSidebarItems: SidebarItem[] = [
   {
     label: 'Dashboard',
     href: '/dashboard',
     icon: 'Home',
-    privilege: 'view_discipline',
+    privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
-
-  // Seção Aluno
   {
-    label: 'Modalidades',
-    href: '/dashboard/modalidades',
+    label: 'Minhas Modalidades',
+    href: '/dashboard/my-disciplines',
     icon: 'BookOpen',
-    privilege: 'view_discipline',
+    privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
   {
     label: 'Aulas',
-    href: '/dashboard/aulas',
+    href: '/dashboard/classes',
     icon: 'Calendar',
-    privileges: ['view_matriculation', 'view_instructor_discipline'],
+    privilege: PRIVILEGES.VIEW_MATRICULATION,
   },
   {
     label: 'Frequência',
-    href: '/dashboard/frequencia',
+    href: '/dashboard/attendance',
     icon: 'UserCheck',
-    privilege: 'view_matriculation',
-  },
-  {
-    label: 'Pagamentos',
-    href: '/dashboard/pagamentos',
-    icon: 'CreditCard',
-    privilege: 'view_matriculation',
-  },
-  {
-    label: 'Ranking',
-    href: '/dashboard/ranking',
-    icon: 'Trophy',
-    privilege: 'view_rank',
-  },
-
-  // Seção Instrutor
-  {
-    label: 'Gerenciar Aulas',
-    href: '/dashboard/instrutor/aulas',
-    icon: 'Calendar',
-    privilege: 'view_instructor_discipline',
-  },
-  {
-    label: 'Frequência das Turmas',
-    href: '/dashboard/instrutor/frequencias',
-    icon: 'UserCheck',
-    privilege: 'view_matriculation',
-  },
-  {
-    label: 'Pagamentos dos Alunos',
-    href: '/instrutor/pagamentos',
-    icon: 'DollarSign',
-    privilege: 'view_matriculation',
-  },
-  {
-    label: 'Horários das Disciplinas',
-    href: '/instrutor/horarios',
-    icon: 'Clock',
-    privilege: 'view_instructor_discipline',
-  },
-
-  // Compartilhados
-  {
-    label: 'Instrutores',
-    href: '/instrutores',
-    icon: 'Users',
-    privilege: 'list_users',
+    privilege: PRIVILEGES.VIEW_MATRICULATION,
   },
   {
     label: 'Horários de Treino',
-    href: '/horarios',
+    href: '/dashboard/training-schedule',
     icon: 'Clock',
-    privilege: 'view_discipline',
+    privilege: PRIVILEGES.VIEW_DISCIPLINE,
+  },
+  {
+    label: 'Comunidade',
+    href: '/dashboard/community',
+    icon: 'Users',
+    privilege: PRIVILEGES.VIEW_USER,
+  },
+  {
+    label: 'Ranking & Exames',
+    href: '/dashboard/ranking',
+    icon: 'Trophy',
+    privileges: [PRIVILEGES.VIEW_RANK, PRIVILEGES.CREATE_RANK],
+  },
+  {
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
   },
 ];
 
+const instructorSidebarItems: SidebarItem[] = [
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'Home',
+    privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+  },
+  {
+    label: 'Minhas Disciplinas',
+    href: '/dashboard/my-disciplines',
+    icon: 'BookOpen',
+    privileges: [PRIVILEGES.LIST_DISCIPLINES, PRIVILEGES.VIEW_DISCIPLINE],
+  },
+  {
+    label: 'Aulas',
+    href: '/dashboard/classes',
+    icon: 'Calendar',
+    privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+  },
+  {
+    label: 'Controle de Frequência',
+    href: '/dashboard/attendance',
+    icon: 'UserCheck',
+    privilege: PRIVILEGES.VIEW_MATRICULATION,
+  },
+  {
+    label: 'Horários das Disciplinas',
+    href: '/dashboard/discipline-schedule',
+    icon: 'Clock',
+    privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+  },
+  {
+    label: 'Comunidade',
+    href: '/dashboard/community',
+    icon: 'Users',
+    privileges: [PRIVILEGES.LIST_USERS, PRIVILEGES.VIEW_USER],
+  },
+  {
+    label: 'Exames de Ranking',
+    href: '/dashboard/ranking-exams',
+    icon: 'Trophy',
+    privileges: [PRIVILEGES.LIST_RANKS, PRIVILEGES.VIEW_RANK],
+  },
+  {
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
+  },
+];
+
+const adminSidebarItems: SidebarItem[] = [
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'Home',
+    privilege: PRIVILEGES.LIST_USERS,
+  },
+  {
+    label: 'Gerenciar Usuários',
+    href: '/dashboard/users',
+    icon: 'Users',
+    privileges: [
+      PRIVILEGES.LIST_USERS,
+      PRIVILEGES.VIEW_USER,
+      PRIVILEGES.UPDATE_USER,
+      PRIVILEGES.DELETE_USER,
+    ],
+  },
+  {
+    label: 'Gerenciar Papéis',
+    href: '/dashboard/roles',
+    icon: 'Shield',
+    privileges: [
+      PRIVILEGES.LIST_ROLES,
+      PRIVILEGES.VIEW_ROLE,
+      PRIVILEGES.CREATE_ROLE,
+      PRIVILEGES.UPDATE_ROLE,
+      PRIVILEGES.DELETE_ROLE,
+    ],
+  },
+  {
+    label: 'Gerenciar Privilégios',
+    href: '/dashboard/privileges',
+    icon: 'Key',
+    privileges: [
+      PRIVILEGES.LIST_PRIVILEGES,
+      PRIVILEGES.VIEW_PRIVILEGE,
+      PRIVILEGES.CREATE_PRIVILEGE,
+      PRIVILEGES.UPDATE_PRIVILEGE,
+      PRIVILEGES.DELETE_PRIVILEGE,
+    ],
+  },
+  {
+    label: 'Gerenciar Modalidades',
+    href: '/dashboard/disciplines',
+    icon: 'BookOpen',
+    privileges: [
+      PRIVILEGES.LIST_DISCIPLINES,
+      PRIVILEGES.VIEW_DISCIPLINE,
+      PRIVILEGES.CREATE_DISCIPLINE,
+      PRIVILEGES.UPDATE_DISCIPLINE,
+      PRIVILEGES.DELETE_DISCIPLINE,
+    ],
+  },
+  {
+    label: 'Gerenciar Rankings',
+    href: '/dashboard/rankings',
+    icon: 'Trophy',
+    privileges: [
+      PRIVILEGES.LIST_RANKS,
+      PRIVILEGES.VIEW_RANK,
+      PRIVILEGES.CREATE_RANK,
+      PRIVILEGES.UPDATE_RANK,
+      PRIVILEGES.DELETE_RANK,
+    ],
+  },
+  {
+    label: 'Gerenciar Matrículas',
+    href: '/dashboard/matriculations',
+    icon: 'UserPlus',
+    privileges: [
+      PRIVILEGES.LIST_MATRICULATIONS,
+      PRIVILEGES.VIEW_MATRICULATION,
+      PRIVILEGES.CREATE_MATRICULATION,
+      PRIVILEGES.UPDATE_MATRICULATION,
+      PRIVILEGES.DELETE_MATRICULATION,
+    ],
+  },
+  {
+    label: 'Gerenciar Instrutores',
+    href: '/dashboard/instructors',
+    icon: 'Users',
+    privileges: [
+      PRIVILEGES.LIST_INSTRUCTOR_DISCIPLINES,
+      PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+      PRIVILEGES.CREATE_INSTRUCTOR_DISCIPLINE,
+      PRIVILEGES.UPDATE_INSTRUCTOR_DISCIPLINE,
+      PRIVILEGES.DELETE_INSTRUCTOR_DISCIPLINE,
+    ],
+  },
+  {
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
+  },
+];
+
+// Update the getSidebarItems function to handle different profiles
 export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
   try {
-    // const response = await fetch('http://localhost:3000/auth/me', {
-    //   method: 'GET',
-    //   credentials: 'include',
-
-    // });
-
-    // Make the API request with cookies
     const response = await api.get<User>('/auth/me', {
       headers: {
         Cookie: cookies,
       },
-      // Disable throwing on HTTP errors to handle 401 gracefully
       throwOnHttpError: false,
     });
-    // const response = await authService.me();
 
     if (!response.ok) {
-      // If the response is not ok (e.g., 401 Unauthorized), return empty array
       console.error('Failed to fetch user data:', response.status);
       return [];
     }
 
     const user = response.data;
+    const userPrivileges = user.privileges.map((p: { name: string }) => p.name);
 
-    // Filter items based on user privileges
-    const visibleItems = sidebarItems.filter((item) => {
-      if (!item.privilege && !item.privileges) return true;
-      if (item.privilege)
-        return user.privileges.some(
-          (p: { name: string }) => p.name === item.privilege
-        );
-      if (item.privileges) {
-        return item.requireAll
-          ? item.privileges.every((p) =>
-              user.privileges.some((priv: { name: string }) => priv.name === p)
-            )
-          : item.privileges.some((p) =>
-              user.privileges.some((priv: { name: string }) => priv.name === p)
-            );
-      }
-      return false;
-    });
+    // Check if user has all privileges (admin)
+    const allPrivileges = Object.values(PRIVILEGES);
+    const isAdmin = allPrivileges.every((privilege) =>
+      userPrivileges.includes(privilege)
+    );
 
-    console.log({ visibleItems: visibleItems[0] });
+    // Check if user is instructor
+    const instructorPrivileges = [
+      PRIVILEGES.LIST_USERS,
+      PRIVILEGES.VIEW_USER,
+      PRIVILEGES.LIST_DISCIPLINES,
+      PRIVILEGES.VIEW_DISCIPLINE,
+      PRIVILEGES.LIST_RANKS,
+      PRIVILEGES.VIEW_RANK,
+      PRIVILEGES.LIST_MATRICULATIONS,
+      PRIVILEGES.VIEW_MATRICULATION,
+      PRIVILEGES.LIST_INSTRUCTOR_DISCIPLINES,
+      PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+    ];
 
-    return visibleItems;
+    const isInstructor = instructorPrivileges.every((privilege) =>
+      userPrivileges.includes(privilege)
+    );
+
+    if (isAdmin) {
+      return adminSidebarItems;
+    } else if (isInstructor) {
+      return instructorSidebarItems;
+    } else {
+      return studentSidebarItems;
+    }
   } catch (error) {
     console.error('Error fetching user data:', error);
     return [];

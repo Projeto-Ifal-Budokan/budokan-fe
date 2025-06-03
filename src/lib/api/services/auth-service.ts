@@ -18,12 +18,7 @@ interface ResponseApi {
 
 export const authService = {
   me: async (): Promise<ApiResponse<User>> => {
-    const response = await api.get<User>('/auth/me', {
-      cache: 'force-cache',
-      next: {
-        revalidate: 60,
-      },
-    });
+    const response = await api.get<User>('/auth/me');
     return response;
   },
 
