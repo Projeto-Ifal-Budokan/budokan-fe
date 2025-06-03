@@ -128,7 +128,7 @@ export default function Sidebar({
       <div
         className={cn(
           'group h-full overflow-hidden border-r bg-blue-900 text-white transition-all duration-300',
-          isCollapsed ? 'w-[70px]' : 'w-[240px]',
+          isCollapsed ? 'w-20' : 'w-[240px]',
           className
         )}
         {...props}
@@ -192,10 +192,9 @@ export default function Sidebar({
             >
               <UserInfo />
               {!isCollapsed && (
-                <LogOut
-                  className='h-4 w-4 text-white/70 hover:text-orange-300'
-                  onClick={handleLogout}
-                />
+                <Button variant='ghost' size='icon' onClick={handleLogout}>
+                  <LogOut className='h-4 w-4 text-white/70 hover:text-orange-300' />
+                </Button>
               )}
             </div>
           </div>
