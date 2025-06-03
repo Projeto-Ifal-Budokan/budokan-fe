@@ -1,6 +1,9 @@
-import { api } from '@/lib/api/client';
-import { PRIVILEGES, type PrivilegeType } from '@/types/privileges';
-import { User } from '@/types/user';
+import { authService } from '@/lib/api/services/auth-service';
+import {
+  INSTRUCTOR_PRIVILEGES,
+  PRIVILEGES,
+  type PrivilegeType,
+} from '@/types/privileges';
 
 export interface SidebarItem {
   label: string;
@@ -211,15 +214,9 @@ const adminSidebarItems: SidebarItem[] = [
   },
 ];
 
-// Update the getSidebarItems function to handle different profiles
 export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
   try {
-    const response = await api.get<User>('/auth/me', {
-      headers: {
-        Cookie: cookies,
-      },
-      throwOnHttpError: false,
-    });
+    const response = await authService.me(cookies);
 
     if (!response.ok) {
       console.error('Failed to fetch user data:', response.status);
@@ -235,21 +232,8 @@ export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
       userPrivileges.includes(privilege)
     );
 
-    // Check if user is instructor
-    const instructorPrivileges = [
-      PRIVILEGES.LIST_USERS,
-      PRIVILEGES.VIEW_USER,
-      PRIVILEGES.LIST_DISCIPLINES,
-      PRIVILEGES.VIEW_DISCIPLINE,
-      PRIVILEGES.LIST_RANKS,
-      PRIVILEGES.VIEW_RANK,
-      PRIVILEGES.LIST_MATRICULATIONS,
-      PRIVILEGES.VIEW_MATRICULATION,
-      PRIVILEGES.LIST_INSTRUCTOR_DISCIPLINES,
-      PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
-    ];
-
-    const isInstructor = instructorPrivileges.every((privilege) =>
+    // Check if user is instructor using the constant
+    const isInstructor = INSTRUCTOR_PRIVILEGES.every((privilege) =>
       userPrivileges.includes(privilege)
     );
 

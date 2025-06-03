@@ -17,8 +17,10 @@ interface ResponseApi {
 }
 
 export const authService = {
-  me: async (): Promise<ApiResponse<User>> => {
-    const response = await api.get<User>('/auth/me');
+  me: async (cookies?: string): Promise<ApiResponse<User>> => {
+    const response = await api.get<User>('/auth/me', {
+      headers: cookies ? { Cookie: cookies } : undefined,
+    });
     return response;
   },
 

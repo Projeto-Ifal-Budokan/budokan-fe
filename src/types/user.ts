@@ -14,6 +14,8 @@ export interface User {
   status: 'active' | 'inactive';
   roles: Role[];
   privileges: Privilege[];
+  birthDate: string;
+  phone: string;
 }
 
 export type CreateUserData = Omit<User, 'id' | 'roles' | 'status'> & {
