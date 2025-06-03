@@ -12,27 +12,25 @@ export const userKeys = {
   detail: (id: string) => [...userKeys.details(), id] as const,
 } as const;
 
+const getUserQuery = (id: string) => ({
+  queryKey: userKeys.detail(id),
+  queryFn: async () => {
+    const response = await userService.getUser(id);
+    return response.data;
+  },
+});
+
+const listUsersQuery = () => ({
+  queryKey: userKeys.lists(),
+  queryFn: async () => {
+    const response = await userService.listUsers();
+    return response.data;
+  },
+});
+
 export function useManageUsers() {
   const queryClient = useQueryClient();
 
-  // These return query objects that won't execute until called
-  const getUserQuery = (id: string) => ({
-    queryKey: userKeys.detail(id),
-    queryFn: async () => {
-      const response = await userService.getUser(id);
-      return response.data;
-    },
-  });
-
-  const listUsersQuery = () => ({
-    queryKey: userKeys.lists(),
-    queryFn: async () => {
-      const response = await userService.listUsers();
-      return response.data;
-    },
-  });
-
-  // You can use these with queryClient.fetchQuery() when needed
   const fetchUser = async (id: string) => {
     return await queryClient.fetchQuery(getUserQuery(id));
   };

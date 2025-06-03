@@ -15,8 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/lib/api/queries/use-auth';
 import { useManageUsers } from '@/lib/api/queries/use-manage-users';
-import { useAuth } from '@/lib/api/queries/useAuth';
 import { User } from '@/types/user';
 import { hasAccess } from '@/utils/access-control';
 import {
