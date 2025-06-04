@@ -52,3 +52,14 @@ export async function handleUnauthorized() {
   // Redirect to login page
   redirect('/login');
 }
+
+// Add this new server action
+export async function handleNotAccessPage() {
+  // Delete the auth cookie
+
+  // Revalidate relevant paths
+  revalidatePath('/');
+
+  // Redirect to login page
+  redirect('/dashboard');
+}
