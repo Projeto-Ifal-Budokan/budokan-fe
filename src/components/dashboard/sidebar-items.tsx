@@ -22,6 +22,12 @@ const studentSidebarItems: SidebarItem[] = [
     privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
   {
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
+  },
+  {
     label: 'Minhas Modalidades',
     href: '/dashboard/my-disciplines',
     icon: 'BookOpen',
@@ -56,12 +62,6 @@ const studentSidebarItems: SidebarItem[] = [
     href: '/dashboard/ranking',
     icon: 'Trophy',
     privileges: [PRIVILEGES.VIEW_RANK, PRIVILEGES.CREATE_RANK],
-  },
-  {
-    label: 'Meu Perfil',
-    href: '/dashboard/profile',
-    icon: 'User',
-    privilege: PRIVILEGES.VIEW_USER,
   },
 ];
 

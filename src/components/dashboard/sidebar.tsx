@@ -12,15 +12,23 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  Clock,
   CreditCard,
   Home,
+  Key,
   LogOut,
+  Shield,
+  Trophy,
+  User,
+  UserCheck,
   UserCircle,
+  UserPlus,
   Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { createElement } from 'react';
 import { SidebarItem } from './sidebar-items';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -72,6 +80,21 @@ const navItems = [
     icon: BarChart3,
   },
 ];
+
+// Add this icon mapping object
+const iconMap: { [key: string]: any } = {
+  Home,
+  BookOpen,
+  Calendar,
+  UserCheck,
+  Clock,
+  Users,
+  Trophy,
+  User,
+  Shield,
+  Key,
+  UserPlus,
+};
 
 export function UserInfo() {
   const { me } = useAuth();
@@ -162,24 +185,28 @@ export default function Sidebar({
           {/* Navigation */}
           <ScrollArea className='flex-1 px-1'>
             <div className='flex flex-col gap-0.5 py-2'>
-              {items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-                    pathname === item.href
-                      ? 'bg-primary-foreground/10 text-primary font-medium'
-                      : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
-                    isCollapsed && 'justify-center px-2'
-                  )}
-                >
-                  {/* <item.icon
-                    className={cn('h-4 w-4', isCollapsed && 'h-5 w-5')}
-                  /> */}
-                  {!isCollapsed && <span>{item.label}</span>}
-                </Link>
-              ))}
+              {items.map((item) => {
+                const IconComponent = iconMap[item.icon];
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
+                      pathname === item.href
+                        ? 'bg-primary-foreground/10 text-primary font-medium'
+                        : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
+                      isCollapsed && 'justify-center px-2'
+                    )}
+                  >
+                    {IconComponent &&
+                      createElement(IconComponent, {
+                        className: cn('h-4 w-4', isCollapsed && 'h-5 w-5'),
+                      })}
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
             </div>
           </ScrollArea>
 
