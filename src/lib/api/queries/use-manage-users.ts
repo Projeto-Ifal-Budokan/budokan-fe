@@ -1,15 +1,15 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../services/user-service';
 
 export const userKeys = {
   all: ['users'] as const,
+  detail: (id: string) => [...userKeys.all, Number(id)] as const,
   lists: () => [...userKeys.all, 'list'] as const,
   list: (filters?: Record<string, unknown>) =>
     [...userKeys.lists(), { filters }] as const,
   details: () => [...userKeys.all, 'detail'] as const,
-  detail: (id: string) => [...userKeys.details(), id] as const,
 } as const;
 
 const getUserQuery = (id: string) => ({
@@ -31,6 +31,13 @@ const listUsersQuery = () => ({
 export function useManageUsers() {
   const queryClient = useQueryClient();
 
+  const useUser = (id: string) => {
+    return useQuery({
+      ...getUserQuery(id),
+      enabled: !!id, // Only run if id exists
+    });
+  };
+
   const fetchUser = async (id: string) => {
     return await queryClient.fetchQuery(getUserQuery(id));
   };
@@ -50,12 +57,12 @@ export function useManageUsers() {
     mutationFn: userService.updateUser,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
-      // queryClient.invalidateQueries({ queryKey: ['users', variables.id] });
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
     },
   });
 
   return {
+    useUser,
     fetchUser,
     fetchUsers,
     deleteUser,

@@ -124,7 +124,13 @@ const adminSidebarItems: SidebarItem[] = [
     privilege: PRIVILEGES.LIST_USERS,
   },
   {
-    label: 'Gerenciar Usuários',
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
+  },
+  {
+    label: 'Usuários',
     href: '/dashboard/users',
     icon: 'Users',
     privileges: [
@@ -135,7 +141,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Papéis',
+    label: 'Papéis',
     href: '/dashboard/roles',
     icon: 'Shield',
     privileges: [
@@ -147,7 +153,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Privilégios',
+    label: 'Privilégios',
     href: '/dashboard/privileges',
     icon: 'Key',
     privileges: [
@@ -159,7 +165,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Modalidades',
+    label: 'Modalidades',
     href: '/dashboard/disciplines',
     icon: 'BookOpen',
     privileges: [
@@ -171,7 +177,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Rankings',
+    label: ' Rankings',
     href: '/dashboard/rankings',
     icon: 'Trophy',
     privileges: [
@@ -183,7 +189,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Matrículas',
+    label: ' Matrículas',
     href: '/dashboard/matriculations',
     icon: 'UserPlus',
     privileges: [
@@ -195,7 +201,7 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
-    label: 'Gerenciar Instrutores',
+    label: 'Instrutores',
     href: '/dashboard/instructors',
     icon: 'Users',
     privileges: [
@@ -205,12 +211,6 @@ const adminSidebarItems: SidebarItem[] = [
       PRIVILEGES.UPDATE_INSTRUCTOR_DISCIPLINE,
       PRIVILEGES.DELETE_INSTRUCTOR_DISCIPLINE,
     ],
-  },
-  {
-    label: 'Meu Perfil',
-    href: '/dashboard/profile',
-    icon: 'User',
-    privilege: PRIVILEGES.VIEW_USER,
   },
 ];
 
