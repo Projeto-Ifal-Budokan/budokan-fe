@@ -6,9 +6,10 @@ import type React from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
-import { cn } from '@/lib/utils';
 import { Menu } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Breadcrumb } from './breadcrumb';
 import Sidebar from './sidebar';
 import { type SidebarItem } from './sidebar-items';
 
@@ -23,6 +24,7 @@ export function ClientDashboardLayout({
 }: ClientDashboardLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
   // Handle responsive behavior
   useEffect(() => {
@@ -52,7 +54,7 @@ export function ClientDashboardLayout({
   };
 
   return (
-    <div className='flex min-h-screen overflow-hidden bg-gray-100'>
+    <div className='flex h-screen overflow-hidden bg-gray-100'>
       {/* Desktop Sidebar */}
       <div className='hidden lg:block'>
         <Sidebar
@@ -80,16 +82,20 @@ export function ClientDashboardLayout({
           <Sidebar isCollapsed={false} onToggle={() => {}} items={items} />
         </SheetContent>
       </Sheet>
+      {/* Main Content Area */}
+      <div className='flex flex-1 flex-col overflow-hidden'>
+        {/* Header */}
+        {pathname !== '/dashboard' ? (
+          <header className='flex-shrink-0 items-center border-b bg-white px-4 py-4 shadow-sm md:px-6'>
+            <Breadcrumb />
+          </header>
+        ) : null}
 
-      {/* Main Content */}
-      <main
-        className={cn(
-          'flex-1 transition-all duration-300 ease-in-out',
-          isMobile ? 'w-full' : isCollapsed ? 'lg:ml-[20px]' : 'lg:ml-[30px]'
-        )}
-      >
-        {children}
-      </main>
+        {/* Scrollable Content */}
+        <main className='flex-1 overflow-auto bg-gray-100'>
+          <div className='h-full p-4 md:p-6'>{children}</div>
+        </main>
+      </div>
     </div>
   );
 }
