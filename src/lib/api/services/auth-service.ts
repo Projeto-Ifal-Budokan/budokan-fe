@@ -42,7 +42,7 @@ export const authService = {
 
   forgotPassword: async (data: { email: string }): Promise<ResponseApi> => {
     const { data: responseData } = await api.post<ResponseApi>(
-      '/auth/forgot-password',
+      'http://localhost:8001/auth/forgot-password',
       data
     );
     return responseData;
