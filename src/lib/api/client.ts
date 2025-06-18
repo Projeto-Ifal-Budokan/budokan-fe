@@ -117,7 +117,7 @@ export async function apiRequest<T>(
 
       toast.error(errorMessage);
       DEBUG &&
-        console.error('❌ API Error:', {
+        console.error('API Error:', {
           url,
           status: response.status,
           errorMessage,
