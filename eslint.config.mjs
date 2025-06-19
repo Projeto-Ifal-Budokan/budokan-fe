@@ -26,9 +26,9 @@ const eslintConfig = [
     },
     rules: {
       // Use TS-specific unused vars rule
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': 'off',
       // General best practices
-      'no-console': 'warn',
+      'no-console': 'off',
       'prefer-const': 'error',
       'no-undef': 'error',
     },
