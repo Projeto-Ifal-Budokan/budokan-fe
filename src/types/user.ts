@@ -18,10 +18,17 @@ export interface User {
   phone: string;
 }
 
-export type CreateUserData = Omit<User, 'id' | 'roles' | 'status'> & {
+export type CreateUserData = Omit<
+  User,
+  'id' | 'roles' | 'status' | 'privileges'
+> & {
   password: string;
   phone: string;
-  birthDate: Date;
+  birthDate: string;
   isPractitioner: boolean;
   healthObservations: string;
+  emergencyContacts: {
+    phone: string;
+    relationship: string;
+  }[];
 };

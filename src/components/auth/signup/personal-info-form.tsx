@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import IMask from 'imask';
-import { AlertCircle, Calendar, Phone } from 'lucide-react';
+import { AlertCircle, Calendar, Phone, User } from 'lucide-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { SignupFormData } from '../../../types/signup-types';
 
@@ -21,6 +21,15 @@ export function PersonalInfoForm() {
       transition={{ duration: 0.3 }}
       className='space-y-6'
     >
+      <div className='text-center'>
+        <div className='mb-4 flex justify-center'>
+          <div className='rounded-full bg-blue-100 p-3'>
+            <User className='h-8 w-8 text-blue-600' />
+          </div>
+        </div>
+        <h3 className='text-xl font-bold text-gray-900'>Dados Pessoais</h3>
+      </div>
+
       <div className='grid grid-cols-2 gap-4'>
         <div className='space-y-2'>
           <Label
