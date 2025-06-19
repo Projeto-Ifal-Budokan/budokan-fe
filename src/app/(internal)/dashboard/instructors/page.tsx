@@ -126,7 +126,7 @@ const instrutores = [
 export default function InstrutoresManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [selectedInstrutor, setSelectedInstrutor] = useState(null);
+  // const [selectedInstrutor, setSelectedInstrutor] = useState(null);
   const [viewMode, setViewMode] = useState('cards'); // cards or table
 
   const filteredInstrutores = instrutores.filter(

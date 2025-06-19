@@ -36,7 +36,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { ProfileSkeleton } from './profile-skeleton';
 
-interface UserProfile extends User {}
+type UserProfile = User;
 
 export default function ProfilePage() {
   const { me } = useAuth();
@@ -62,9 +62,9 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR');
-  };
+  // const formatDate = (dateString: string) => {
+  //   return new Date(dateString).toLocaleDateString('pt-BR');
+  // };
 
   const getInitials = (firstName: string, surname: string) => {
     if (!firstName || !surname) return '';

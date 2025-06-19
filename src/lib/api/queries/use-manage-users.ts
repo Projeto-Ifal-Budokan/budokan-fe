@@ -55,7 +55,7 @@ export function useManageUsers() {
 
   const updateUser = useMutation({
     mutationFn: userService.updateUser,
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
     },

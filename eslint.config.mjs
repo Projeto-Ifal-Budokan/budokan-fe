@@ -13,7 +13,7 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js'],
+    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser,
       parserOptions: {
@@ -24,22 +24,32 @@ const eslintConfig = [
         },
       },
     },
+    rules: {
+      // Use TS-specific unused vars rule
+      '@typescript-eslint/no-unused-vars': 'warn',
+      // General best practices
+      'no-console': 'warn',
+      'prefer-const': 'error',
+      'no-undef': 'error',
+    },
   },
   {
+    files: ['**/*.js'],
     rules: {
-      // React specific rules
-      'react/prop-types': 'error',
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-      'react/no-unused-prop-types': 'warn',
-      'react/jsx-no-duplicate-props': 'error',
-      'react/jsx-key': 'error',
-
-      // General best practices
       'no-unused-vars': 'warn',
       'no-console': 'warn',
       'prefer-const': 'error',
       'no-undef': 'error',
+    },
+  },
+  {
+    // React rules for all files (remove jsx-uses-react for React 17+)
+    rules: {
+      'react/prop-types': 'error',
+      'react/jsx-uses-vars': 'error',
+      'react/no-unused-prop-types': 'warn',
+      'react/jsx-no-duplicate-props': 'error',
+      'react/jsx-key': 'error',
     },
   },
 ];

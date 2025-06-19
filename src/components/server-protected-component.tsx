@@ -1,11 +1,12 @@
 import { getUserPrivileges } from '@/lib/auth';
+import { ReactNode } from 'react';
 
 interface ServerProtectedComponentProps {
   privilege?: string;
   privileges?: string[];
   requireAll?: boolean;
-  fallback?: React.ReactNode;
-  children: React.ReactNode;
+  fallback?: ReactNode;
+  children: ReactNode;
 }
 
 export async function ServerProtectedComponent({

@@ -84,10 +84,10 @@ export const HistorySection = () => {
               </h3>
               <p className='text-gray-600'>
                 Mantemos vivos os valores tradicionais da Arquearia, resumidos
-                no conceito de "Shin-Zen-Bi" (Verdade-Bondade-Beleza). Cada tiro
-                deve ser verdadeiro em intenção, bom em ética e belo em forma.
-                Estes princípios transcendem o dojo e são aplicados na vida
-                cotidiana de nossos praticantes.
+                no conceito de &quot;Shin-Zen-Bi&quot; (Verdade-Bondade-Beleza).
+                Cada tiro deve ser verdadeiro em intenção, bom em ética e belo
+                em forma. Estes princípios transcendem o dojo e são aplicados na
+                vida cotidiana de nossos praticantes.
               </p>
             </div>
           </div>

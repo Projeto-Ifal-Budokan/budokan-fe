@@ -7,16 +7,15 @@ import { useAuth } from '@/lib/api/queries/use-auth';
 
 import { cn } from '@/lib/utils';
 import {
-  BarChart3,
   BookOpen,
   Calendar,
   ChevronLeft,
   ChevronRight,
   Clock,
-  CreditCard,
   Home,
   Key,
   LogOut,
+  LucideIcon,
   Shield,
   Trophy,
   User,
@@ -28,61 +27,17 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { createElement } from 'react';
+import { createElement, HTMLAttributes } from 'react';
 import { SidebarItem } from './sidebar-items';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SidebarProps extends HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   onToggle: () => void;
   items: SidebarItem[];
 }
 
-// Navigation items
-const navItems = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: Home,
-  },
-  {
-    title: 'Modalidades',
-    href: '/dashboard/disciplines',
-    icon: BookOpen,
-  },
-  {
-    title: 'Frequência',
-    href: '/dashboard/attendance',
-    icon: Calendar,
-  },
-  {
-    title: 'Instrutores',
-    href: '/dashboard/instructors',
-    icon: UserCircle,
-  },
-  {
-    title: 'Usuários',
-    href: '/dashboard/users',
-    icon: Users,
-  },
-  {
-    title: 'Alunos',
-    href: '/dashboard/students',
-    icon: Users,
-  },
-  {
-    title: 'Pagamentos',
-    href: '/dashboard/payments',
-    icon: CreditCard,
-  },
-  {
-    title: 'Relatórios',
-    href: '/dashboard/reports',
-    icon: BarChart3,
-  },
-];
-
 // Add this icon mapping object
-const iconMap: { [key: string]: any } = {
+const iconMap: { [key: string]: LucideIcon } = {
   Home,
   BookOpen,
   Calendar,

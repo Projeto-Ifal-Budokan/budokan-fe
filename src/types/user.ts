@@ -4,7 +4,7 @@ export interface Role {
   description: string;
 }
 
-export interface Privilege extends Role {}
+export type Privilege = Role;
 
 export interface User {
   id: number;

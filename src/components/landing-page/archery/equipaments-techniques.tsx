@@ -1,6 +1,6 @@
-import { ChevronRight } from "lucide-react";
-import Image from "next/image";
-import archeryAsset from '@/assets/images/arquearia.png'
+import archeryAsset from '@/assets/images/arquearia.png';
+import { ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 
 export const EquipamentsTechniquesSection = () => {
   return (
@@ -10,10 +10,11 @@ export const EquipamentsTechniquesSection = () => {
           <h2 className='mb-4 text-3xl font-bold text-blue-800'>
             Equipamentos e Técnicas
           </h2>
-          <div className='mx-auto mb-6 h-1 w-20 bg-yellow-500'></div>
+          <div className='w- 20 mx-auto mb-6 h-1 bg-yellow-500'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
-            A Arquearia utiliza equipamentos tradicionais e técnicas refinadas ao
-            longo de séculos, combinando funcionalidade, estética e simbolismo.
+            A Arquearia utiliza equipamentos tradicionais e técnicas refinadas
+            ao longo de séculos, combinando funcionalidade, estética e
+            simbolismo.
           </p>
         </div>
 
@@ -31,8 +32,8 @@ export const EquipamentsTechniquesSection = () => {
               Equipamentos
             </h3>
             <p className='mb-6 text-gray-600'>
-              Os equipamentos do Arquearia são cuidadosamente elaborados, seguindo
-              tradições centenárias e utilizando materiais naturais.
+              Os equipamentos do Arquearia são cuidadosamente elaborados,
+              seguindo tradições centenárias e utilizando materiais naturais.
             </p>
             <ul className='space-y-4'>
               <li className='flex items-start'>
@@ -100,8 +101,8 @@ export const EquipamentsTechniquesSection = () => {
               Hassetsu: As Oito Etapas do Tiro
             </h3>
             <p className='mb-6 text-gray-600'>
-              O tiro na Arquearia é dividido em oito etapas sequenciais (Hassetsu),
-              cada uma com significado técnico e espiritual próprio.
+              O tiro na Arquearia é dividido em oito etapas sequenciais
+              (Hassetsu), cada uma com significado técnico e espiritual próprio.
             </p>
             <ol className='space-y-4'>
               <li className='flex items-start'>
@@ -226,17 +227,17 @@ export const EquipamentsTechniquesSection = () => {
             <div className='space-y-2'>
               <h4 className='font-bold text-yellow-500'>Seisha Hitchu</h4>
               <p className='text-sm opacity-90'>
-                "Atirar corretamente é acertar" - princípio que enfatiza que a
-                forma correta naturalmente leva ao acerto, sem focar no
-                resultado.
+                &quot;Atirar corretamente é acertar&quot; - princípio que
+                enfatiza que a forma correta naturalmente leva ao acerto, sem
+                focar no resultado.
               </p>
             </div>
             <div className='space-y-2'>
               <h4 className='font-bold text-yellow-500'>Mushin</h4>
               <p className='text-sm opacity-90'>
-                "Mente vazia" - estado mental ideal durante o tiro, livre de
-                pensamentos, julgamentos ou expectativas, permitindo ação
-                natural e espontânea.
+                &quot;Mente vazia&quot; - estado mental ideal durante o tiro,
+                livre de pensamentos, julgamentos ou expectativas, permitindo
+                ação natural e espontânea.
               </p>
             </div>
           </div>
