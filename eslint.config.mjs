@@ -1,4 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc';
+import parser from '@typescript-eslint/parser';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -14,7 +15,14 @@ const eslintConfig = [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js'],
     languageOptions: {
-      parser: '@typescript-eslint/parser',
+      parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
   },
   {
