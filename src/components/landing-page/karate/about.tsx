@@ -12,8 +12,8 @@ export const AboutSection = () => {
             </h2>
             <div className='mb-6 h-1 w-20 bg-yellow-500'></div>
             <p className='mb-4 text-gray-600'>
-              Karate-Do, ou "O Caminho das Mãos Vazias", é uma arte marcial
-              japonesa que se originou em Okinawa e foi posteriormente
+              Karate-Do, ou &quot;O Caminho das Mãos Vazias&quot;, é uma arte
+              marcial japonesa que se originou em Okinawa e foi posteriormente
               desenvolvida no Japão. É caracterizada por golpes lineares,
               bloqueios e chutes, utilizando todas as partes do corpo como armas
               naturais para defesa pessoal.

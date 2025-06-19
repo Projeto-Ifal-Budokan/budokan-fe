@@ -62,11 +62,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { UsersSkeleton } from './users-skeleton';
 
-const tiposUsuario = [
-  { value: 'administrador', label: 'Administrador', color: 'destructive' },
-  { value: 'instrutor', label: 'Instrutor', color: 'default' },
-  { value: 'funcionario', label: 'Funcionário', color: 'secondary' },
-];
+// const tiposUsuario = [
+//   { value: 'administrador', label: 'Administrador', color: 'destructive' },
+//   { value: 'instrutor', label: 'Instrutor', color: 'default' },
+//   { value: 'funcionario', label: 'Funcionário', color: 'secondary' },
+// ];
 
 export function UsuariosManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -82,7 +82,7 @@ export function UsuariosManagement() {
   const {
     data: users,
     isLoading,
-    error,
+    // error,
   } = useQuery({
     queryKey: userKeys.all,
     queryFn: fetchUsers,
@@ -418,7 +418,7 @@ export function UsuariosManagement() {
                     {/* <div className='text-sm'>{usuario.ultimoAcesso}</div> */}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={getStatusColor(usuario.status) as any}>
+                    <Badge variant={getStatusColor(usuario.status)}>
                       {usuario.status}
                     </Badge>
                   </TableCell>

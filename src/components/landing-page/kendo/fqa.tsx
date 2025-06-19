@@ -15,7 +15,7 @@ export const FQASection = () => {
           </h2>
           <div className='mx-auto mb-6 h-1 w-20 bg-yellow-500'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
-            Encontre respostas para as dúvidas mais comuns sobre a prática de
+            Encontre respostas para as perguntas mais comuns sobre a prática de
             Kendo na Budokan-Ryu.
           </p>
         </div>
@@ -27,11 +27,11 @@ export const FQASection = () => {
                 Qual a idade mínima para começar a praticar Kendo?
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
-                Na Budokan-Ryu, aceitamos alunos a partir dos 10 anos de idade. Para
-                crianças mais novas, recomendamos aguardar um pouco mais devido
-                à necessidade de força e coordenação para manejar o shinai
-                (espada de bambu). Não há idade máxima, temos praticantes de
-                todas as idades!
+                Na Budokan-Ryu, aceitamos alunos a partir dos 10 anos de idade.
+                Para crianças mais novas, recomendamos aguardar um pouco mais
+                devido à necessidade de força e coordenação para manejar o
+                shinai (espada de bambu). Não há idade máxima, temos praticantes
+                de todas as idades!
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value='item-2' className='rounded-lg border p-2'>
@@ -88,10 +88,10 @@ export const FQASection = () => {
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
                 Em média, leva-se de 3 a 5 anos de prática consistente para
-                atingir o nível de 1º Dan, que equivale à "faixa preta" inicial.
-                Este tempo varia de acordo com a frequência nos treinos,
-                dedicação e aptidão individual. O foco deve estar sempre no
-                aprendizado e não na graduação em si.
+                atingir o nível de 1º Dan, que equivale à &quot;faixa
+                preta&quot; inicial. Este tempo varia de acordo com a frequência
+                nos treinos, dedicação e aptidão individual. O foco deve estar
+                sempre no aprendizado e não na graduação em si.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value='item-7' className='rounded-lg border p-2'>
@@ -99,11 +99,11 @@ export const FQASection = () => {
                 Posso participar de competições?
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
-                Sim. A Budokan-Ryu participa regularmente de competições regionais,
-                nacionais e até internacionais. A participação é opcional, mas
-                incentivada como parte do desenvolvimento do praticante.
-                Preparamos nossos alunos tanto para competições individuais
-                quanto por equipes.
+                Sim. A Budokan-Ryu participa regularmente de competições
+                regionais, nacionais e até internacionais. A participação é
+                opcional, mas incentivada como parte do desenvolvimento do
+                praticante. Preparamos nossos alunos tanto para competições
+                individuais quanto por equipes.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

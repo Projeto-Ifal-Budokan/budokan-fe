@@ -1,8 +1,8 @@
 export interface Manner {
     id: number;
-    title: String;
-    description: String;
-    comment: String;
+    title: string;
+    description: string;
+    comment: string;
 }
 
 export const dojoManners: Manner[] = [

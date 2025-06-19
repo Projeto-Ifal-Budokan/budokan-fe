@@ -129,7 +129,7 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
                 {/* <Badge variant={getTipoColor(user.tipo) as any}>
                   {user.tipo}
                 </Badge> */}
-                <Badge variant={getStatusColor(user.status) as any}>
+                <Badge variant={getStatusColor(user.status)}>
                   {user.status}
                 </Badge>
               </div>

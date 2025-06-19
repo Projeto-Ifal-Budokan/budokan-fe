@@ -1,7 +1,8 @@
+import { ReactNode } from 'react';
 import { Progress } from './progress';
 
 interface Step {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
 }
 

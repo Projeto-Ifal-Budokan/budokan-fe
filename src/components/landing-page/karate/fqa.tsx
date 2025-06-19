@@ -87,9 +87,9 @@ export const FQASection = () => {
               <AccordionContent className='pt-2 text-gray-600'>
                 Não. Embora o Karate-Do ensine técnicas de defesa pessoal, sua
                 filosofia é centrada no desenvolvimento do caráter e no
-                princípio de que "o Karate começa e termina com cortesia".
-                Ensinamos que as técnicas só devem ser usadas como último
-                recurso em situações de perigo real.
+                princípio de que &quot;o Karate começa e termina com
+                cortesia&quot;. Ensinamos que as técnicas só devem ser usadas
+                como último recurso em situações de perigo real.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value='item-7' className='rounded-lg border p-2'>

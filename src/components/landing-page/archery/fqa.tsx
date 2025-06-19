@@ -27,10 +27,10 @@ export const FQASection = () => {
                 Qual a idade mínima para começar a praticar Arquearia?
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
-                Na Budokan-Ryu, aceitamos alunos a partir dos 14 anos de idade. Isso
-                se deve à necessidade de força física para manusear o arco e à
-                maturidade necessária para a concentração exigida. Não há idade
-                máxima, temos praticantes de todas as idades, inclusive
+                Na Budokan-Ryu, aceitamos alunos a partir dos 14 anos de idade.
+                Isso se deve à necessidade de força física para manusear o arco
+                e à maturidade necessária para a concentração exigida. Não há
+                idade máxima, temos praticantes de todas as idades, inclusive
                 seniores.
               </AccordionContent>
             </AccordionItem>
@@ -89,11 +89,11 @@ export const FQASection = () => {
                 O Arquearia é competitivo?
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
-                Embora existam competições de Arquearia, a essência desta arte não é
-                competitiva. O verdadeiro "adversário" é você mesmo, buscando
-                sempre aperfeiçoar sua técnica e estado mental. Na Budokan-Ryu,
-                participamos de eventos competitivos, mas enfatizamos o
-                desenvolvimento pessoal acima dos resultados.
+                Embora existam competições de Arquearia, a essência desta arte
+                não é competitiva. O verdadeiro &quot;adversário&quot; é você
+                mesmo, buscando sempre aperfeiçoar sua técnica e estado mental.
+                Na Budokan-Ryu, participamos de eventos competitivos, mas
+                enfatizamos o desenvolvimento pessoal acima dos resultados.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value='item-7' className='rounded-lg border p-2'>
@@ -102,8 +102,8 @@ export const FQASection = () => {
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
                 O Arquearia é considerado um caminho de vida, não tendo um ponto
-                final de "domínio completo". Mesmo mestres com décadas de
-                prática continuam aprendendo e refinando sua técnica.
+                final de &quot;domínio completo&quot;. Mesmo mestres com décadas
+                de prática continuam aprendendo e refinando sua técnica.
                 Tipicamente, leva-se cerca de 3-5 anos de prática consistente
                 para desenvolver uma compreensão sólida dos fundamentos e
                 começar a experimentar a verdadeira essência do Arquearia.

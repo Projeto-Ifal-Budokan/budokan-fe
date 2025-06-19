@@ -1,4 +1,5 @@
 import { handleNotAccessPage, handleUnauthorized } from '@/app/actions/auth';
+import { RequestInit } from 'next/dist/server/web/spec-extension/request';
 import { toast } from 'sonner';
 
 const API_BASE_URL =
@@ -14,7 +15,7 @@ class ApiError extends Error {
     public status: number,
     message: string,
     public response?: Response,
-    public data?: any // Add data property to store response data
+    public data?: unknown // Add data property to store response data
   ) {
     super(message);
     this.name = 'ApiError';
@@ -44,14 +45,14 @@ export async function apiRequest<T>(
     ...requestOptions
   } = options;
 
-  // Debug logging
-  DEBUG &&
+  if (DEBUG) {
     console.log('🚀 API Request:', {
       url,
       method: requestOptions.method || 'GET',
       headers: requestOptions.headers,
       body: requestOptions.body,
     });
+  }
 
   // Create AbortController for timeout
   const controller = new AbortController();
@@ -72,13 +73,14 @@ export async function apiRequest<T>(
     clearTimeout(timeoutId);
 
     // Debug logging for response
-    DEBUG &&
+    if (DEBUG) {
       console.log('📥 API Response:', {
         url,
         status: response.status,
         statusText: response.statusText,
         headers: Object.fromEntries(response.headers.entries()),
       });
+    }
 
     // Parse response data regardless of status
     const contentLength = response.headers.get('content-length');
@@ -91,7 +93,7 @@ export async function apiRequest<T>(
       try {
         data = await response.clone().json(); // Use clone() to allow re-reading
       } catch (parseError) {
-        DEBUG && console.warn('Failed to parse JSON response:', parseError);
+        if (DEBUG) console.warn('Failed to parse JSON response:', parseError);
         data = (await response.text()) as T;
       }
     } else {
@@ -110,24 +112,25 @@ export async function apiRequest<T>(
       let errorMessage = `HTTP ${response.status}`;
 
       if (data && typeof data === 'object') {
-        const errorData = data as any;
+        const errorData = data as { message?: string; error?: string };
         errorMessage = errorData.message || errorData.error || errorMessage;
       } else if (typeof data === 'string') {
         errorMessage = data || errorMessage;
       }
 
       toast.error(errorMessage);
-      DEBUG &&
-        console.error('❌ API Error:', {
+      if (DEBUG) {
+        console.error('API Error:', {
           url,
           status: response.status,
           errorMessage,
           data,
         });
+      }
 
       // If throwOnHttpError is false, return the response even for errors
       if (!throwOnHttpError) {
-        DEBUG && console.log('🔄 Returning error response without throwing');
+        if (DEBUG) console.log('🔄 Returning error response without throwing');
         return apiResponse;
       }
 
@@ -180,11 +183,12 @@ export async function apiRequest<T>(
       throw apiError;
     }
 
-    DEBUG &&
+    if (DEBUG) {
       console.log('✅ API Success:', {
         url,
         data,
       });
+    }
 
     return apiResponse;
   } catch (error) {
@@ -194,17 +198,18 @@ export async function apiRequest<T>(
 
     // Handle AbortError (timeout)
     if (error instanceof Error && error.name === 'AbortError') {
-      DEBUG && console.error('⏰ Request timeout:', url);
+      if (DEBUG) console.error('⏰ Request timeout:', url);
       throw new ApiError(408, 'Request timeout');
     }
 
     // Handle CORS and network errors
-    DEBUG &&
+    if (DEBUG) {
       console.error('🌐 Network/CORS Error:', {
         url,
         error: error instanceof Error ? error.message : 'Unknown error',
         name: error instanceof Error ? error.name : 'Unknown',
       });
+    }
 
     throw new ApiError(0, 'Network error or CORS issue');
   }
