@@ -4,6 +4,8 @@ import { AccountInfoForm } from '@/components/auth/signup/account-info-form';
 import { ConfirmationForm } from '@/components/auth/signup/confirmation-form';
 import { EmergencyContactsForm } from '@/components/auth/signup/emergency-contacts-form';
 import { PersonalInfoForm } from '@/components/auth/signup/personal-info-form';
+import { PractitionerSelectionForm } from '@/components/auth/signup/practitioner-selection-form';
+
 import { Button } from '@/components/ui/button';
 import { ProgressIndicator } from '@/components/ui/progress-indicator';
 import { authService } from '@/lib/api/services/auth-service';
@@ -18,6 +20,7 @@ import {
   Lock,
   Phone,
   User,
+  Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,29 +29,10 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-const steps = [
-  {
-    icon: <User />,
-    label: 'Dados Pessoais',
-  },
-  {
-    icon: <Lock />,
-    label: 'Acesso',
-  },
-  {
-    icon: <Phone />,
-    label: 'Emergência',
-  },
-  {
-    icon: <CheckCircle2 />,
-    label: 'Confirmação',
-  },
-];
-
 const SignupSuccessPage = () => {
   return (
     <div className='flex h-screen w-full items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 p-8 lg:w-1/2'>
-      <div className='w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg'>
+      <div className='w-full max-w-lg rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-lg'>
         <div className='mb-6 flex justify-center'>
           <div className='rounded-full bg-green-100 p-3'>
             <CheckCircle2 className='h-12 w-12 text-green-600' />
@@ -75,14 +59,13 @@ const SignupSuccessPage = () => {
 
 const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const router = useRouter();
-
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPractitioner, setIsPractitioner] = useState<boolean | null>(null);
 
   // Create form methods with React Hook Form and Zod resolver
   const methods = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-
     defaultValues: {
       firstName: '',
       surname: '',
@@ -97,6 +80,39 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
     mode: 'onChange',
   });
 
+  // Dynamic steps based on practitioner status
+  const getSteps = () => {
+    const baseSteps = [
+      {
+        icon: <User />,
+        label: 'Dados Pessoais',
+      },
+      {
+        icon: <Users />,
+        label: 'Tipo de Usuário',
+      },
+      {
+        icon: <Lock />,
+        label: 'Acesso',
+      },
+    ];
+
+    // Add emergency contacts step only if practitioner
+    if (isPractitioner === true) {
+      baseSteps.push({
+        icon: <Phone />,
+        label: 'Emergência',
+      });
+    }
+
+    baseSteps.push({
+      icon: <CheckCircle2 />,
+      label: 'Confirmação',
+    });
+
+    return baseSteps;
+  };
+
   // Handle next step
   const handleNextStep = async () => {
     let isValid = false;
@@ -107,9 +123,11 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
         ['firstName', 'surname', 'phone', 'birthDate'],
         { shouldFocus: true }
       );
-
       isValid = result;
     } else if (currentStep === 2) {
+      // Practitioner selection step - no validation needed as it's handled by the component
+      isValid = isPractitioner !== null;
+    } else if (currentStep === 3) {
       const result = await methods.trigger(
         ['email', 'password', 'confirmPassword'],
         { shouldFocus: true }
@@ -126,12 +144,17 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
       } else {
         isValid = result;
       }
-    } else if (currentStep === 3) {
+    } else if (currentStep === 4 && isPractitioner) {
+      // Emergency contacts step (only for practitioners)
       const result = await methods.trigger(['emergencyContacts'], {
         shouldFocus: true,
       });
       isValid = result;
-    } else if (currentStep === 4) {
+    } else if (
+      (currentStep === 4 && !isPractitioner) ||
+      (currentStep === 5 && isPractitioner)
+    ) {
+      // Confirmation step
       const result = await methods.trigger(['termsAccepted'], {
         shouldFocus: true,
       });
@@ -144,6 +167,19 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
   };
 
+  // Handle practitioner selection
+  const handlePractitionerSelection = (practitioner: boolean) => {
+    setIsPractitioner(practitioner);
+    methods.setValue('isPractitioner', practitioner);
+
+    // If not practitioner, clear emergency contacts
+    if (!practitioner) {
+      methods.setValue('emergencyContacts', []);
+    } else {
+      methods.setValue('emergencyContacts', [{ phone: '', relationship: '' }]);
+    }
+  };
+
   // Handle form submission
   const onSubmit = async (data: SignupFormData) => {
     setIsSubmitting(true);
@@ -152,7 +188,7 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
         ...data,
         birthDate: data.birthDate,
         healthObservations: data.healthObservations || '',
-        emergencyContacts: data.emergencyContacts,
+        emergencyContacts: isPractitioner ? data.emergencyContacts : [],
       });
 
       if (response.ok) {
@@ -166,6 +202,9 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
       setIsSubmitting(false);
     }
   };
+
+  const steps = getSteps();
+  const totalSteps = steps.length;
 
   return (
     <div className='flex h-screen w-full flex-col justify-center overflow-hidden bg-gradient-to-b from-gray-50 to-gray-100 lg:w-1/2'>
@@ -219,24 +258,45 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
       {/* Conteúdo principal com scroll controlado */}
       <div className='flex items-center px-4 pb-4 lg:px-8'>
         <div className='mx-auto w-full max-w-md'>
+          {/* Step Header - sempre visível */}
+          <div className='mb-6 text-center'>
+            <h3 className='text-2xl font-bold text-blue-900'>
+              {steps[currentStep - 1].label}
+            </h3>
+          </div>
+
           <FormProvider {...methods}>
             <form
               onSubmit={methods.handleSubmit(onSubmit)}
               className='rounded-2xl border border-gray-100 bg-white shadow-lg'
             >
-              {/* Área do formulário com altura fixa e scroll interno */}
+              {/* Só o conteúdo do formulário tem scroll */}
               <div
                 className='p-4 lg:p-6'
-                style={{ maxHeight: 'calc(100vh - 280px)', minHeight: '400px' }}
+                style={{
+                  maxHeight: 'calc(100vh - 340px)',
+                  minHeight: '400px',
+                  overflowY: 'auto',
+                }}
               >
-                <div className='-mr-2 h-full overflow-y-auto pr-2'>
-                  <AnimatePresence mode='wait'>
-                    {currentStep === 1 && <PersonalInfoForm key='step1' />}
-                    {currentStep === 2 && <AccountInfoForm key='step2' />}
-                    {currentStep === 3 && <EmergencyContactsForm key='step3' />}
-                    {currentStep === 4 && <ConfirmationForm key='step4' />}
-                  </AnimatePresence>
-                </div>
+                <AnimatePresence mode='wait'>
+                  {currentStep === 1 && <PersonalInfoForm key='step1' />}
+                  {currentStep === 2 && (
+                    <PractitionerSelectionForm
+                      key='step2'
+                      onSelection={handlePractitionerSelection}
+                      selectedValue={isPractitioner}
+                    />
+                  )}
+                  {currentStep === 3 && <AccountInfoForm key='step3' />}
+                  {currentStep === 4 && isPractitioner && (
+                    <EmergencyContactsForm key='step4' />
+                  )}
+                  {((currentStep === 4 && !isPractitioner) ||
+                    (currentStep === 5 && isPractitioner)) && (
+                    <ConfirmationForm key='step5' />
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Navigation buttons fixos na parte inferior */}
@@ -253,7 +313,7 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
                     </Button>
                   )}
 
-                  {currentStep < 4 ? (
+                  {currentStep < totalSteps ? (
                     <Button
                       type='button'
                       onClick={handleNextStep}
