@@ -12,6 +12,18 @@ export const personalInfoSchema = z.object({
   birthDate: z.string().min(1, { message: 'Data de nascimento é obrigatória' }),
   isPractitioner: z.boolean(),
   healthObservations: z.string().optional(),
+  emergencyContacts: z
+    .array(
+      z.object({
+        phone: z
+          .string()
+          .min(1, { message: 'Telefone de emergência é obrigatório' }),
+        relationship: z
+          .string()
+          .min(1, { message: 'Relacionamento é obrigatório' }),
+      })
+    )
+    .min(1, { message: 'Pelo menos um contato de emergência é obrigatório' }),
 });
 
 export const accountInfoSchema = z
@@ -26,10 +38,7 @@ export const accountInfoSchema = z
       .regex(/[a-z]/, {
         message: 'Senha deve conter pelo menos uma letra minúscula',
       })
-      .regex(/[0-9]/, { message: 'Senha deve conter pelo menos um número' })
-      .regex(/[^A-Za-z0-9]/, {
-        message: 'Senha deve conter pelo menos um caractere especial',
-      }),
+      .regex(/[0-9]/, { message: 'Senha deve conter pelo menos um número' }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -56,6 +65,7 @@ export const signupSchema = z.object({
   isPractitioner: z.boolean(),
   termsAccepted: confirmationSchema.shape.termsAccepted,
   healthObservations: z.string().optional(),
+  emergencyContacts: personalInfoSchema.shape.emergencyContacts,
 });
 
 // Type for the form data

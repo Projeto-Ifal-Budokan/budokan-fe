@@ -1,3 +1,4 @@
+import { handleNotAccessPage, handleUnauthorized } from '@/app/actions/auth';
 import { toast } from 'sonner';
 
 const API_BASE_URL =
@@ -140,6 +141,9 @@ export async function apiRequest<T>(
 
       // Specific error handling
       if (response.status === 401) {
+        // Call the server action to handle unauthorized access
+        await handleUnauthorized();
+
         throw new ApiError(
           401,
           errorMessage || 'Authentication required',
@@ -148,6 +152,7 @@ export async function apiRequest<T>(
         );
       }
       if (response.status === 403) {
+        await handleNotAccessPage();
         throw new ApiError(
           403,
           errorMessage || 'Access forbidden',

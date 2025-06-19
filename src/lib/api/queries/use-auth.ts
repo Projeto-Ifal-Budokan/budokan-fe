@@ -1,14 +1,20 @@
 'use client';
 
+import { ApiError } from '@/types/api';
 import { User } from '@/types/user';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { ApiError, authService } from '../services/auth-service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { authService } from '../services/auth-service';
 
 export function useAuth() {
+  const queryClient = useQueryClient();
+
   const me = useQuery<User, ApiError>({
     queryKey: ['auth', 'me'],
-    queryFn: authService.me,
-    retry: 1,
+    queryFn: async () => {
+      const response = await authService.me();
+
+      return response.data;
+    },
   });
 
   const login = useMutation({
@@ -27,11 +33,16 @@ export function useAuth() {
     mutationFn: authService.resetPassword,
   });
 
+  const clearAuthCache = () => {
+    queryClient.clear(); // This will clear all queries
+  };
+
   return {
     me,
     login,
     register,
     forgotPassword,
     resetPassword,
+    clearAuthCache,
   };
 }
