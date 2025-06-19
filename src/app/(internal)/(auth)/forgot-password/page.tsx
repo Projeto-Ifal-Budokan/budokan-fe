@@ -3,9 +3,18 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordStrengthMeter } from '@/components/ui/password-strength-meter';
 import { authService } from '@/lib/api/services/auth-service';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -49,7 +58,7 @@ const ForgotPasswordForm = ({ onSuccess }: { onSuccess: () => void }) => {
     try {
       await authService.forgotPassword(data);
       toast.success(
-        'Email de recuperação enviado! Verifique sua caixa de entrada.'
+        'Se o e-mail estiver registrado, uma instrução foi enviada.'
       );
       onSuccess();
     } catch (error) {
@@ -139,6 +148,9 @@ const ForgotPasswordForm = ({ onSuccess }: { onSuccess: () => void }) => {
 const ResetPasswordForm = ({ token }: { token: string }) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [passwordValue, setPasswordValue] = useState('');
 
   const {
     register,
@@ -195,14 +207,32 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
                 <Lock className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400' />
                 <Input
                   id='password'
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   placeholder='Digite sua nova senha'
-                  className='pl-10'
-                  {...register('password')}
+                  className={`pr-10 pl-10 ${errors.password ? 'border-red-500' : ''}`}
+                  {...register('password', {
+                    onChange: (e) => setPasswordValue(e.target.value),
+                  })}
+                  aria-invalid={!!errors.password}
+                  aria-describedby='password-error'
                 />
+                <button
+                  type='button'
+                  className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400'
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  {showPassword ? (
+                    <EyeOff className='h-4 w-4' />
+                  ) : (
+                    <Eye className='h-4 w-4' />
+                  )}
+                </button>
               </div>
+              <PasswordStrengthMeter password={passwordValue} />
               {errors.password && (
-                <p className='text-sm text-red-600'>
+                <p id='password-error' className='text-sm text-red-600'>
                   {errors.password.message}
                 </p>
               )}
@@ -214,14 +244,29 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
                 <Lock className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400' />
                 <Input
                   id='confirmPassword'
-                  type='password'
+                  type={showConfirm ? 'text' : 'password'}
                   placeholder='Confirme sua nova senha'
-                  className='pl-10'
+                  className={`pr-10 pl-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                   {...register('confirmPassword')}
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby='confirmPassword-error'
                 />
+                <button
+                  type='button'
+                  className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-400'
+                  tabIndex={-1}
+                  onClick={() => setShowConfirm((v) => !v)}
+                  aria-label={showConfirm ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  {showConfirm ? (
+                    <EyeOff className='h-4 w-4' />
+                  ) : (
+                    <Eye className='h-4 w-4' />
+                  )}
+                </button>
               </div>
               {errors.confirmPassword && (
-                <p className='text-sm text-red-600'>
+                <p id='confirmPassword-error' className='text-sm text-red-600'>
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -273,8 +318,7 @@ const EmailSentSuccess = () => {
         </h1>
 
         <p className='mb-8 text-gray-600'>
-          Verifique sua caixa de entrada e siga as instruções para redefinir sua
-          senha.
+          Se o e-mail estiver registrado, uma instrução foi enviada.
         </p>
 
         <Link href='/login'>
