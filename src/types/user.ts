@@ -4,6 +4,8 @@ export interface Role {
   description: string;
 }
 
+export interface Privilege extends Role {}
+
 export interface User {
   id: number;
   email: string;
@@ -11,12 +13,22 @@ export interface User {
   surname: string;
   status: 'active' | 'inactive';
   roles: Role[];
+  privileges: Privilege[];
+  birthDate: string;
+  phone: string;
 }
 
-export type CreateUserData = Omit<User, 'id' | 'roles' | 'status'> & {
+export type CreateUserData = Omit<
+  User,
+  'id' | 'roles' | 'status' | 'privileges'
+> & {
   password: string;
   phone: string;
-  birthDate: Date;
+  birthDate: string;
   isPractitioner: boolean;
   healthObservations: string;
+  emergencyContacts: {
+    phone: string;
+    relationship: string;
+  }[];
 };

@@ -57,72 +57,44 @@ export function ConfirmationForm() {
       </div>
 
       <div className='space-y-4'>
-        <div className='flex items-center space-x-2'>
+        <div className='mt-4 flex items-center space-x-2'>
           <Controller
-            name='isPractitioner'
+            name='termsAccepted'
             control={control}
             render={({ field }) => (
               <Checkbox
-                id='isPractitioner'
+                id='termsAccepted'
                 checked={field.value}
                 onCheckedChange={field.onChange}
-                className='text-primary rounded border-gray-300 focus:ring-orange-500'
+                className={cn(
+                  'text-primary rounded border-gray-300 focus:ring-orange-500',
+                  errors.termsAccepted && 'border-red-500'
+                )}
               />
             )}
           />
           <Label
-            htmlFor='isPractitioner'
-            className='text-sm font-medium text-gray-700'
-          >
-            Sou o aluno
-          </Label>
-        </div>
-        <p className='ml-6 text-xs text-gray-500'>
-          Marque esta opção se você é o aluno que irá frequentar as aulas.
-        </p>
-
-        <div className='mt-4 flex items-start space-x-2'>
-          <div className='mt-1'>
-            <Controller
-              name='termsAccepted'
-              control={control}
-              render={({ field }) => (
-                <Checkbox
-                  id='termsAccepted'
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                  className={cn(
-                    'text-primary rounded border-gray-300 focus:ring-orange-500',
-                    errors.termsAccepted && 'border-red-500'
-                  )}
-                />
-              )}
-            />
-          </div>
-          <div>
-            <Label
-              htmlFor='termsAccepted'
-              className={cn(
-                'text-sm font-medium text-gray-700',
-                errors.termsAccepted && 'text-red-500'
-              )}
-            >
-              Concordo com os
-              <Link href='/terms' className='text-blue-600 hover:underline'>
-                Termos de Uso
-              </Link>{' '}
-              e{' '}
-              <Link href='/privacy' className='text-blue-600 hover:underline'>
-                Política de Privacidade
-              </Link>
-            </Label>
-            {errors.termsAccepted && (
-              <div className='mt-1 flex items-center text-xs text-red-500'>
-                <AlertCircle className='mr-1 h-3 w-3' />
-                {errors.termsAccepted.message}
-              </div>
+            htmlFor='termsAccepted'
+            className={cn(
+              'text-sm font-medium text-gray-700',
+              errors.termsAccepted && 'text-red-500'
             )}
-          </div>
+          >
+            Concordo com os{' '}
+            <Link href='/terms' className='text-blue-600 hover:underline'>
+              Termos de Uso
+            </Link>{' '}
+            e{' '}
+            <Link href='/privacy' className='text-blue-600 hover:underline'>
+              Política de Privacidade
+            </Link>
+          </Label>
+          {errors.termsAccepted && (
+            <div className='ml-2 flex items-center text-xs text-red-500'>
+              <AlertCircle className='mr-1 h-3 w-3' />
+              {errors.termsAccepted.message}
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

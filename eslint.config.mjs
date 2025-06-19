@@ -1,5 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import tailwindcssPlugin from 'eslint-plugin-tailwindcss';
+import parser from '@typescript-eslint/parser';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -15,13 +15,17 @@ const eslintConfig = [
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js'],
     languageOptions: {
-      parser: '@typescript-eslint/parser',
+      parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
   },
   {
-    plugins: {
-      tailwindcss: tailwindcssPlugin,
-    },
     rules: {
       // React specific rules
       'react/prop-types': 'error',
@@ -30,10 +34,6 @@ const eslintConfig = [
       'react/no-unused-prop-types': 'warn',
       'react/jsx-no-duplicate-props': 'error',
       'react/jsx-key': 'error',
-
-      // Tailwind specific rules
-      'tailwindcss/classnames-order': 'warn',
-      'tailwindcss/no-custom-classname': 'warn',
 
       // General best practices
       'no-unused-vars': 'warn',

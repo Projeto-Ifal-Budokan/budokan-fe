@@ -1,10 +1,16 @@
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import { AdminDisciplinesView } from '@/components/dashboard/disciplines/admin-disciplines-view';
+import { authService } from '@/lib/api/services/auth-service';
+import { hasAccess } from '@/utils/access-control';
+import { cookies } from 'next/headers';
 
-export default function ModalidadesPage() {
-  return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-6">Modalidades</h1>
-      <p>Gerencie as modalidades e turmas do Budokan.</p>
-    </DashboardLayout>
-  )
+export default async function DisciplinePage() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+  const { data: user } = await authService.me(cookieHeader);
+
+  if (user && hasAccess('admin', user)) {
+    return <AdminDisciplinesView />;
+  }
+
+  return null;
 }

@@ -3,7 +3,7 @@
 import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useAuth } from '@/lib/api/queries/useAuth';
+import { useAuth } from '@/lib/api/queries/use-auth';
 
 import { cn } from '@/lib/utils';
 import {
@@ -12,27 +12,30 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  Clock,
   CreditCard,
   Home,
+  Key,
   LogOut,
+  Shield,
+  Trophy,
+  User,
+  UserCheck,
   UserCircle,
+  UserPlus,
   Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { createElement } from 'react';
+import { SidebarItem } from './sidebar-items';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   onToggle: () => void;
+  items: SidebarItem[];
 }
-
-// Mock user data - in a real app, this would come from authentication
-// const user = {
-//   name: 'João Silva',
-//   role: 'Administrador',
-//   avatar: '/placeholder.svg?height=32&width=32',
-// };
 
 // Navigation items
 const navItems = [
@@ -78,6 +81,21 @@ const navItems = [
   },
 ];
 
+// Add this icon mapping object
+const iconMap: { [key: string]: any } = {
+  Home,
+  BookOpen,
+  Calendar,
+  UserCheck,
+  Clock,
+  Users,
+  Trophy,
+  User,
+  Shield,
+  Key,
+  UserPlus,
+};
+
 export function UserInfo() {
   const { me } = useAuth();
   const { data: user, isLoading } = me;
@@ -116,9 +134,16 @@ export default function Sidebar({
   className,
   isCollapsed,
   onToggle,
+  items,
   ...props
 }: SidebarProps) {
+  const { clearAuthCache } = useAuth();
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    clearAuthCache(); // Clear the cache before logging out
+    await logoutAction();
+  };
 
   return (
     <div className='relative h-full'>
@@ -126,7 +151,7 @@ export default function Sidebar({
       <div
         className={cn(
           'group h-full overflow-hidden border-r bg-blue-900 text-white transition-all duration-300',
-          isCollapsed ? 'w-[70px]' : 'w-[240px]',
+          isCollapsed ? 'w-20' : 'w-[240px]',
           className
         )}
         {...props}
@@ -160,24 +185,28 @@ export default function Sidebar({
           {/* Navigation */}
           <ScrollArea className='flex-1 px-1'>
             <div className='flex flex-col gap-0.5 py-2'>
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-                    pathname === item.href
-                      ? 'bg-primary-foreground/10 text-primary font-medium'
-                      : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
-                    isCollapsed && 'justify-center px-2'
-                  )}
-                >
-                  <item.icon
-                    className={cn('h-4 w-4', isCollapsed && 'h-5 w-5')}
-                  />
-                  {!isCollapsed && <span>{item.title}</span>}
-                </Link>
-              ))}
+              {items.map((item) => {
+                const IconComponent = iconMap[item.icon];
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
+                      pathname === item.href
+                        ? 'bg-primary-foreground/10 text-primary font-medium'
+                        : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
+                      isCollapsed && 'justify-center px-2'
+                    )}
+                  >
+                    {IconComponent &&
+                      createElement(IconComponent, {
+                        className: cn('h-4 w-4', isCollapsed && 'h-5 w-5'),
+                      })}
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
             </div>
           </ScrollArea>
 
@@ -190,12 +219,9 @@ export default function Sidebar({
             >
               <UserInfo />
               {!isCollapsed && (
-                <LogOut
-                  className='h-4 w-4 text-white/70 hover:text-orange-300'
-                  onClick={() => {
-                    logoutAction();
-                  }}
-                />
+                <Button variant='ghost' size='icon' onClick={handleLogout}>
+                  <LogOut className='h-4 w-4 text-white/70 hover:text-orange-300' />
+                </Button>
               )}
             </div>
           </div>
