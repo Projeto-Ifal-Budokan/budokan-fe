@@ -77,9 +77,9 @@ export function UserInfo() {
         <span className='text-sm font-medium text-orange-300'>
           {user?.firstName} {user?.surname}
         </span>
-        <span className='text-xs text-white/70'>
+        {/* <span className='text-xs text-white/70'>
           {user?.roles[0]?.name || 'Usuário'}
-        </span>
+        </span> */}
       </div>
     </div>
   );

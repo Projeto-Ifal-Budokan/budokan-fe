@@ -1,3 +1,4 @@
+import { api } from '@/lib/api/client';
 import { authService } from '@/lib/api/services/auth-service';
 import {
   INSTRUCTOR_PRIVILEGES,
@@ -224,7 +225,26 @@ export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
     }
 
     const user = response.data;
-    const userPrivileges = user.privileges.map((p: { name: string }) => p.name);
+
+    // TODO: Refactor this to use any service, but fot now its ok
+    const userPrivilegesResponse = await api.get<{ name: string }[]>(
+      `/privileges/user/${user.id}`,
+      {
+        headers: {
+          Cookie: cookies,
+        },
+      }
+    );
+
+    if (!userPrivilegesResponse.ok) {
+      console.error(
+        'Failed to fetch user privileges:',
+        userPrivilegesResponse.status
+      );
+      return [];
+    }
+
+    const userPrivileges = userPrivilegesResponse.data.map((p) => p.name);
 
     // Check if user has all privileges (admin)
     const allPrivileges = Object.values(PRIVILEGES);
