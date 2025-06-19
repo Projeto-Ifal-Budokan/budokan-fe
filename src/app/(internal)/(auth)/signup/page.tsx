@@ -258,13 +258,6 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
       {/* Conteúdo principal com scroll controlado */}
       <div className='flex items-center px-4 pb-4 lg:px-8'>
         <div className='mx-auto w-full max-w-md'>
-          {/* Step Header - sempre visível */}
-          <div className='mb-6 text-center'>
-            <h3 className='text-2xl font-bold text-blue-900'>
-              {steps[currentStep - 1].label}
-            </h3>
-          </div>
-
           <FormProvider {...methods}>
             <form
               onSubmit={methods.handleSubmit(onSubmit)}

@@ -17,7 +17,7 @@ export function PractitionerSelectionForm({
             <Users className='h-6 w-6 text-white' />
           </div>
         </div>
-
+        <h3 className='text-xl font-bold text-gray-900'>Tipo de Usuário</h3>
         <p className='mt-1 text-sm text-gray-600'>
           Selecione o tipo de usuário que melhor descreve você
         </p>
