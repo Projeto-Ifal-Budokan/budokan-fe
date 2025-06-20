@@ -19,7 +19,7 @@ const PROFILE_PRIVILEGES: Record<ProfileType, PrivilegeType[]> = {
 /**
  * Checks if a user has access to a specific profile type
  * @param profileType The type of profile to check access for
- * @param user The user object containing privileges
+ * @param privileges The privileges object containing privileges
  * @returns boolean indicating if user has access
  */
 export function hasAccess(
@@ -37,12 +37,10 @@ export function hasAccess(
 /**
  * Server-side function to check user access
  * @param profileType The type of profile to check access for
- * @param cookies The cookies containing the user session
  * @returns Promise<boolean> indicating if user has access
  */
 export async function checkUserAccess(
-  profileType: ProfileType,
-  cookies: string
+  profileType: ProfileType
 ): Promise<boolean> {
   try {
     const response = await api.get<User>('/auth/me');
