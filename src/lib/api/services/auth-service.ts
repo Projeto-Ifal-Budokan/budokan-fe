@@ -3,10 +3,8 @@ import { Response } from '@/types/api';
 import { CreateUserData, User } from '@/types/user';
 
 export const authService = {
-  me: async (cookies?: string): Promise<ApiResponse<User>> => {
-    const response = await api.get<User>('/auth/me', {
-      headers: cookies ? { Cookie: cookies } : undefined,
-    });
+  me: async (): Promise<ApiResponse<User>> => {
+    const response = await api.get<User>('/auth/me');
     return response;
   },
 

@@ -17,6 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/lib/api/queries/use-auth';
 import { useManageUsers } from '@/lib/api/queries/use-manage-users';
+import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
 import { User } from '@/types/user';
 import { hasAccess } from '@/utils/access-control';
 import {
@@ -44,6 +45,13 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('personal');
   const { data: user } = me;
   const { updateUser } = useManageUsers();
+
+  // const userPrivileges = use(
+  //   privilegesService.getPrivilegesByUser(user?.id?.toString() || '')
+  // );
+  const { data: userPrivileges } = usePrivilegesByUser(
+    user?.id?.toString() || ''
+  );
 
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
@@ -156,7 +164,7 @@ export default function ProfilePage() {
                 >
                   {user?.status === 'active' ? 'Ativo' : 'Inativo'}
                 </Badge>
-                {hasAccess('admin', user) ? (
+                {hasAccess('admin', userPrivileges || []) ? (
                   <Badge variant={'secondary'}>Administrador</Badge>
                 ) : null}
               </div>

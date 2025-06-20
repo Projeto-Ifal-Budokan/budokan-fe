@@ -1,4 +1,5 @@
 import { handleNotAccessPage, handleUnauthorized } from '@/app/actions/auth';
+import { getAuthHeaders } from '@/utils/cookie-utils';
 import { RequestInit } from 'next/dist/server/web/spec-extension/request';
 import { toast } from 'sonner';
 
@@ -62,6 +63,7 @@ export async function apiRequest<T>(
     headers: {
       'Content-Type': 'application/json',
       ...requestOptions.headers,
+      Cookie: await getAuthHeaders(),
     },
     credentials: 'include',
     signal: controller.signal,
