@@ -1,11 +1,12 @@
 import { api } from '@/lib/api/client';
+import { privilegesService } from '@/lib/api/services/privileges-service';
 import {
   INSTRUCTOR_PRIVILEGES,
   PRIVILEGES,
   STUDENT_PRIVILEGES,
   type PrivilegeType,
 } from '@/types/privileges';
-import { User } from '@/types/user';
+import { Privilege, User } from '@/types/user';
 
 export type ProfileType = 'instructor' | 'student' | 'admin';
 
@@ -21,9 +22,12 @@ const PROFILE_PRIVILEGES: Record<ProfileType, PrivilegeType[]> = {
  * @param user The user object containing privileges
  * @returns boolean indicating if user has access
  */
-export function hasAccess(profileType: ProfileType, user: User): boolean {
+export function hasAccess(
+  profileType: ProfileType,
+  privileges: Privilege[]
+): boolean {
   const requiredPrivileges = PROFILE_PRIVILEGES[profileType];
-  const userPrivileges = user.privileges.map((p: { name: string }) => p.name);
+  const userPrivileges = privileges.map((p) => p.name);
 
   return requiredPrivileges.every((privilege) =>
     userPrivileges.includes(privilege)
@@ -41,20 +45,27 @@ export async function checkUserAccess(
   cookies: string
 ): Promise<boolean> {
   try {
-    const response = await api.get<User>('/auth/me', {
-      headers: {
-        Cookie: cookies,
-      },
-      throwOnHttpError: false,
-    });
+    const response = await api.get<User>('/auth/me');
 
     if (!response.ok) {
       console.error('Failed to fetch user data:', response.status);
       return false;
     }
 
-    const user = response.data;
-    return hasAccess(profileType, user);
+    const userPrivilegesResponse = await privilegesService.getPrivilegesByUser(
+      response.data.id.toString()
+    );
+
+    if (!userPrivilegesResponse.ok) {
+      console.error(
+        'Failed to fetch user privileges:',
+        userPrivilegesResponse.status
+      );
+      return false;
+    }
+
+    const userPrivileges = userPrivilegesResponse.data;
+    return hasAccess(profileType, userPrivileges);
   } catch (error) {
     console.error('Error checking user access:', error);
     return false;
