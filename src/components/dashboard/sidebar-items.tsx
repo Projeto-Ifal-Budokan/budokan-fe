@@ -1,5 +1,5 @@
-import { api } from '@/lib/api/client';
 import { authService } from '@/lib/api/services/auth-service';
+import { privilegesService } from '@/lib/api/services/privileges-service';
 import {
   INSTRUCTOR_PRIVILEGES,
   PRIVILEGES,
@@ -215,9 +215,9 @@ const adminSidebarItems: SidebarItem[] = [
   },
 ];
 
-export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
+export async function getSidebarItems(): Promise<SidebarItem[]> {
   try {
-    const response = await authService.me(cookies);
+    const response = await authService.me();
 
     if (!response.ok) {
       console.error('Failed to fetch user data:', response.status);
@@ -227,13 +227,8 @@ export async function getSidebarItems(cookies: string): Promise<SidebarItem[]> {
     const user = response.data;
 
     // TODO: Refactor this to use any service, but fot now its ok
-    const userPrivilegesResponse = await api.get<{ name: string }[]>(
-      `/privileges/user/${user.id}`,
-      {
-        headers: {
-          Cookie: cookies,
-        },
-      }
+    const userPrivilegesResponse = await privilegesService.getPrivilegesByUser(
+      user.id.toString()
     );
 
     if (!userPrivilegesResponse.ok) {
