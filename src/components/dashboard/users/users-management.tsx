@@ -15,6 +15,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -43,9 +44,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useAuth } from '@/lib/api/queries/use-auth';
 import { useManageUsers, userKeys } from '@/lib/api/queries/use-manage-users';
+import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
+import { User } from '@/types/user';
+import { hasAccess } from '@/utils/access-control';
 import { useQuery } from '@tanstack/react-query';
 import {
+  AlertTriangle,
   Edit,
   Eye,
   Key,
@@ -61,6 +67,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 // const tiposUsuario = [
 //   { value: 'administrador', label: 'Administrador', color: 'destructive' },
@@ -74,9 +81,27 @@ export function UsersManagement() {
   const [filterStatus, setFilterStatus] = useState('todos');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+  // Status change confirmation modal state
+  const [isStatusChangeModalOpen, setIsStatusChangeModalOpen] = useState(false);
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    user: User;
+    newStatus: string;
+  } | null>(null);
+
   // Get the manageUsers instance first
-  const { fetchUsers } = useManageUsers();
+  const { fetchUsers, updateUser } = useManageUsers();
   const router = useRouter();
+
+  // Get current user and their privileges to check if they're admin
+  const { data: currentUser } = useAuth().me;
+  const { data: currentUserPrivileges } = usePrivilegesByUser(
+    currentUser?.id.toString() || ''
+  );
+
+  // Check if current user is admin
+  const isAdmin = currentUserPrivileges
+    ? hasAccess('admin', currentUserPrivileges)
+    : false;
 
   // Then use it in the query
   const {
@@ -87,6 +112,59 @@ export function UsersManagement() {
     queryKey: userKeys.all,
     queryFn: fetchUsers,
   });
+
+  // Function to initiate status change (opens confirmation modal)
+  const handleStatusChangeRequest = (user: User, newStatus: string) => {
+    if (!isAdmin) {
+      toast.error('Você não tem permissão para alterar o status dos usuários');
+      return;
+    }
+
+    if (user.status === newStatus) {
+      return; // No change needed
+    }
+
+    setPendingStatusChange({ user, newStatus });
+    setIsStatusChangeModalOpen(true);
+  };
+
+  // Function to confirm and execute status change
+  const confirmStatusChange = async () => {
+    if (!pendingStatusChange) return;
+
+    const { user, newStatus } = pendingStatusChange;
+
+    try {
+      const updatedUser = {
+        ...user,
+        status: newStatus as 'active' | 'inactive' | 'suspended',
+      };
+
+      await updateUser.mutateAsync(updatedUser);
+
+      const statusMessages = {
+        active: 'ativado',
+        inactive: 'desativado',
+        suspended: 'suspenso',
+      };
+
+      toast.success(
+        `Usuário ${statusMessages[newStatus as keyof typeof statusMessages]} com sucesso!`
+      );
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      toast.error('Erro ao alterar status do usuário');
+    } finally {
+      setIsStatusChangeModalOpen(false);
+      setPendingStatusChange(null);
+    }
+  };
+
+  // Function to cancel status change
+  const cancelStatusChange = () => {
+    setIsStatusChangeModalOpen(false);
+    setPendingStatusChange(null);
+  };
 
   if (isLoading) {
     return <UsersSkeleton />;
@@ -101,24 +179,60 @@ export function UsersManagement() {
               .includes(searchTerm.toLowerCase()) ||
             usuario.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
             usuario.email.toLowerCase().includes(searchTerm.toLowerCase());
-          // const matchesTipo =
-          //   filterTipo === 'todos' || usuario.tipo.toLowerCase() === filterTipo;
-          // const matchesStatus =
-          //   filterStatus === 'todos' || usuario.status.toLowerCase() === filterStatus;
 
-          return matchesSearch;
-          // && matchesTipo && matchesStatus;
+          const matchesStatus =
+            filterStatus === 'todos' || usuario.status === filterStatus;
+
+          return matchesSearch && matchesStatus;
         })
       : []) || [];
 
   const getStatusColor = (status: string) => {
-    return status === 'active' ? 'default' : 'secondary';
+    switch (status) {
+      case 'active':
+        return 'default';
+      case 'inactive':
+        return 'secondary';
+      case 'suspended':
+        return 'destructive';
+      default:
+        return 'secondary';
+    }
   };
 
-  // const getTipoColor = (tipo: string) => {
-  //   const tipoObj = tiposUsuario.find((t) => t.label === tipo);
-  //   return tipoObj?.color || 'default';
-  // };
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'Ativo';
+      case 'inactive':
+        return 'Inativo';
+      case 'suspended':
+        return 'Suspenso';
+      default:
+        return 'Inativo';
+    }
+  };
+
+  const getStatusChangeMessage = (currentStatus: string, newStatus: string) => {
+    const statusMessages = {
+      active: 'ativar',
+      inactive: 'desativar',
+      suspended: 'suspender',
+    };
+
+    return statusMessages[newStatus as keyof typeof statusMessages];
+  };
+
+  const getStatusChangeDescription = (newStatus: string) => {
+    const descriptions = {
+      active: 'O usuário poderá acessar o sistema normalmente.',
+      inactive: 'O usuário não poderá acessar o sistema.',
+      suspended:
+        'O usuário ficará temporariamente impedido de acessar o sistema.',
+    };
+
+    return descriptions[newStatus as keyof typeof descriptions];
+  };
 
   return (
     <div className='space-y-6'>
@@ -344,8 +458,9 @@ export function UsersManagement() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='todos'>Todos</SelectItem>
-            <SelectItem value='ativo'>Ativo</SelectItem>
-            <SelectItem value='inativo'>Inativo</SelectItem>
+            <SelectItem value='active'>Ativo</SelectItem>
+            <SelectItem value='inactive'>Inativo</SelectItem>
+            <SelectItem value='suspended'>Suspenso</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -363,9 +478,7 @@ export function UsersManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>Usuário</TableHead>
-                <TableHead>Tipo</TableHead>
                 <TableHead>Contato</TableHead>
-                <TableHead>Último Acesso</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
@@ -376,10 +489,7 @@ export function UsersManagement() {
                   <TableCell>
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8'>
-                        <AvatarImage
-                          // src={usuario.avatar || '/placeholder.svg'}
-                          alt={usuario.firstName}
-                        />
+                        <AvatarImage alt={usuario.firstName} />
                         <AvatarFallback className='text-xs'>
                           {usuario.firstName +
                             ' ' +
@@ -390,18 +500,16 @@ export function UsersManagement() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className='font-medium'>{usuario.firstName}</div>
+                        <div className='font-medium'>
+                          {usuario.firstName + ' ' + usuario.surname}
+                        </div>
                         <div className='text-muted-foreground text-sm'>
                           {usuario.email}
                         </div>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    {/* <Badge variant={getTipoColor(usuario.tipo) as any}>
-                      {usuario.tipo}
-                    </Badge> */}
-                  </TableCell>
+
                   <TableCell>
                     <div className='space-y-1'>
                       <div className='flex items-center gap-1 text-sm'>
@@ -414,14 +522,33 @@ export function UsersManagement() {
                       </div>
                     </div>
                   </TableCell>
+
                   <TableCell>
-                    {/* <div className='text-sm'>{usuario.ultimoAcesso}</div> */}
+                    <div className='flex items-center gap-2'>
+                      <Badge variant={getStatusColor(usuario.status)}>
+                        {getStatusText(usuario.status)}
+                      </Badge>
+                      {isAdmin && (
+                        <Select
+                          value={usuario.status}
+                          onValueChange={(newStatus) =>
+                            handleStatusChangeRequest(usuario, newStatus)
+                          }
+                          disabled={updateUser.isPending}
+                        >
+                          <SelectTrigger className='h-8 w-28'>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value='active'>Ativo</SelectItem>
+                            <SelectItem value='inactive'>Inativo</SelectItem>
+                            <SelectItem value='suspended'>Suspenso</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusColor(usuario.status)}>
-                      {usuario.status}
-                    </Badge>
-                  </TableCell>
+
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -438,18 +565,22 @@ export function UsersManagement() {
                           <Eye className='mr-2 h-4 w-4' />
                           Visualizar
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Edit className='mr-2 h-4 w-4' />
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Key className='mr-2 h-4 w-4' />
-                          Redefinir Senha
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className='text-destructive'>
-                          <Trash2 className='mr-2 h-4 w-4' />
-                          Excluir
-                        </DropdownMenuItem>
+                        {isAdmin && (
+                          <>
+                            <DropdownMenuItem>
+                              <Edit className='mr-2 h-4 w-4' />
+                              Editar
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Key className='mr-2 h-4 w-4' />
+                              Redefinir Senha
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className='text-destructive'>
+                              <Trash2 className='mr-2 h-4 w-4' />
+                              Excluir
+                            </DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -459,6 +590,101 @@ export function UsersManagement() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Status Change Confirmation Modal */}
+      <Dialog
+        open={isStatusChangeModalOpen}
+        onOpenChange={setIsStatusChangeModalOpen}
+      >
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle className='flex items-center gap-2'>
+              <AlertTriangle className='h-5 w-5 text-amber-500' />
+              Confirmar Alteração de Status
+            </DialogTitle>
+            <DialogDescription>
+              Você tem certeza que deseja alterar o status deste usuário?
+            </DialogDescription>
+          </DialogHeader>
+
+          {pendingStatusChange && (
+            <div className='space-y-4'>
+              <div className='bg-muted flex items-center gap-3 rounded-lg p-3'>
+                <Avatar className='h-10 w-10'>
+                  <AvatarImage alt={pendingStatusChange.user.firstName} />
+                  <AvatarFallback>
+                    {pendingStatusChange.user.firstName[0]}
+                    {pendingStatusChange.user.surname[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className='font-medium'>
+                    {pendingStatusChange.user.firstName}{' '}
+                    {pendingStatusChange.user.surname}
+                  </div>
+                  <div className='text-muted-foreground text-sm'>
+                    {pendingStatusChange.user.email}
+                  </div>
+                </div>
+              </div>
+
+              <div className='space-y-2'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm'>Status atual:</span>
+                  <Badge
+                    variant={getStatusColor(pendingStatusChange.user.status)}
+                  >
+                    {getStatusText(pendingStatusChange.user.status)}
+                  </Badge>
+                </div>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm'>Novo status:</span>
+                  <Badge
+                    variant={getStatusColor(pendingStatusChange.newStatus)}
+                  >
+                    {getStatusText(pendingStatusChange.newStatus)}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className='rounded-lg border border-blue-200 bg-blue-50 p-3'>
+                <p className='text-sm text-blue-800'>
+                  <strong>Ação:</strong>{' '}
+                  {getStatusChangeMessage(
+                    pendingStatusChange.user.status,
+                    pendingStatusChange.newStatus
+                  )}{' '}
+                  usuário
+                </p>
+                <p className='mt-1 text-sm text-blue-700'>
+                  {getStatusChangeDescription(pendingStatusChange.newStatus)}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant='outline'
+              onClick={cancelStatusChange}
+              disabled={updateUser.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={confirmStatusChange}
+              disabled={updateUser.isPending}
+              className={
+                pendingStatusChange?.newStatus === 'suspended'
+                  ? 'bg-destructive hover:bg-destructive/90'
+                  : ''
+              }
+            >
+              {updateUser.isPending ? 'Alterando...' : 'Confirmar Alteração'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

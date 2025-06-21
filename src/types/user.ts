@@ -11,7 +11,7 @@ export interface User {
   email: string;
   firstName: string;
   surname: string;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'suspended';
   roles: Role[];
   privileges: Privilege[];
   birthDate: string;
