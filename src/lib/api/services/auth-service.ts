@@ -1,4 +1,4 @@
-import { api, ApiResponse } from '@/lib/api/client';
+import { api, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
 import { CreateUserData, User } from '@/types/user';
 

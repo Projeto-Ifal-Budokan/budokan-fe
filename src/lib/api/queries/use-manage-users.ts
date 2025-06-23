@@ -1,6 +1,8 @@
 'use client';
 
+import { UserStatus } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { userService } from '../services/user-service';
 
 export const userKeys = {
@@ -50,6 +52,7 @@ export function useManageUsers() {
     mutationFn: userService.deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
+      toast.success('Usuário excluído com sucesso!');
     },
   });
 
@@ -58,6 +61,17 @@ export function useManageUsers() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userKeys.all });
       queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      toast.success('Usuário atualizado com sucesso!');
+    },
+  });
+
+  const updateUserStatus = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: UserStatus }) =>
+      userService.updateUserStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      toast.success('Status do usuário atualizado com sucesso!');
     },
   });
 
@@ -67,5 +81,6 @@ export function useManageUsers() {
     fetchUsers,
     deleteUser,
     updateUser,
+    updateUserStatus,
   };
 }

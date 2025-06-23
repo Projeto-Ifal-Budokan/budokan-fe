@@ -1,4 +1,4 @@
-import { api, ApiResponse } from '@/lib/api/client';
+import { api, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
 import { Privilege } from '@/types/user';
 import { getAuthHeaders } from '@/utils/cookie-utils';

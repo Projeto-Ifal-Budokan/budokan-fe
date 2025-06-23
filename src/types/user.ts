@@ -6,12 +6,14 @@ export interface Role {
 
 export type Privilege = Role;
 
+export type UserStatus = 'active' | 'inactive' | 'suspended';
+
 export interface User {
   id: number;
   email: string;
   firstName: string;
   surname: string;
-  status: 'active' | 'inactive';
+  status: UserStatus;
   roles: Role[];
   privileges: Privilege[];
   birthDate: string;
