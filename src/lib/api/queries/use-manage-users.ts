@@ -1,5 +1,6 @@
 'use client';
 
+import { UserStatus } from '@/types/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../services/user-service';
 
@@ -61,11 +62,21 @@ export function useManageUsers() {
     },
   });
 
+  const updateUserStatus = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: UserStatus }) =>
+      userService.updateUserStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+    },
+  });
+
   return {
     useUser,
     fetchUser,
     fetchUsers,
     deleteUser,
     updateUser,
+    updateUserStatus,
   };
 }
