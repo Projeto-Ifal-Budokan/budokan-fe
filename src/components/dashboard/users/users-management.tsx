@@ -54,15 +54,17 @@ import {
   AlertTriangle,
   Edit,
   Eye,
+  Filter,
   Key,
   Mail,
   MoreHorizontal,
   Phone,
-  Plus,
   Search,
   Shield,
   Trash2,
+  TrendingUp,
   UserCheck,
+  UserPlus,
   Users,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -227,455 +229,590 @@ export function UsersManagement() {
   };
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
-        <div>
-          <h1 className='text-3xl font-bold'>Usuários</h1>
-          <p className='text-muted-foreground'>
-            Gerencie os usuários do sistema
-          </p>
-        </div>
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className='mr-2 h-4 w-4' />
-              Novo Usuário
-            </Button>
-          </DialogTrigger>
-          <DialogContent className='max-w-2xl'>
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Usuário</DialogTitle>
-              <DialogDescription>
-                Preencha as informações do novo usuário do sistema
-              </DialogDescription>
-            </DialogHeader>
-            <div className='grid gap-4 py-4'>
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <Label htmlFor='nome'>Nome Completo</Label>
-                  <Input id='nome' placeholder='Nome do usuário' />
-                </div>
-                <div className='space-y-2'>
-                  <Label htmlFor='email'>Email</Label>
-                  <Input
-                    id='email'
-                    type='email'
-                    placeholder='email@budokan.com'
-                  />
-                </div>
+    <div className='min-h-screen'>
+      <div className='mx-auto space-y-8'>
+        {/* Header Section */}
+        <div className='flex flex-col gap-6 md:flex-row md:items-center md:justify-between'>
+          <div className='space-y-2'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'>
+                <Users className='h-6 w-6' />
               </div>
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <Label htmlFor='telefone'>Telefone</Label>
-                  <Input id='telefone' placeholder='(11) 99999-9999' />
-                </div>
-                <div className='space-y-2'>
-                  <Label htmlFor='tipo'>Tipo de Usuário</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Selecione o tipo' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='administrador'>
-                        Administrador
-                      </SelectItem>
-                      <SelectItem value='instrutor'>Instrutor</SelectItem>
-                      <SelectItem value='funcionario'>Funcionário</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <Label htmlFor='senha'>Senha Temporária</Label>
-                  <Input
-                    id='senha'
-                    type='password'
-                    placeholder='Senha inicial'
-                  />
-                </div>
-                <div className='space-y-2'>
-                  <Label htmlFor='status'>Status</Label>
-                  <Select defaultValue='ativo'>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='ativo'>Ativo</SelectItem>
-                      <SelectItem value='inativo'>Inativo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className='space-y-3'>
-                <Label>Permissões</Label>
-                <div className='grid grid-cols-2 gap-3'>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-usuarios' />
-                    <Label htmlFor='perm-usuarios' className='text-sm'>
-                      Gerenciar Usuários
-                    </Label>
-                  </div>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-alunos' defaultChecked />
-                    <Label htmlFor='perm-alunos' className='text-sm'>
-                      Gerenciar Alunos
-                    </Label>
-                  </div>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-modalidades' />
-                    <Label htmlFor='perm-modalidades' className='text-sm'>
-                      Gerenciar Modalidades
-                    </Label>
-                  </div>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-frequencia' defaultChecked />
-                    <Label htmlFor='perm-frequencia' className='text-sm'>
-                      Controle de Frequência
-                    </Label>
-                  </div>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-pagamentos' />
-                    <Label htmlFor='perm-pagamentos' className='text-sm'>
-                      Gerenciar Pagamentos
-                    </Label>
-                  </div>
-                  <div className='flex items-center space-x-2'>
-                    <Switch id='perm-relatorios' />
-                    <Label htmlFor='perm-relatorios' className='text-sm'>
-                      Relatórios Avançados
-                    </Label>
-                  </div>
-                </div>
+              <div>
+                <h1 className='text-4xl font-bold tracking-tight text-gray-900'>
+                  Gerenciamento de Usuários
+                </h1>
+                <p className='text-lg text-gray-600'>
+                  Controle total sobre os usuários do sistema
+                </p>
               </div>
             </div>
-            <div className='flex justify-end gap-2'>
+          </div>
+
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button
+                size='lg'
+                className='bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg transition-all hover:scale-105 hover:shadow-xl'
+              >
+                <UserPlus className='mr-2 h-5 w-5' />
+                Novo Usuário
+              </Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-3xl'>
+              <DialogHeader className='space-y-4 pb-6'>
+                <DialogTitle className='text-2xl font-semibold'>
+                  Adicionar Novo Usuário
+                </DialogTitle>
+                <DialogDescription className='text-base'>
+                  Preencha as informações do novo usuário do sistema
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className='space-y-8 py-4'>
+                {/* Personal Information */}
+                <div className='space-y-4'>
+                  <h3 className='border-b pb-2 text-lg font-semibold text-gray-900'>
+                    Informações Pessoais
+                  </h3>
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <div className='space-y-2'>
+                      <Label htmlFor='nome' className='text-sm font-medium'>
+                        Nome Completo
+                      </Label>
+                      <Input
+                        id='nome'
+                        placeholder='Nome do usuário'
+                        className='h-11'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='email' className='text-sm font-medium'>
+                        Email
+                      </Label>
+                      <Input
+                        id='email'
+                        type='email'
+                        placeholder='email@budokan.com'
+                        className='h-11'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='telefone' className='text-sm font-medium'>
+                        Telefone
+                      </Label>
+                      <Input
+                        id='telefone'
+                        placeholder='(11) 99999-9999'
+                        className='h-11'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='tipo' className='text-sm font-medium'>
+                        Tipo de Usuário
+                      </Label>
+                      <Select>
+                        <SelectTrigger className='h-11'>
+                          <SelectValue placeholder='Selecione o tipo' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='administrador'>
+                            Administrador
+                          </SelectItem>
+                          <SelectItem value='instrutor'>Instrutor</SelectItem>
+                          <SelectItem value='funcionario'>
+                            Funcionário
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Account Configuration */}
+                <div className='space-y-4'>
+                  <h3 className='border-b pb-2 text-lg font-semibold text-gray-900'>
+                    Configuração da Conta
+                  </h3>
+                  <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                    <div className='space-y-2'>
+                      <Label htmlFor='senha' className='text-sm font-medium'>
+                        Senha Temporária
+                      </Label>
+                      <Input
+                        id='senha'
+                        type='password'
+                        placeholder='Senha inicial'
+                        className='h-11'
+                      />
+                    </div>
+                    <div className='space-y-2'>
+                      <Label htmlFor='status' className='text-sm font-medium'>
+                        Status
+                      </Label>
+                      <Select defaultValue='ativo'>
+                        <SelectTrigger className='h-11'>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='ativo'>Ativo</SelectItem>
+                          <SelectItem value='inativo'>Inativo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Permissions */}
+                <div className='space-y-4'>
+                  <h3 className='border-b pb-2 text-lg font-semibold text-gray-900'>
+                    Permissões do Sistema
+                  </h3>
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                    {[
+                      {
+                        id: 'perm-usuarios',
+                        label: 'Gerenciar Usuários',
+                        icon: Users,
+                      },
+                      {
+                        id: 'perm-alunos',
+                        label: 'Gerenciar Alunos',
+                        icon: UserCheck,
+                        defaultChecked: true,
+                      },
+                      {
+                        id: 'perm-modalidades',
+                        label: 'Gerenciar Modalidades',
+                        icon: Shield,
+                      },
+                      {
+                        id: 'perm-frequencia',
+                        label: 'Controle de Frequência',
+                        icon: TrendingUp,
+                        defaultChecked: true,
+                      },
+                      {
+                        id: 'perm-pagamentos',
+                        label: 'Gerenciar Pagamentos',
+                        icon: TrendingUp,
+                      },
+                      {
+                        id: 'perm-relatorios',
+                        label: 'Relatórios Avançados',
+                        icon: TrendingUp,
+                      },
+                    ].map(({ id, label, icon: Icon, defaultChecked }) => (
+                      <div
+                        key={id}
+                        className='flex items-center space-x-3 rounded-lg border bg-gray-50 p-3 transition-colors hover:bg-gray-100'
+                      >
+                        <Switch id={id} defaultChecked={defaultChecked} />
+                        <Icon className='h-4 w-4 text-gray-600' />
+                        <Label
+                          htmlFor={id}
+                          className='cursor-pointer text-sm font-medium'
+                        >
+                          {label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className='flex gap-3 pt-6'>
+                <Button
+                  variant='outline'
+                  onClick={() => setIsAddModalOpen(false)}
+                  className='px-6'
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => setIsAddModalOpen(false)}
+                  className='bg-gradient-to-r from-blue-600 to-indigo-600 px-6'
+                >
+                  Criar Usuário
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Enhanced Stats Cards */}
+        <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+          <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-xl'>
+            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
+            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium opacity-90'>
+                Total Usuários
+              </CardTitle>
+              <Users className='h-5 w-5 opacity-80' />
+            </CardHeader>
+            <CardContent className='relative'>
+              <div className='text-3xl font-bold'>{users?.length || 0}</div>
+              <p className='mt-1 text-xs opacity-80'>
+                {users?.filter((u) => u.status === 'active').length || 0} ativos
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-xl'>
+            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
+            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium opacity-90'>
+                Administradores
+              </CardTitle>
+              <Shield className='h-5 w-5 opacity-80' />
+            </CardHeader>
+            <CardContent className='relative'>
+              <div className='text-3xl font-bold'>
+                {/* {usuarios.filter((u) => u.tipo === 'Administrador').length} */}
+                3
+              </div>
+              <p className='mt-1 text-xs opacity-80'>usuários admin</p>
+            </CardContent>
+          </Card>
+
+          <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl'>
+            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
+            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium opacity-90'>
+                Instrutores
+              </CardTitle>
+              <UserCheck className='h-5 w-5 opacity-80' />
+            </CardHeader>
+            <CardContent className='relative'>
+              <div className='text-3xl font-bold'>
+                {/* {usuarios.filter((u) => u.tipo === 'Instrutor').length} */}
+                12
+              </div>
+              <p className='mt-1 text-xs opacity-80'>instrutores cadastrados</p>
+            </CardContent>
+          </Card>
+
+          <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl'>
+            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
+            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium opacity-90'>
+                Funcionários
+              </CardTitle>
+              <Users className='h-5 w-5 opacity-80' />
+            </CardHeader>
+            <CardContent className='relative'>
+              <div className='text-3xl font-bold'>
+                {/* {usuarios.filter((u) => u.tipo === 'Funcionário').length} */}
+                8
+              </div>
+              <p className='mt-1 text-xs opacity-80'>funcionários ativos</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Filters Section */}
+        <Card className='border-0 bg-white/80 shadow-lg backdrop-blur-sm'>
+          <CardHeader className='pb-4'>
+            <div className='flex items-center gap-2'>
+              <Filter className='h-5 w-5 text-gray-600' />
+              <CardTitle className='text-lg'>Filtros e Busca</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className='flex flex-col gap-4 md:flex-row md:items-center'>
+              <div className='relative max-w-md flex-1'>
+                <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400' />
+                <Input
+                  placeholder='Buscar por nome ou email...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className='h-11 border-gray-200 bg-white pl-10 shadow-sm focus:border-blue-500 focus:ring-blue-500'
+                />
+              </div>
+
+              <div className='flex gap-3'>
+                <Select value={filterTipo} onValueChange={setFilterTipo}>
+                  <SelectTrigger className='h-11 w-48 border-gray-200 bg-white shadow-sm'>
+                    <SelectValue placeholder='Filtrar por tipo' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='todos'>Todos os tipos</SelectItem>
+                    <SelectItem value='administrador'>Administrador</SelectItem>
+                    <SelectItem value='instrutor'>Instrutor</SelectItem>
+                    <SelectItem value='funcionario'>Funcionário</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={filterStatus} onValueChange={setFilterStatus}>
+                  <SelectTrigger className='h-11 w-40 border-gray-200 bg-white shadow-sm'>
+                    <SelectValue placeholder='Status' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='todos'>Todos</SelectItem>
+                    <SelectItem value='active'>Ativo</SelectItem>
+                    <SelectItem value='inactive'>Inativo</SelectItem>
+                    <SelectItem value='suspended'>Suspenso</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Enhanced Users Table */}
+        <Card className='border-0 bg-white/90 shadow-xl backdrop-blur-sm'>
+          <CardHeader className='border-b bg-gradient-to-r from-gray-50 to-gray-100'>
+            <CardTitle className='text-xl font-semibold'>
+              Lista de Usuários
+            </CardTitle>
+            <CardDescription className='text-base'>
+              Gerencie todos os usuários do sistema com facilidade
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='p-0'>
+            <Table>
+              <TableHeader className='bg-gray-50/50'>
+                <TableRow className='border-b border-gray-200'>
+                  <TableHead className='py-4 font-semibold text-gray-700'>
+                    Usuário
+                  </TableHead>
+                  <TableHead className='py-4 font-semibold text-gray-700'>
+                    Contato
+                  </TableHead>
+                  <TableHead className='py-4 font-semibold text-gray-700'>
+                    Status
+                  </TableHead>
+                  <TableHead className='py-4 font-semibold text-gray-700'>
+                    Ações
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredUsuarios.map((usuario, index) => (
+                  <TableRow
+                    key={usuario.id}
+                    className={`border-b border-gray-100 transition-colors hover:bg-gray-50/50 ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'
+                    }`}
+                  >
+                    <TableCell className='py-4'>
+                      <div className='flex items-center gap-4'>
+                        <Avatar className='h-10 w-10 ring-2 ring-gray-100'>
+                          <AvatarImage alt={usuario.firstName} />
+                          <AvatarFallback className='bg-gradient-to-br from-blue-100 to-indigo-100 text-sm font-medium text-blue-700'>
+                            {usuario.firstName[0]}
+                            {usuario.surname[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className='font-semibold text-gray-900'>
+                            {usuario.firstName + ' ' + usuario.surname}
+                          </div>
+                          <div className='text-sm text-gray-500'>
+                            {usuario.email}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className='py-4'>
+                      <div className='space-y-2'>
+                        <div className='flex items-center gap-2 text-sm'>
+                          <Mail className='h-4 w-4 text-gray-400' />
+                          <span className='text-gray-600'>{usuario.email}</span>
+                        </div>
+                        <div className='flex items-center gap-2 text-sm'>
+                          <Phone className='h-4 w-4 text-gray-400' />
+                          <span className='text-gray-600'>{usuario.phone}</span>
+                        </div>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className='py-4'>
+                      <div className='flex items-center gap-2'>
+                        {isAdmin ? (
+                          <Select
+                            value={usuario.status}
+                            onValueChange={(newStatus) =>
+                              handleStatusChangeRequest(usuario, newStatus)
+                            }
+                            disabled={updateUserStatus.isPending}
+                          >
+                            <SelectTrigger className='h-9 w-32 border-gray-200'>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value='active'>Ativo</SelectItem>
+                              <SelectItem value='inactive'>Inativo</SelectItem>
+                              <SelectItem value='suspended'>
+                                Suspenso
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <Badge
+                            variant={getStatusColor(usuario.status)}
+                            className='px-3 py-1'
+                          >
+                            {getStatusText(usuario.status)}
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className='py-4'>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            className='h-9 w-9 hover:bg-gray-100'
+                          >
+                            <MoreHorizontal className='h-4 w-4' />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align='end' className='w-48'>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(`/dashboard/users/${usuario.id}`)
+                            }
+                            className='cursor-pointer'
+                          >
+                            <Eye className='mr-2 h-4 w-4' />
+                            Visualizar
+                          </DropdownMenuItem>
+                          {isAdmin && (
+                            <>
+                              <DropdownMenuItem className='cursor-pointer'>
+                                <Edit className='mr-2 h-4 w-4' />
+                                Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className='cursor-pointer'>
+                                <Key className='mr-2 h-4 w-4' />
+                                Redefinir Senha
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className='text-destructive cursor-pointer'>
+                                <Trash2 className='mr-2 h-4 w-4' />
+                                Excluir
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* Status Change Confirmation Modal - Enhanced */}
+        <Dialog
+          open={isStatusChangeModalOpen}
+          onOpenChange={setIsStatusChangeModalOpen}
+        >
+          <DialogContent className='max-w-lg border-0 shadow-2xl'>
+            <DialogHeader className='space-y-4'>
+              <DialogTitle className='flex items-center gap-3 text-xl'>
+                <div className='flex h-10 w-10 items-center justify-center rounded-full bg-amber-100'>
+                  <AlertTriangle className='h-5 w-5 text-amber-600' />
+                </div>
+                Confirmar Alteração de Status
+              </DialogTitle>
+              <DialogDescription className='text-base text-gray-600'>
+                Você tem certeza que deseja alterar o status deste usuário?
+              </DialogDescription>
+            </DialogHeader>
+
+            {pendingStatusChange && (
+              <div className='space-y-6 py-4'>
+                <div className='flex items-center gap-4 rounded-xl bg-gray-50 p-4'>
+                  <Avatar className='h-12 w-12 ring-2 ring-gray-200'>
+                    <AvatarImage alt={pendingStatusChange.user.firstName} />
+                    <AvatarFallback className='bg-gradient-to-br from-blue-100 to-indigo-100 font-semibold text-blue-700'>
+                      {pendingStatusChange.user.firstName[0]}
+                      {pendingStatusChange.user.surname[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className='font-semibold text-gray-900'>
+                      {pendingStatusChange.user.firstName}{' '}
+                      {pendingStatusChange.user.surname}
+                    </div>
+                    <div className='text-sm text-gray-500'>
+                      {pendingStatusChange.user.email}
+                    </div>
+                  </div>
+                </div>
+
+                <div className='space-y-3'>
+                  <div className='flex items-center justify-between rounded-lg border bg-white p-3 shadow-sm'>
+                    <span className='text-sm font-medium text-gray-700'>
+                      Status atual:
+                    </span>
+                    <Badge
+                      variant={getStatusColor(pendingStatusChange.user.status)}
+                      className='px-3 py-1'
+                    >
+                      {getStatusText(pendingStatusChange.user.status)}
+                    </Badge>
+                  </div>
+                  <div className='flex items-center justify-between rounded-lg border bg-white p-3 shadow-sm'>
+                    <span className='text-sm font-medium text-gray-700'>
+                      Novo status:
+                    </span>
+                    <Badge
+                      variant={getStatusColor(pendingStatusChange.newStatus)}
+                      className='px-3 py-1'
+                    >
+                      {getStatusText(pendingStatusChange.newStatus)}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className='rounded-xl border border-blue-200 bg-blue-50 p-4'>
+                  <p className='text-sm font-medium text-blue-800'>
+                    <strong>Ação:</strong>{' '}
+                    {getStatusChangeMessage(
+                      pendingStatusChange.user.status,
+                      pendingStatusChange.newStatus
+                    )}{' '}
+                    usuário
+                  </p>
+                  <p className='mt-2 text-sm text-blue-700'>
+                    {getStatusChangeDescription(pendingStatusChange.newStatus)}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter className='flex gap-3 pt-4'>
               <Button
                 variant='outline'
-                onClick={() => setIsAddModalOpen(false)}
+                onClick={cancelStatusChange}
+                disabled={updateUserStatus.isPending}
+                className='px-6'
               >
                 Cancelar
               </Button>
-              <Button onClick={() => setIsAddModalOpen(false)}>
-                Criar Usuário
+              <Button
+                onClick={confirmStatusChange}
+                disabled={updateUserStatus.isPending}
+                className={`px-6 ${
+                  pendingStatusChange?.newStatus === 'suspended'
+                    ? 'bg-destructive hover:bg-destructive/90'
+                    : 'bg-gradient-to-r from-blue-600 to-indigo-600'
+                }`}
+              >
+                {updateUserStatus.isPending
+                  ? 'Alterando...'
+                  : 'Confirmar Alteração'}
               </Button>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
-
-      {/* Stats Cards */}
-      <div className='grid gap-4 md:grid-cols-4'>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Total Usuários
-            </CardTitle>
-            <Users className='text-muted-foreground h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{users?.length || 0}</div>
-            <p className='text-muted-foreground text-xs'>
-              {users?.filter((u) => u.status === 'active').length || 0} ativos
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Administradores
-            </CardTitle>
-            <Shield className='text-muted-foreground h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {/* {usuarios.filter((u) => u.tipo === 'Administrador').length} */}
-            </div>
-            <p className='text-muted-foreground text-xs'>usuários admin</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Instrutores</CardTitle>
-            <UserCheck className='text-muted-foreground h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {/* {usuarios.filter((u) => u.tipo === 'Instrutor').length} */}
-            </div>
-            <p className='text-muted-foreground text-xs'>
-              instrutores cadastrados
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Funcionários</CardTitle>
-            <Users className='text-muted-foreground h-4 w-4' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>
-              {/* {usuarios.filter((u) => u.tipo === 'Funcionário').length} */}
-            </div>
-            <p className='text-muted-foreground text-xs'>funcionários ativos</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <div className='flex items-center gap-4'>
-        <div className='relative max-w-sm flex-1'>
-          <Search className='text-muted-foreground absolute top-2.5 left-2 h-4 w-4' />
-          <Input
-            placeholder='Buscar usuários...'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className='pl-8'
-          />
-        </div>
-        <Select value={filterTipo} onValueChange={setFilterTipo}>
-          <SelectTrigger className='w-40'>
-            <SelectValue placeholder='Tipo' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='todos'>Todos os tipos</SelectItem>
-            <SelectItem value='administrador'>Administrador</SelectItem>
-            <SelectItem value='instrutor'>Instrutor</SelectItem>
-            <SelectItem value='funcionario'>Funcionário</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className='w-32'>
-            <SelectValue placeholder='Status' />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='todos'>Todos</SelectItem>
-            <SelectItem value='active'>Ativo</SelectItem>
-            <SelectItem value='inactive'>Inativo</SelectItem>
-            <SelectItem value='suspended'>Suspenso</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Users Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Usuários</CardTitle>
-          <CardDescription>
-            Gerencie todos os usuários do sistema
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Usuário</TableHead>
-                <TableHead>Contato</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsuarios.map((usuario) => (
-                <TableRow key={usuario.id}>
-                  <TableCell>
-                    <div className='flex items-center gap-3'>
-                      <Avatar className='h-8 w-8'>
-                        <AvatarImage alt={usuario.firstName} />
-                        <AvatarFallback className='text-xs'>
-                          {usuario.firstName +
-                            ' ' +
-                            usuario.surname
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className='font-medium'>
-                          {usuario.firstName + ' ' + usuario.surname}
-                        </div>
-                        <div className='text-muted-foreground text-sm'>
-                          {usuario.email}
-                        </div>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <div className='space-y-1'>
-                      <div className='flex items-center gap-1 text-sm'>
-                        <Mail className='text-muted-foreground h-3 w-3' />
-                        <span className='text-xs'>{usuario.email}</span>
-                      </div>
-                      <div className='flex items-center gap-1 text-sm'>
-                        <Phone className='text-muted-foreground h-3 w-3' />
-                        <span className='text-xs'>{usuario.phone}</span>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <div className='flex items-center gap-2'>
-                      {isAdmin && (
-                        <Select
-                          value={usuario.status}
-                          onValueChange={(newStatus) =>
-                            handleStatusChangeRequest(usuario, newStatus)
-                          }
-                          disabled={updateUserStatus.isPending}
-                        >
-                          <SelectTrigger className='h-8 w-28'>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value='active'>Ativo</SelectItem>
-                            <SelectItem value='inactive'>Inativo</SelectItem>
-                            <SelectItem value='suspended'>Suspenso</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' size='sm'>
-                          <MoreHorizontal className='h-4 w-4' />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align='end'>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            router.push(`/dashboard/users/${usuario.id}`)
-                          }
-                        >
-                          <Eye className='mr-2 h-4 w-4' />
-                          Visualizar
-                        </DropdownMenuItem>
-                        {isAdmin && (
-                          <>
-                            <DropdownMenuItem>
-                              <Edit className='mr-2 h-4 w-4' />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Key className='mr-2 h-4 w-4' />
-                              Redefinir Senha
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className='text-destructive'>
-                              <Trash2 className='mr-2 h-4 w-4' />
-                              Excluir
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Status Change Confirmation Modal */}
-      <Dialog
-        open={isStatusChangeModalOpen}
-        onOpenChange={setIsStatusChangeModalOpen}
-      >
-        <DialogContent className='max-w-md'>
-          <DialogHeader>
-            <DialogTitle className='flex items-center gap-2'>
-              <AlertTriangle className='h-5 w-5 text-amber-500' />
-              Confirmar Alteração de Status
-            </DialogTitle>
-            <DialogDescription>
-              Você tem certeza que deseja alterar o status deste usuário?
-            </DialogDescription>
-          </DialogHeader>
-
-          {pendingStatusChange && (
-            <div className='space-y-4'>
-              <div className='bg-muted flex items-center gap-3 rounded-lg p-3'>
-                <Avatar className='h-10 w-10'>
-                  <AvatarImage alt={pendingStatusChange.user.firstName} />
-                  <AvatarFallback>
-                    {pendingStatusChange.user.firstName[0]}
-                    {pendingStatusChange.user.surname[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className='font-medium'>
-                    {pendingStatusChange.user.firstName}{' '}
-                    {pendingStatusChange.user.surname}
-                  </div>
-                  <div className='text-muted-foreground text-sm'>
-                    {pendingStatusChange.user.email}
-                  </div>
-                </div>
-              </div>
-
-              <div className='space-y-2'>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm'>Status atual:</span>
-                  <Badge
-                    variant={getStatusColor(pendingStatusChange.user.status)}
-                  >
-                    {getStatusText(pendingStatusChange.user.status)}
-                  </Badge>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm'>Novo status:</span>
-                  <Badge
-                    variant={getStatusColor(pendingStatusChange.newStatus)}
-                  >
-                    {getStatusText(pendingStatusChange.newStatus)}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className='rounded-lg border border-blue-200 bg-blue-50 p-3'>
-                <p className='text-sm text-blue-800'>
-                  <strong>Ação:</strong>{' '}
-                  {getStatusChangeMessage(
-                    pendingStatusChange.user.status,
-                    pendingStatusChange.newStatus
-                  )}{' '}
-                  usuário
-                </p>
-                <p className='mt-1 text-sm text-blue-700'>
-                  {getStatusChangeDescription(pendingStatusChange.newStatus)}
-                </p>
-              </div>
-            </div>
-          )}
-
-          <DialogFooter>
-            <Button
-              variant='outline'
-              onClick={cancelStatusChange}
-              disabled={updateUserStatus.isPending}
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={confirmStatusChange}
-              disabled={updateUserStatus.isPending}
-              className={
-                pendingStatusChange?.newStatus === 'suspended'
-                  ? 'bg-destructive hover:bg-destructive/90'
-                  : ''
-              }
-            >
-              {updateUserStatus.isPending
-                ? 'Alterando...'
-                : 'Confirmar Alteração'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
