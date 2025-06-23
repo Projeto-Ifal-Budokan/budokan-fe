@@ -1,4 +1,4 @@
-import { api } from '@/lib/api/client';
+import { api } from '@/lib/api/api';
 import { privilegesService } from '@/lib/api/services/privileges-service';
 import {
   INSTRUCTOR_PRIVILEGES,

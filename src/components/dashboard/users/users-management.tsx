@@ -47,7 +47,7 @@ import {
 import { useAuth } from '@/lib/api/queries/use-auth';
 import { useManageUsers, userKeys } from '@/lib/api/queries/use-manage-users';
 import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
-import { User } from '@/types/user';
+import { User, UserStatus } from '@/types/user';
 import { hasAccess } from '@/utils/access-control';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -69,12 +69,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-// const tiposUsuario = [
-//   { value: 'administrador', label: 'Administrador', color: 'destructive' },
-//   { value: 'instrutor', label: 'Instrutor', color: 'default' },
-//   { value: 'funcionario', label: 'Funcionário', color: 'secondary' },
-// ];
-
 export function UsersManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTipo, setFilterTipo] = useState('todos');
@@ -89,7 +83,7 @@ export function UsersManagement() {
   } | null>(null);
 
   // Get the manageUsers instance first
-  const { fetchUsers, updateUser } = useManageUsers();
+  const { fetchUsers, updateUserStatus } = useManageUsers();
   const router = useRouter();
 
   // Get current user and their privileges to check if they're admin
@@ -135,12 +129,10 @@ export function UsersManagement() {
     const { user, newStatus } = pendingStatusChange;
 
     try {
-      const updatedUser = {
-        ...user,
-        status: newStatus as 'active' | 'inactive' | 'suspended',
-      };
-
-      await updateUser.mutateAsync(updatedUser);
+      await updateUserStatus.mutateAsync({
+        id: String(user.id),
+        status: newStatus as UserStatus,
+      });
 
       const statusMessages = {
         active: 'ativado',
@@ -525,16 +517,13 @@ export function UsersManagement() {
 
                   <TableCell>
                     <div className='flex items-center gap-2'>
-                      <Badge variant={getStatusColor(usuario.status)}>
-                        {getStatusText(usuario.status)}
-                      </Badge>
                       {isAdmin && (
                         <Select
                           value={usuario.status}
                           onValueChange={(newStatus) =>
                             handleStatusChangeRequest(usuario, newStatus)
                           }
-                          disabled={updateUser.isPending}
+                          disabled={updateUserStatus.isPending}
                         >
                           <SelectTrigger className='h-8 w-28'>
                             <SelectValue />
@@ -667,20 +656,22 @@ export function UsersManagement() {
             <Button
               variant='outline'
               onClick={cancelStatusChange}
-              disabled={updateUser.isPending}
+              disabled={updateUserStatus.isPending}
             >
               Cancelar
             </Button>
             <Button
               onClick={confirmStatusChange}
-              disabled={updateUser.isPending}
+              disabled={updateUserStatus.isPending}
               className={
                 pendingStatusChange?.newStatus === 'suspended'
                   ? 'bg-destructive hover:bg-destructive/90'
                   : ''
               }
             >
-              {updateUser.isPending ? 'Alterando...' : 'Confirmar Alteração'}
+              {updateUserStatus.isPending
+                ? 'Alterando...'
+                : 'Confirmar Alteração'}
             </Button>
           </DialogFooter>
         </DialogContent>
