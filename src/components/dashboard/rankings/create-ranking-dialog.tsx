@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { rankingsService } from '@/lib/api/services/rankings-service';
 import { CreateRankData, createRankSchema } from '@/types/ranking';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Trophy } from 'lucide-react';
@@ -37,12 +38,14 @@ interface CreateRankingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   disciplines: Discipline[];
+  onSuccess?: () => void;
 }
 
 export function CreateRankingDialog({
   open,
   onOpenChange,
   disciplines,
+  onSuccess,
 }: CreateRankingDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -67,15 +70,19 @@ export function CreateRankingDialog({
   const onSubmit = async (data: CreateRankData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Implement API call to create ranking
-      console.log('Creating ranking:', data);
+      const response = await rankingsService.createRanking(data);
 
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success('Ranking criado com sucesso!');
-      reset();
-      onOpenChange(false);
+      if (response.ok) {
+        toast.success('Ranking criado com sucesso!');
+        reset();
+        onOpenChange(false);
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        toast.error('Erro ao criar ranking. Tente novamente.');
+        console.error('Failed to create ranking:', response.status);
+      }
     } catch (error) {
       console.error('Error creating ranking:', error);
       toast.error('Erro ao criar ranking. Tente novamente.');

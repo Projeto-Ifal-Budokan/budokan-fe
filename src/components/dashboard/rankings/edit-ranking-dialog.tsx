@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { rankingsService } from '@/lib/api/services/rankings-service';
 import { Ranking, UpdateRankData, updateRankSchema } from '@/types/ranking';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Edit, Loader2 } from 'lucide-react';
@@ -43,6 +44,7 @@ interface EditRankingDialogProps {
   onOpenChange: (open: boolean) => void;
   ranking: Ranking;
   disciplines: Discipline[];
+  onSuccess?: () => void;
 }
 
 export function EditRankingDialog({
@@ -50,6 +52,7 @@ export function EditRankingDialog({
   onOpenChange,
   ranking,
   disciplines,
+  onSuccess,
 }: EditRankingDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -85,14 +88,21 @@ export function EditRankingDialog({
   const onSubmit = async (data: EditRankData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Implement API call to update ranking
-      console.log('Updating ranking:', { id: ranking.id, ...data });
+      const response = await rankingsService.updateRanking(
+        ranking.id.toString(),
+        data
+      );
 
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success('Ranking atualizado com sucesso!');
-      onOpenChange(false);
+      if (response.ok) {
+        toast.success('Ranking atualizado com sucesso!');
+        onOpenChange(false);
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        toast.error('Erro ao atualizar ranking. Tente novamente.');
+        console.error('Failed to update ranking:', response.status);
+      }
     } catch (error) {
       console.error('Error updating ranking:', error);
       toast.error('Erro ao atualizar ranking. Tente novamente.');

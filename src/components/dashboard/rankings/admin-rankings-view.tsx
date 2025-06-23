@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { rankingsService } from '@/lib/api/services/rankings-service';
 import { Ranking } from '@/types/ranking';
 import {
   BookOpen,
@@ -29,7 +30,7 @@ import {
   Trash2,
   Trophy,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateRankingDialog } from './create-ranking-dialog';
 import { RankingDetailDialog } from './detail-ranking-dialog';
 import { EditRankingDialog } from './edit-ranking-dialog';
@@ -49,8 +50,11 @@ export function AdminRankingsView() {
   const [editingRanking, setEditingRanking] = useState<Ranking | null>(null);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [rankings, setRankings] = useState<Ranking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data based on API structure
+  // Mock data for disciplines - in real app, this would come from API
   const disciplines: Discipline[] = [
     {
       id: 1,
@@ -72,98 +76,44 @@ export function AdminRankingsView() {
     },
   ];
 
-  const rankings: Ranking[] = [
-    {
-      id: 1,
-      idDiscipline: 1,
-      name: '7º Kyu',
-      description: 'Faixa Branca',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 2,
-      idDiscipline: 1,
-      name: '6º Kyu',
-      description: 'Faixa Amarela',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 3,
-      idDiscipline: 1,
-      name: '5º Kyu',
-      description: 'Faixa Laranja',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 4,
-      idDiscipline: 1,
-      name: '4º Kyu',
-      description: 'Faixa Verde',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 5,
-      idDiscipline: 1,
-      name: '3º Kyu',
-      description: 'Faixa Roxa',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 6,
-      idDiscipline: 1,
-      name: '2º Kyu',
-      description: 'Faixa Marrom',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 7,
-      idDiscipline: 1,
-      name: '1º Kyu',
-      description: 'Faixa Marrom',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 8,
-      idDiscipline: 1,
-      name: '1º Dan',
-      description: 'Faixa Preta',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Karate-Do',
-    },
-    {
-      id: 9,
-      idDiscipline: 2,
-      name: '6º Kyu',
-      description: 'Faixa Branca',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Kendo',
-    },
-    {
-      id: 10,
-      idDiscipline: 2,
-      name: '5º Kyu',
-      description: 'Faixa Azul',
-      createdAt: '2025-06-06T12:58:43.000Z',
-      updatedAt: '2025-06-06T12:58:44.000Z',
-      disciplineName: 'Kendo',
-    },
-  ];
+  // Load rankings from API
+  const loadRankings = async (disciplineId?: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await rankingsService.getRankings(disciplineId);
+
+      if (response.ok) {
+        setRankings(response.data);
+      } else {
+        setError('Erro ao carregar rankings');
+        console.error('Failed to load rankings:', response.status);
+      }
+    } catch (error) {
+      setError('Erro ao carregar rankings');
+      console.error('Error loading rankings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load rankings on component mount
+  useEffect(() => {
+    loadRankings();
+  }, []);
+
+  // Load rankings when discipline filter changes
+  useEffect(() => {
+    if (selectedDiscipline === 'all') {
+      loadRankings();
+    } else {
+      const discipline = disciplines.find((d) => d.name === selectedDiscipline);
+      if (discipline) {
+        loadRankings(discipline.id.toString());
+      }
+    }
+  }, [selectedDiscipline]);
 
   const filteredRankings = rankings.filter((ranking) => {
     // Filtro por termo de busca
@@ -172,12 +122,7 @@ export function AdminRankingsView() {
       ranking.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ranking.disciplineName?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Filtro por modalidade
-    const matchesDiscipline =
-      selectedDiscipline === 'all' ||
-      ranking.disciplineName === selectedDiscipline;
-
-    return matchesSearch && matchesDiscipline;
+    return matchesSearch;
   });
 
   const getRankingStats = (rankingId: number) => {
@@ -207,9 +152,25 @@ export function AdminRankingsView() {
     setShowEditDialog(true);
   };
 
-  const handleDelete = (ranking: Ranking) => {
-    // TODO: Implement delete functionality
-    console.log('Delete ranking:', ranking);
+  const handleDelete = async (ranking: Ranking) => {
+    try {
+      const response = await rankingsService.deleteRanking(
+        ranking.id.toString()
+      );
+
+      if (response.ok) {
+        // Reload rankings after successful deletion
+        loadRankings(
+          selectedDiscipline === 'all' ? undefined : selectedDiscipline
+        );
+      } else {
+        console.error('Failed to delete ranking:', response.status);
+        // TODO: Show error message to user
+      }
+    } catch (error) {
+      console.error('Error deleting ranking:', error);
+      // TODO: Show error message to user
+    }
   };
 
   const handleView = (ranking: Ranking) => {
@@ -222,6 +183,64 @@ export function AdminRankingsView() {
   };
 
   const hasActiveFilters = searchTerm || selectedDiscipline !== 'all';
+
+  const handleCreateSuccess = () => {
+    setShowCreateDialog(false);
+    // Reload rankings after successful creation
+    loadRankings(selectedDiscipline === 'all' ? undefined : selectedDiscipline);
+  };
+
+  const handleEditSuccess = () => {
+    setShowEditDialog(false);
+    // Reload rankings after successful edit
+    loadRankings(selectedDiscipline === 'all' ? undefined : selectedDiscipline);
+  };
+
+  if (loading) {
+    return (
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h1 className='text-3xl font-bold text-gray-900'>
+              Gerenciamento de Rankings
+            </h1>
+            <p className='text-gray-600'>
+              Gerencie os níveis de graduação das modalidades
+            </p>
+          </div>
+        </div>
+        <div className='flex items-center justify-center py-12'>
+          <div className='text-center'>
+            <div className='mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600'></div>
+            <p className='mt-2 text-gray-600'>Carregando rankings...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <div>
+            <h1 className='text-3xl font-bold text-gray-900'>
+              Gerenciamento de Rankings
+            </h1>
+            <p className='text-gray-600'>
+              Gerencie os níveis de graduação das modalidades
+            </p>
+          </div>
+        </div>
+        <div className='flex items-center justify-center py-12'>
+          <div className='text-center'>
+            <p className='mb-4 text-red-600'>{error}</p>
+            <Button onClick={() => loadRankings()}>Tentar novamente</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='space-y-6'>
@@ -551,6 +570,7 @@ export function AdminRankingsView() {
           open={showCreateDialog}
           onOpenChange={setShowCreateDialog}
           disciplines={disciplines}
+          onSuccess={handleCreateSuccess}
         />
       )}
 
@@ -560,6 +580,7 @@ export function AdminRankingsView() {
           onOpenChange={setShowEditDialog}
           ranking={editingRanking}
           disciplines={disciplines}
+          onSuccess={handleEditSuccess}
         />
       )}
 

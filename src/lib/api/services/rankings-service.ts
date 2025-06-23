@@ -4,8 +4,11 @@ import { CreateRankData, Ranking, UpdateRankData } from '@/types/ranking';
 import { getAuthHeaders } from '@/utils/cookie-utils';
 
 export const rankingsService = {
-  getRankings: async (): Promise<ApiResponse<Ranking[]>> => {
-    const response = await api.get<Ranking[]>('/rankings', {
+  getRankings: async (
+    disciplineId?: string
+  ): Promise<ApiResponse<Ranking[]>> => {
+    const params = disciplineId ? `?disciplineId=${disciplineId}` : '';
+    const response = await api.get<Ranking[]>(`/ranks${params}`, {
       headers: {
         Cookie: await getAuthHeaders(),
       },
@@ -14,7 +17,7 @@ export const rankingsService = {
   },
 
   getRankingById: async (id: string): Promise<ApiResponse<Ranking>> => {
-    const response = await api.get<Ranking>(`/rankings/${id}`, {
+    const response = await api.get<Ranking>(`/ranks/${id}`, {
       headers: {
         Cookie: await getAuthHeaders(),
       },
@@ -25,7 +28,7 @@ export const rankingsService = {
   createRanking: async (
     data: CreateRankData
   ): Promise<ApiResponse<Response>> => {
-    const response = await api.post<Response>('/rankings', data, {
+    const response = await api.post<Response>('/ranks', data, {
       headers: {
         Cookie: await getAuthHeaders(),
       },
@@ -37,7 +40,7 @@ export const rankingsService = {
     id: string,
     data: UpdateRankData
   ): Promise<ApiResponse<Response>> => {
-    const response = await api.put<Response>(`/rankings/${id}`, data, {
+    const response = await api.put<Response>(`/ranks/${id}`, data, {
       headers: {
         Cookie: await getAuthHeaders(),
       },
@@ -46,7 +49,7 @@ export const rankingsService = {
   },
 
   deleteRanking: async (id: string): Promise<ApiResponse<Response>> => {
-    const response = await api.delete<Response>(`/rankings/${id}`, {
+    const response = await api.delete<Response>(`/ranks/${id}`, {
       headers: {
         Cookie: await getAuthHeaders(),
       },
