@@ -19,10 +19,12 @@ export const rolePrivilegesService = {
   },
 
   getPrivilegesByRole: async (
-    id: string
+    id: string,
+    page: number = 1,
+    pageSize: number = 100
   ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
     const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
-      `/role-privileges/${id}`
+      `/role-privileges/${id}?page=${page}&page_size=${pageSize}`
     );
     return response;
   },
