@@ -44,13 +44,13 @@ export default function PrivilegesManagement() {
     ? hasAccess('admin', currentUserPrivileges)
     : false;
 
-  // Redirect if not admin
-  useMemo(() => {
-    if (!isLoading && !isAdmin && currentUser) {
-      router.push('/dashboard/acesso-negado');
-      return;
-    }
-  }, [isAdmin, isLoading, currentUser, router]);
+  //   // Redirect if not admin
+  //   useMemo(() => {
+  //     if (!isLoading && !isAdmin) {
+  //       router.push('/dashboard/acesso-negado');
+  //       return;
+  //     }
+  //   }, [isAdmin, isLoading, router]);
 
   // Filter privileges based on search term
   const filteredPrivileges = useMemo(() => {

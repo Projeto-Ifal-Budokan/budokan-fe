@@ -39,6 +39,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react';
+import { Fragment } from 'react';
 
 interface PrivilegesTableProps {
   privileges: Privilege[];
@@ -189,32 +190,40 @@ export function PrivilegesTable({
             </div>
           </div>
 
-          {/* Privileges organized by category with single scroll */}
-          <div className='max-h-[600px] space-y-6 overflow-y-auto pr-2'>
-            {Object.entries(privilegesByCategory).map(
-              ([category, categoryPrivileges]) => (
-                <div key={category} className='space-y-3'>
-                  <div className='sticky top-0 z-10 flex items-center gap-2 bg-white/95 py-2 backdrop-blur-sm'>
-                    {getCategoryIcon(category)}
-                    <h3 className='text-lg font-semibold capitalize'>
-                      {category.replace('_', ' ')}
-                    </h3>
-                    <Badge variant='secondary'>
-                      {categoryPrivileges.length} privilégios
-                    </Badge>
-                  </div>
-
-                  <div className='rounded-lg border'>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Nome do Privilégio</TableHead>
-                          <TableHead>Identificador</TableHead>
-                          <TableHead>Descrição</TableHead>
-                          <TableHead>Ação</TableHead>
+          {/* Privileges organized by category with single table */}
+          <div className='rounded-lg border'>
+            <div className='max-h-[600px] overflow-y-auto'>
+              <Table>
+                <TableHeader className='sticky top-0 z-20 bg-white'>
+                  <TableRow>
+                    <TableHead className='w-[30%]'>
+                      Nome do Privilégio
+                    </TableHead>
+                    <TableHead className='w-[25%]'>Identificador</TableHead>
+                    <TableHead className='w-[35%]'>Descrição</TableHead>
+                    <TableHead className='w-[10%]'>Ação</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Object.entries(privilegesByCategory).map(
+                    ([category, categoryPrivileges]) => (
+                      <Fragment key={category}>
+                        {/* Category Separator Row */}
+                        <TableRow className='bg-gray-50/50'>
+                          <TableCell colSpan={4} className='py-4'>
+                            <div className='flex items-center gap-2'>
+                              {getCategoryIcon(category)}
+                              <h3 className='text-lg font-semibold capitalize'>
+                                {category.replace('_', ' ')}
+                              </h3>
+                              <Badge variant='secondary'>
+                                {categoryPrivileges.length} privilégios
+                              </Badge>
+                            </div>
+                          </TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
+
+                        {/* Category Privileges */}
                         {categoryPrivileges.map((privilege) => {
                           const action = privilege.name.split('_')[0];
                           return (
@@ -247,12 +256,12 @@ export function PrivilegesTable({
                             </TableRow>
                           );
                         })}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-              )
-            )}
+                      </Fragment>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
           {/* Pagination Controls */}
