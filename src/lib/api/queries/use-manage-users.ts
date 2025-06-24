@@ -50,7 +50,7 @@ export function useManageUsers() {
     return await queryClient.fetchQuery(getUserQuery(id));
   };
 
-  const fetchUsers = async (page?: number, pageSize?: number) => {
+  const fetchUsers = async (page: number = 1, pageSize: number = 10) => {
     return await queryClient.fetchQuery(listUsersQuery(page, pageSize));
   };
 
