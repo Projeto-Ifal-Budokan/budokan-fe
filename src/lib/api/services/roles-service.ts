@@ -1,6 +1,6 @@
 import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
-import { Role } from '@/types/user';
+import { Privilege, Role } from '@/types/user';
 
 export interface CreateRoleData {
   name: string;
@@ -15,6 +15,15 @@ export interface UpdateRoleData {
 export const rolesService = {
   getRole: async (id: string): Promise<ApiResponse<Role>> => {
     const response = await api.get<Role>(`/roles/${id}`);
+    return response;
+  },
+
+  getPrivilegesByRole: async (
+    roleId: string
+  ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
+    const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
+      `/roles/${roleId}/privileges`
+    );
     return response;
   },
 
