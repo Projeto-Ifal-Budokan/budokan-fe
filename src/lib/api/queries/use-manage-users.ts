@@ -22,10 +22,10 @@ const getUserQuery = (id: string) => ({
   },
 });
 
-const listUsersQuery = () => ({
-  queryKey: userKeys.lists(),
+const listUsersQuery = (page: number = 1, pageSize: number = 10) => ({
+  queryKey: userKeys.list({ page, pageSize }),
   queryFn: async () => {
-    const response = await userService.listUsers();
+    const response = await userService.listUsers(page, pageSize);
     return response;
   },
 });
@@ -40,12 +40,18 @@ export function useManageUsers() {
     });
   };
 
+  const useUsers = (page: number = 1, pageSize: number = 10) => {
+    return useQuery({
+      ...listUsersQuery(page, pageSize),
+    });
+  };
+
   const fetchUser = async (id: string) => {
     return await queryClient.fetchQuery(getUserQuery(id));
   };
 
-  const fetchUsers = async () => {
-    return await queryClient.fetchQuery(listUsersQuery());
+  const fetchUsers = async (page?: number, pageSize?: number) => {
+    return await queryClient.fetchQuery(listUsersQuery(page, pageSize));
   };
 
   const deleteUser = useMutation({
@@ -77,6 +83,7 @@ export function useManageUsers() {
 
   return {
     useUser,
+    useUsers,
     fetchUser,
     fetchUsers,
     deleteUser,

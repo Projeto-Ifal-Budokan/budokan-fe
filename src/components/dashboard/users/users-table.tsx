@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Pagination } from '@/components/ui/pagination';
 import {
   Table,
   TableBody,
@@ -19,6 +20,12 @@ interface UsersTableProps {
   users: User[];
   isAdmin: boolean;
   isPending: boolean;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (pageSize: number) => void;
   onStatusChange: (user: User, newStatus: string) => void;
   onViewUser: (userId: number) => void;
   getStatusColor: (status: string) => 'default' | 'secondary' | 'destructive';
@@ -29,10 +36,16 @@ export function UsersTable({
   users,
   isAdmin,
   isPending,
+  currentPage,
+  totalPages,
+  totalItems,
+  pageSize,
   onStatusChange,
   onViewUser,
   getStatusColor,
   getStatusText,
+  onPageChange,
+  onPageSizeChange,
 }: UsersTableProps) {
   return (
     <Card className='border-0 bg-white/90 shadow-xl backdrop-blur-sm'>
@@ -78,6 +91,15 @@ export function UsersTable({
             ))}
           </TableBody>
         </Table>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          onPageSizeChange={onPageSizeChange}
+        />
       </CardContent>
     </Card>
   );
