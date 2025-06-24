@@ -19,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import {
@@ -49,17 +48,16 @@ import { hasAccess } from '@/utils/access-control';
 import {
   ArrowLeft,
   Check,
-  CheckSquare,
+  CheckCircle2,
+  Circle,
   Download,
   Filter,
   Info,
   Lock,
   Search,
-  Settings,
   Shield,
-  Square,
-  Undo2,
-  X,
+  ShieldCheck,
+  Zap,
 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -355,15 +353,20 @@ export default function RolePrivilegesPage() {
   // Loading states
   if (roleLoading || privilegesLoading || rolePrivilegesLoading) {
     return (
-      <div className='flex min-h-screen items-center justify-center'>
-        <div className='space-y-4 text-center'>
-          <div className='mx-auto h-16 w-16 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600'></div>
-          <div className='space-y-2'>
-            <h3 className='text-lg font-semibold text-gray-900'>
-              Carregando informações...
+      <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+        <div className='space-y-6 text-center'>
+          <div className='relative'>
+            <div className='mx-auto h-24 w-24 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600'></div>
+            <div className='absolute inset-0 flex items-center justify-center'>
+              <Shield className='h-8 w-8 text-blue-600' />
+            </div>
+          </div>
+          <div className='space-y-3'>
+            <h3 className='text-xl font-semibold text-slate-800'>
+              Carregando informações do papel
             </h3>
-            <p className='text-sm text-gray-600'>
-              Buscando dados do papel e privilégios
+            <p className='max-w-md text-slate-600'>
+              Aguarde enquanto buscamos os dados dos privilégios e permissões...
             </p>
           </div>
         </div>
@@ -373,21 +376,27 @@ export default function RolePrivilegesPage() {
 
   if (!role) {
     return (
-      <div className='flex min-h-screen items-center justify-center'>
-        <div className='space-y-6 text-center'>
-          <div className='mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-100'>
-            <X className='h-10 w-10 text-red-600' />
+      <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+        <div className='max-w-md space-y-8 text-center'>
+          <div className='mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-red-100'>
+            <Shield className='h-12 w-12 text-red-600' />
           </div>
-          <div className='space-y-2'>
-            <h2 className='text-2xl font-bold text-gray-900'>
+          <div className='space-y-4'>
+            <h2 className='text-3xl font-bold text-slate-800'>
               Papel não encontrado
             </h2>
-            <p className='max-w-md text-gray-600'>
+            <p className='leading-relaxed text-slate-600'>
               O papel solicitado não existe ou foi removido do sistema.
+              Verifique se o ID está correto ou entre em contato com o
+              administrador.
             </p>
           </div>
-          <Button onClick={handleGoBack} variant='outline' size='lg'>
-            <ArrowLeft className='mr-2 h-4 w-4' />
+          <Button
+            onClick={handleGoBack}
+            size='lg'
+            className='bg-blue-600 px-8 py-3 text-white hover:bg-blue-700'
+          >
+            <ArrowLeft className='mr-2 h-5 w-5' />
             Voltar para Papéis
           </Button>
         </div>
@@ -397,123 +406,126 @@ export default function RolePrivilegesPage() {
 
   return (
     <TooltipProvider>
-      <div className='min-h-screen bg-gray-50/30'>
-        <div className='mx-auto max-w-7xl space-y-8 p-6'>
-          {/* Enhanced Header */}
+      <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
+        <div className='mx-auto max-w-7xl space-y-8 p-8'>
+          {/* Modern Header */}
           <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center space-x-6'>
               <Button
-                variant='outline'
+                variant='ghost'
                 size='sm'
                 onClick={handleGoBack}
-                className='flex items-center gap-2 hover:bg-gray-100'
+                className='px-3 py-2 text-slate-600 hover:bg-white/60 hover:text-slate-800'
               >
-                <ArrowLeft className='h-4 w-4' />
+                <ArrowLeft className='mr-2 h-4 w-4' />
                 Voltar
               </Button>
-              <div className='flex items-center gap-4'>
-                <div className='flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 text-white shadow-lg'>
-                  <Shield className='h-7 w-7' />
+
+              <div className='flex items-center space-x-4'>
+                <div className='relative'>
+                  <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 shadow-lg'>
+                    <Shield className='h-8 w-8 text-white' />
+                  </div>
+                  <div className='absolute -right-1 -bottom-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-green-500'>
+                    <Check className='h-3 w-3 text-white' />
+                  </div>
                 </div>
+
                 <div>
-                  <h1 className='text-3xl font-bold tracking-tight text-gray-900'>
-                    {role.name}
-                  </h1>
-                  <p className='text-lg text-gray-600'>{role.description}</p>
+                  <div className='flex items-center space-x-3'>
+                    <h1 className='text-3xl font-bold text-slate-800'>
+                      {role.name}
+                    </h1>
+                    <Badge
+                      variant='outline'
+                      className='border-blue-200 px-3 py-1 text-sm font-medium text-blue-700'
+                    >
+                      #{role.id}
+                    </Badge>
+                  </div>
+                  <p className='mt-1 text-lg text-slate-600'>
+                    {role.description}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className='flex items-center gap-3'>
-              {isAdmin && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      onClick={handleExportPrivileges}
-                      className='flex items-center gap-2'
-                    >
-                      <Download className='h-4 w-4' />
-                      Exportar
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Exportar privilégios do papel</TooltipContent>
-                </Tooltip>
-              )}
-              <Badge variant='secondary' className='px-3 py-1 text-sm'>
-                ID: #{role.id}
-              </Badge>
-            </div>
+
+            {isAdmin && (
+              <Button
+                onClick={handleExportPrivileges}
+                variant='outline'
+                className='border-slate-200 bg-white px-6 text-slate-700 hover:bg-slate-50'
+              >
+                <Download className='mr-2 h-4 w-4' />
+                Exportar
+              </Button>
+            )}
           </div>
 
-          {/* Enhanced Stats Cards */}
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-            <Card className='border-0 bg-white shadow-sm'>
+          {/* Enhanced Stats */}
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
+            <Card className='border-0 bg-white/70 shadow-lg backdrop-blur-sm'>
               <CardContent className='p-6'>
-                <div className='flex items-center gap-4'>
-                  <div className='rounded-lg bg-green-100 p-3'>
-                    <Check className='h-6 w-6 text-green-600' />
-                  </div>
+                <div className='flex items-center justify-between'>
                   <div>
-                    <p className='text-sm font-medium text-gray-600'>
-                      Privilégios Atribuídos
+                    <p className='mb-1 text-sm font-medium text-slate-600'>
+                      Privilégios Ativos
                     </p>
-                    <p className='text-2xl font-bold text-gray-900'>
+                    <p className='text-3xl font-bold text-slate-800'>
                       {privilegeStats.assigned}
                     </p>
+                    <p className='text-sm text-slate-500'>
+                      de {privilegeStats.total} total
+                    </p>
+                  </div>
+                  <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-green-100'>
+                    <ShieldCheck className='h-6 w-6 text-green-600' />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className='border-0 bg-white shadow-sm'>
+            <Card className='border-0 bg-white/70 shadow-lg backdrop-blur-sm'>
               <CardContent className='p-6'>
-                <div className='flex items-center gap-4'>
-                  <div className='rounded-lg bg-blue-100 p-3'>
-                    <Settings className='h-6 w-6 text-blue-600' />
-                  </div>
+                <div className='flex items-center justify-between'>
                   <div>
-                    <p className='text-sm font-medium text-gray-600'>
-                      Total de Privilégios
+                    <p className='mb-1 text-sm font-medium text-slate-600'>
+                      Progresso
                     </p>
-                    <p className='text-2xl font-bold text-gray-900'>
-                      {privilegeStats.total}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className='border-0 bg-white shadow-sm'>
-              <CardContent className='p-6'>
-                <div className='space-y-3'>
-                  <div className='flex items-center justify-between'>
-                    <p className='text-sm font-medium text-gray-600'>
-                      Percentual Completo
-                    </p>
-                    <span className='text-sm font-bold text-gray-900'>
+                    <p className='text-3xl font-bold text-slate-800'>
                       {privilegeStats.percentage.toFixed(0)}%
-                    </span>
+                    </p>
+                    <div className='mt-2 w-24'>
+                      <Progress
+                        value={privilegeStats.percentage}
+                        className='h-2'
+                      />
+                    </div>
                   </div>
-                  <Progress value={privilegeStats.percentage} className='h-2' />
+                  <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100'>
+                    <Zap className='h-6 w-6 text-blue-600' />
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             {privilegeStats.pending > 0 && (
-              <Card className='border-0 bg-amber-50 shadow-sm'>
+              <Card className='border-0 border-amber-200 bg-amber-50/70 shadow-lg backdrop-blur-sm'>
                 <CardContent className='p-6'>
-                  <div className='flex items-center gap-4'>
-                    <div className='rounded-lg bg-amber-100 p-3'>
-                      <Undo2 className='h-6 w-6 text-amber-600' />
-                    </div>
+                  <div className='flex items-center justify-between'>
                     <div>
-                      <p className='text-sm font-medium text-amber-700'>
-                        Alterações Pendentes
+                      <p className='mb-1 text-sm font-medium text-amber-700'>
+                        Processando
                       </p>
-                      <p className='text-2xl font-bold text-amber-900'>
+                      <p className='text-3xl font-bold text-amber-800'>
                         {privilegeStats.pending}
                       </p>
+                      <p className='text-sm text-amber-600'>
+                        alterações pendentes
+                      </p>
+                    </div>
+                    <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100'>
+                      <div className='h-5 w-5 animate-spin rounded-full border-2 border-amber-600 border-t-transparent' />
                     </div>
                   </div>
                 </CardContent>
@@ -521,95 +533,100 @@ export default function RolePrivilegesPage() {
             )}
           </div>
 
-          {/* Enhanced Filters and Search */}
-          <Card className='border-0 bg-white shadow-sm'>
+          {/* Modern Filters */}
+          <Card className='border-0 bg-white/70 shadow-lg backdrop-blur-sm'>
             <CardContent className='p-6'>
               <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
-                <div className='flex flex-col gap-4 lg:flex-row lg:items-center'>
-                  <div className='max-w-md flex-1'>
-                    <div className='relative'>
-                      <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400' />
-                      <Input
-                        placeholder='Buscar privilégios...'
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className='border-gray-200 pl-10 focus:border-purple-500 focus:ring-purple-500'
-                      />
-                    </div>
-                  </div>
-                  <Select
-                    value={selectedCategory}
-                    onValueChange={setSelectedCategory}
-                  >
-                    <SelectTrigger className='w-[180px]'>
-                      <Filter className='mr-2 h-4 w-4' />
-                      <SelectValue placeholder='Categoria' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='all'>Todas categorias</SelectItem>
-                      {availableCategories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category.replace('_', ' ').toUpperCase()}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Select
-                    value={sortBy}
-                    onValueChange={(value: SortOption) => setSortBy(value)}
-                  >
-                    <SelectTrigger className='w-[140px]'>
-                      <SelectValue placeholder='Ordenar' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='category'>Categoria</SelectItem>
-                      <SelectItem value='name'>Nome</SelectItem>
-                      <SelectItem value='status'>Status</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <div className='flex items-center space-x-2'>
-                    <Switch
-                      id='show-assigned'
-                      checked={showOnlyAssigned}
-                      onCheckedChange={setShowOnlyAssigned}
+                <div className='flex flex-1 flex-col gap-4 sm:flex-row'>
+                  <div className='relative max-w-md flex-1'>
+                    <Search className='absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-slate-400' />
+                    <Input
+                      placeholder='Buscar privilégios...'
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className='border-slate-200 bg-white pl-10 focus:border-blue-400 focus:ring-blue-400'
                     />
-                    <label
-                      htmlFor='show-assigned'
-                      className='text-sm font-medium text-gray-700'
-                    >
-                      Apenas atribuídos
-                    </label>
                   </div>
+
+                  <div className='flex gap-3'>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
+                      <SelectTrigger className='w-[180px] border-slate-200 bg-white'>
+                        <Filter className='mr-2 h-4 w-4' />
+                        <SelectValue placeholder='Categoria' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='all'>Todas as categorias</SelectItem>
+                        {availableCategories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category.replace('_', ' ').toUpperCase()}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select
+                      value={sortBy}
+                      onValueChange={(value: SortOption) => setSortBy(value)}
+                    >
+                      <SelectTrigger className='w-[140px] border-slate-200 bg-white'>
+                        <SelectValue placeholder='Ordenar' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='category'>Categoria</SelectItem>
+                        <SelectItem value='name'>Nome</SelectItem>
+                        <SelectItem value='status'>Status</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className='flex items-center space-x-3'>
+                  <Switch
+                    id='show-assigned'
+                    checked={showOnlyAssigned}
+                    onCheckedChange={setShowOnlyAssigned}
+                  />
+                  <label
+                    htmlFor='show-assigned'
+                    className='text-sm font-medium text-slate-700'
+                  >
+                    Apenas ativos
+                  </label>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Enhanced Privileges Management */}
-          <Card className='border-0 bg-white shadow-sm'>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Lock className='h-5 w-5' />
-                Gerenciar Privilégios
-              </CardTitle>
-              <CardDescription>
-                Gerencie os privilégios atribuídos a este papel no sistema
-              </CardDescription>
+          {/* Modern Privileges Management */}
+          <Card className='border-0 bg-white/70 shadow-lg backdrop-blur-sm'>
+            <CardHeader className='pb-4'>
+              <div className='flex items-center justify-between'>
+                <div>
+                  <CardTitle className='flex items-center gap-3 text-xl'>
+                    <Lock className='h-5 w-5 text-blue-600' />
+                    Gerenciar Privilégios
+                  </CardTitle>
+                  <CardDescription className='mt-1'>
+                    Configure as permissões e acessos para este papel
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               {!isAdmin ? (
-                <div className='py-12 text-center'>
-                  <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100'>
-                    <Lock className='h-8 w-8 text-red-600' />
+                <div className='py-16 text-center'>
+                  <div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100'>
+                    <Lock className='h-10 w-10 text-red-600' />
                   </div>
-                  <h3 className='mb-2 text-lg font-semibold text-gray-900'>
+                  <h3 className='mb-2 text-xl font-semibold text-slate-800'>
                     Acesso Restrito
                   </h3>
-                  <p className='text-gray-600'>
-                    Você não tem permissão para visualizar ou modificar
-                    privilégios
+                  <p className='mx-auto max-w-md text-slate-600'>
+                    Você não possui as permissões necessárias para visualizar ou
+                    modificar os privilégios deste papel.
                   </p>
                 </div>
               ) : (
@@ -625,16 +642,20 @@ export default function RolePrivilegesPage() {
 
                       return (
                         <div key={category} className='space-y-4'>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <h3 className='text-lg font-semibold text-gray-900 capitalize'>
+                          <div className='flex items-center justify-between border-b border-slate-200 py-3'>
+                            <div className='flex items-center space-x-4'>
+                              <h3 className='text-lg font-semibold text-slate-800 capitalize'>
                                 {category.replace('_', ' ')}
                               </h3>
-                              <Badge variant='outline' className='text-xs'>
-                                {categoryAssigned}/{privileges.length} atribuído
+                              <Badge
+                                variant={allAssigned ? 'default' : 'secondary'}
+                                className={`text-xs ${allAssigned ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}
+                              >
+                                {categoryAssigned}/{privileges.length} ativo
                                 {privileges.length !== 1 ? 's' : ''}
                               </Badge>
                             </div>
+
                             <div className='flex items-center gap-2'>
                               <Tooltip>
                                 <TooltipTrigger asChild>
@@ -645,13 +666,16 @@ export default function RolePrivilegesPage() {
                                       handleBulkToggle(category, true)
                                     }
                                     disabled={allAssigned}
-                                    className='h-8 px-2'
+                                    className='h-8 px-3 text-xs'
                                   >
-                                    <CheckSquare className='h-4 w-4' />
+                                    Ativar todos
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Atribuir todos</TooltipContent>
+                                <TooltipContent>
+                                  Ativar todos os privilégios desta categoria
+                                </TooltipContent>
                               </Tooltip>
+
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <Button
@@ -661,12 +685,14 @@ export default function RolePrivilegesPage() {
                                       handleBulkToggle(category, false)
                                     }
                                     disabled={noneAssigned}
-                                    className='h-8 px-2'
+                                    className='h-8 px-3 text-xs'
                                   >
-                                    <Square className='h-4 w-4' />
+                                    Desativar todos
                                   </Button>
                                 </TooltipTrigger>
-                                <TooltipContent>Remover todos</TooltipContent>
+                                <TooltipContent>
+                                  Desativar todos os privilégios desta categoria
+                                </TooltipContent>
                               </Tooltip>
                             </div>
                           </div>
@@ -683,49 +709,62 @@ export default function RolePrivilegesPage() {
                               return (
                                 <div
                                   key={privilege.id}
-                                  className={`flex items-center space-x-4 rounded-xl border-2 p-4 transition-all duration-200 ${
+                                  className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-200 ${
                                     isAssigned
                                       ? 'border-green-200 bg-green-50/50 hover:bg-green-50'
-                                      : 'border-gray-200 bg-white hover:bg-gray-50'
-                                  } ${isPending ? 'opacity-60' : ''} `}
+                                      : 'border-slate-200 bg-white hover:bg-slate-50'
+                                  } ${isPending ? 'opacity-60' : ''}`}
                                 >
-                                  <Checkbox
-                                    id={`privilege-${privilege.id}`}
-                                    checked={isAssigned}
-                                    disabled={isPending}
-                                    onCheckedChange={(checked) =>
-                                      handlePrivilegeToggle(
-                                        privilege,
-                                        checked as boolean
-                                      )
-                                    }
-                                    className='h-5 w-5'
-                                  />
-                                  <div className='min-w-0 flex-1'>
-                                    <label
-                                      htmlFor={`privilege-${privilege.id}`}
-                                      className='block cursor-pointer'
-                                    >
-                                      <div className='mb-1 flex items-center gap-2'>
-                                        <span className='font-medium text-gray-900'>
+                                  <div className='flex items-center space-x-4 p-4'>
+                                    <div className='relative'>
+                                      {isAssigned ? (
+                                        <CheckCircle2
+                                          className={`h-6 w-6 text-green-600 ${isPending ? 'animate-pulse' : ''}`}
+                                          onClick={() =>
+                                            !isPending &&
+                                            handlePrivilegeToggle(
+                                              privilege,
+                                              false
+                                            )
+                                          }
+                                        />
+                                      ) : (
+                                        <Circle
+                                          className={`h-6 w-6 cursor-pointer text-slate-400 hover:text-slate-600 ${isPending ? 'animate-pulse' : ''}`}
+                                          onClick={() =>
+                                            !isPending &&
+                                            handlePrivilegeToggle(
+                                              privilege,
+                                              true
+                                            )
+                                          }
+                                        />
+                                      )}
+                                    </div>
+
+                                    <div className='min-w-0 flex-1'>
+                                      <div className='mb-1 flex items-center space-x-3'>
+                                        <h4 className='truncate font-medium text-slate-800'>
                                           {privilege.name
                                             .replace(/_/g, ' ')
                                             .replace(/\b\w/g, (l) =>
                                               l.toUpperCase()
                                             )}
-                                        </span>
+                                        </h4>
+
                                         {isAssigned && (
                                           <Badge
                                             variant='secondary'
-                                            className='px-2 py-0.5 text-xs'
+                                            className='bg-green-100 px-2 py-0.5 text-xs text-green-700'
                                           >
                                             Ativo
                                           </Badge>
                                         )}
+
                                         {privilege.description && (
                                           <Tooltip>
                                             <TooltipTrigger asChild>
-                                              <Info className='h-4 w-4 cursor-help text-gray-400' />
+                                              <Info className='h-4 w-4 cursor-help text-slate-400 hover:text-slate-600' />
                                             </TooltipTrigger>
                                             <TooltipContent
                                               side='top'
@@ -736,14 +775,32 @@ export default function RolePrivilegesPage() {
                                           </Tooltip>
                                         )}
                                       </div>
-                                    </label>
-                                  </div>
-                                  {isPending && (
-                                    <div className='flex items-center rounded-full border bg-white px-3 py-1 text-xs text-gray-500'>
-                                      <div className='mr-2 h-3 w-3 animate-spin rounded-full border-2 border-purple-200 border-t-purple-600'></div>
-                                      Processando...
+
+                                      {privilege.description && (
+                                        <p className='truncate text-sm text-slate-500'>
+                                          {privilege.description}
+                                        </p>
+                                      )}
                                     </div>
-                                  )}
+
+                                    {isPending && (
+                                      <div className='flex items-center space-x-2 rounded-full bg-blue-50 px-3 py-1'>
+                                        <div className='h-3 w-3 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
+                                        <span className='text-xs font-medium text-blue-700'>
+                                          Processando
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Hover Effect */}
+                                  <div
+                                    className={`absolute inset-y-0 left-0 w-1 transition-all duration-200 ${
+                                      isAssigned
+                                        ? 'bg-green-500'
+                                        : 'bg-transparent group-hover:bg-blue-400'
+                                    }`}
+                                  />
                                 </div>
                               );
                             })}
@@ -754,15 +811,16 @@ export default function RolePrivilegesPage() {
                   )}
 
                   {filteredPrivileges.length === 0 && (
-                    <div className='py-12 text-center'>
-                      <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100'>
-                        <Search className='h-8 w-8 text-gray-400' />
+                    <div className='py-16 text-center'>
+                      <div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100'>
+                        <Search className='h-10 w-10 text-slate-400' />
                       </div>
-                      <h3 className='mb-2 text-lg font-semibold text-gray-900'>
+                      <h3 className='mb-2 text-xl font-semibold text-slate-800'>
                         Nenhum privilégio encontrado
                       </h3>
-                      <p className='text-gray-600'>
-                        Tente ajustar os filtros de pesquisa
+                      <p className='mx-auto max-w-md text-slate-600'>
+                        Ajuste os filtros de pesquisa ou categoria para
+                        encontrar os privilégios desejados.
                       </p>
                     </div>
                   )}
@@ -772,30 +830,43 @@ export default function RolePrivilegesPage() {
           </Card>
         </div>
 
-        {/* Confirmation Dialog */}
+        {/* Modern Confirmation Dialog */}
         <AlertDialog
           open={confirmDialog.isOpen}
           onOpenChange={(open) => setConfirmDialog({ isOpen: open })}
         >
-          <AlertDialogContent>
+          <AlertDialogContent className='max-w-md'>
             <AlertDialogHeader>
-              <AlertDialogTitle>
-                Confirmar{' '}
-                {confirmDialog.action === 'assign' ? 'Atribuição' : 'Remoção'}
+              <AlertDialogTitle className='text-xl'>
+                {confirmDialog.action === 'assign'
+                  ? 'Ativar Privilégio'
+                  : 'Desativar Privilégio'}
               </AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja{' '}
-                {confirmDialog.action === 'assign' ? 'atribuir' : 'remover'} o
-                privilégio{' '}
-                <strong>&quot;{confirmDialog.privilege?.name}&quot;</strong>{' '}
-                {confirmDialog.action === 'assign' ? 'ao' : 'do'} papel{' '}
-                <strong>&quot;{role.name}&quot;</strong>?
+              <AlertDialogDescription className='text-base leading-relaxed'>
+                Confirma a{' '}
+                {confirmDialog.action === 'assign' ? 'ativação' : 'desativação'}{' '}
+                do privilégio{' '}
+                <span className='font-semibold text-slate-800'>
+                  &quot;{confirmDialog.privilege?.name}&quot;
+                </span>{' '}
+                para o papel{' '}
+                <span className='font-semibold text-slate-800'>
+                  &quot;{role.name}&quot;
+                </span>
+                ?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmPrivilegeToggle}>
-                Confirmar
+              <AlertDialogAction
+                onClick={confirmPrivilegeToggle}
+                className={
+                  confirmDialog.action === 'assign'
+                    ? 'bg-green-600 hover:bg-green-700'
+                    : 'bg-red-600 hover:bg-red-700'
+                }
+              >
+                {confirmDialog.action === 'assign' ? 'Ativar' : 'Desativar'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

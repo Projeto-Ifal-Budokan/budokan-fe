@@ -1,6 +1,6 @@
 import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
-import { Privilege, Role } from '@/types/user';
+import { Role } from '@/types/user';
 
 export interface CreateRoleData {
   name: string;
@@ -18,14 +18,14 @@ export const rolesService = {
     return response;
   },
 
-  getPrivilegesByRole: async (
-    roleId: string
-  ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
-    const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
-      `/roles/${roleId}/privileges`
-    );
-    return response;
-  },
+  //   getPrivilegesByRole: async (
+  //     roleId: string
+  //   ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
+  //     const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
+  //       `/roles/${roleId}/privileges`
+  //     );
+  //     return response;
+  //   },
 
   listRoles: async (
     page: number = 1,

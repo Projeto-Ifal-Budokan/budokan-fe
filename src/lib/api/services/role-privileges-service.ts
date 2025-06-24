@@ -19,10 +19,10 @@ export const rolePrivilegesService = {
   },
 
   getPrivilegesByRole: async (
-    roleId: string
+    id: string
   ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
     const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
-      `/roles/${roleId}/privileges`
+      `/role-privileges/${id}`
     );
     return response;
   },

@@ -6,7 +6,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { rolePrivilegesService } from '../services/role-privileges-service';
-import { rolesService } from '../services/roles-service';
 
 export function useRolePrivileges(roleId: string) {
   const queryClient = useQueryClient();
@@ -14,7 +13,7 @@ export function useRolePrivileges(roleId: string) {
   const privilegesByRole = useQuery<Privilege[], ApiError>({
     queryKey: ['privileges', 'role', roleId],
     queryFn: async () => {
-      const response = await rolesService.getPrivilegesByRole(roleId);
+      const response = await rolePrivilegesService.getPrivilegesByRole(roleId);
       return response.data.items || [];
     },
     enabled: !!roleId,
