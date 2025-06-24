@@ -28,6 +28,7 @@ export function Breadcrumb() {
     reports: 'Relatórios',
     profile: 'Perfil',
     roles: 'Papéis',
+    privileges: 'Privilégios',
   };
 
   return (
