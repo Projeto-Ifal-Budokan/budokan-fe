@@ -148,8 +148,8 @@ export default function UsersManagement() {
 
   // Filter users
   const filteredUsuarios =
-    (Array.isArray(users)
-      ? users.filter((usuario) => {
+    (Array.isArray(users?.data?.items)
+      ? users?.data?.items.filter((usuario) => {
           const matchesSearch =
             usuario.firstName
               .toLowerCase()
@@ -196,7 +196,7 @@ export default function UsersManagement() {
         </div>
 
         {/* Stats Cards */}
-        <UserStatsCards users={users} />
+        <UserStatsCards users={users?.data?.items || []} />
 
         {/* Filters */}
         <UserFilters

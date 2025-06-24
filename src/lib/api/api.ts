@@ -35,6 +35,13 @@ export interface ApiResponse<T> {
   ok: boolean;
 }
 
+export interface ApiPaginatedResponse<T> {
+  items: T;
+  count: number;
+  page: number;
+  page_size: number;
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {}

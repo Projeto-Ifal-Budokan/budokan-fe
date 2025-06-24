@@ -6,10 +6,10 @@ import { hasAccess } from '@/utils/access-control';
 export default async function DisciplinePage() {
   const { data: user } = await authService.me();
   const { data: userPrivileges } = await privilegesService.getPrivilegesByUser(
-    user.id.toString()
+    String(user?.id)
   );
 
-  if (user && hasAccess('admin', userPrivileges)) {
+  if (user && hasAccess('admin', userPrivileges.items || [])) {
     return <AdminDisciplinesView />;
   }
 

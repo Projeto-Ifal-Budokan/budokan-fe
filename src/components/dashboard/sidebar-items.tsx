@@ -226,9 +226,8 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
 
     const user = response.data;
 
-    // TODO: Refactor this to use any service, but fot now its ok
     const userPrivilegesResponse = await privilegesService.getPrivilegesByUser(
-      user.id.toString()
+      String(user.id)
     );
 
     if (!userPrivilegesResponse.ok) {
@@ -239,7 +238,7 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       return [];
     }
 
-    const userPrivileges = userPrivilegesResponse.data.map((p) => p.name);
+    const userPrivileges = userPrivilegesResponse.data.items.map((p) => p.name);
 
     // Check if user has all privileges (admin)
     const allPrivileges = Object.values(PRIVILEGES);

@@ -1,22 +1,32 @@
-import { api, ApiResponse } from '@/lib/api/api';
+import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
 import { Privilege } from '@/types/user';
 import { getAuthHeaders } from '@/utils/cookie-utils';
 
 export const privilegesService = {
-  getPrivileges: async (): Promise<ApiResponse<Privilege[]>> => {
-    const response = await api.get<Privilege[]>('/privileges');
+  getPrivileges: async (
+    page: number = 1,
+    pageSize: number = 100
+  ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
+    const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
+      `/privileges/?page=${page}&page_size=${pageSize}`
+    );
     return response;
   },
 
   getPrivilegesByUser: async (
-    id: string
-  ): Promise<ApiResponse<Privilege[]>> => {
-    const response = await api.get<Privilege[]>(`/privileges/user/${id}`, {
-      headers: {
-        Cookie: await getAuthHeaders(),
-      },
-    });
+    id: string,
+    page: number = 1,
+    pageSize: number = 100
+  ): Promise<ApiResponse<ApiPaginatedResponse<Privilege[]>>> => {
+    const response = await api.get<ApiPaginatedResponse<Privilege[]>>(
+      `/privileges/user/${id}?page=${page}&page_size=${pageSize}`,
+      {
+        headers: {
+          Cookie: await getAuthHeaders(),
+        },
+      }
+    );
     return response;
   },
 

@@ -1,4 +1,4 @@
-import { api, ApiResponse } from '@/lib/api/api';
+import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
 import { User, UserStatus } from '@/types/user';
 
@@ -8,8 +8,13 @@ export const userService = {
     return response;
   },
 
-  listUsers: async (): Promise<ApiResponse<User[]>> => {
-    const response = await api.get<User[]>('/users/');
+  listUsers: async (
+    page: number = 1,
+    pageSize: number = 10
+  ): Promise<ApiResponse<ApiPaginatedResponse<User[]>>> => {
+    const response = await api.get<ApiPaginatedResponse<User[]>>(
+      `/users/?page=${page}&page_size=${pageSize}`
+    );
     return response;
   },
 

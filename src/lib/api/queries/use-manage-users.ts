@@ -26,7 +26,7 @@ const listUsersQuery = () => ({
   queryKey: userKeys.lists(),
   queryFn: async () => {
     const response = await userService.listUsers();
-    return response.data;
+    return response;
   },
 });
 

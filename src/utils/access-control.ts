@@ -62,7 +62,7 @@ export async function checkUserAccess(
       return false;
     }
 
-    const userPrivileges = userPrivilegesResponse.data;
+    const userPrivileges = userPrivilegesResponse.data.items;
     return hasAccess(profileType, userPrivileges);
   } catch (error) {
     console.error('Error checking user access:', error);

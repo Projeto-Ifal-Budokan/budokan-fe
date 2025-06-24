@@ -12,7 +12,7 @@ export function usePrivileges() {
     queryKey: ['privileges'],
     queryFn: async () => {
       const response = await privilegesService.getPrivileges();
-      return response.data;
+      return response.data.items;
     },
   });
 
@@ -51,7 +51,7 @@ export function usePrivilegesByUser(id: string) {
     queryKey: ['privileges', 'user', id],
     queryFn: async () => {
       const response = await privilegesService.getPrivilegesByUser(id);
-      return response.data;
+      return response.data.items;
     },
     enabled: !!id,
   });
