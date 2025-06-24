@@ -407,7 +407,7 @@ export default function RolePrivilegesPage() {
   return (
     <TooltipProvider>
       <div className='min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
-        <div className='mx-auto max-w-7xl space-y-8 p-8'>
+        <div className='mx-auto space-y-8'>
           {/* Modern Header */}
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-6'>

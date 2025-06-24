@@ -27,6 +27,7 @@ export function Breadcrumb() {
     payments: 'Pagamentos',
     reports: 'Relatórios',
     profile: 'Perfil',
+    roles: 'Papéis',
   };
 
   return (
