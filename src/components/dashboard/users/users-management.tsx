@@ -1,23 +1,22 @@
 'use client';
 
 import { UsersSkeleton } from '@/app/(internal)/dashboard/users/users-skeleton';
+import { AddUserModal } from '@/components/dashboard/users/add-user-modal';
+import { StatusChangeModal } from '@/components/dashboard/users/status-change-modal';
+import { UserFilters } from '@/components/dashboard/users/user-filters';
+import { UserStatsCards } from '@/components/dashboard/users/user-stats-cards';
+import { UsersTable } from '@/components/dashboard/users/users-table';
 import { useAuth } from '@/lib/api/queries/use-auth';
-import { useManageUsers, userKeys } from '@/lib/api/queries/use-manage-users';
+import { useManageUsers } from '@/lib/api/queries/use-manage-users';
 import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
 import { User, UserStatus } from '@/types/user';
 import { hasAccess } from '@/utils/access-control';
-import { useQuery } from '@tanstack/react-query';
 import { Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { AddUserModal } from './add-user-modal';
-import { StatusChangeModal } from './status-change-modal';
-import { UserFilters } from './user-filters';
-import { UserStatsCards } from './user-stats-cards';
-import { UsersTable } from './users-table';
 
-export function UsersManagement() {
+export default function UsersManagement() {
   // State
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTipo, setFilterTipo] = useState('todos');
@@ -29,23 +28,34 @@ export function UsersManagement() {
     newStatus: string;
   } | null>(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   // Hooks
-  const { fetchUsers, updateUserStatus } = useManageUsers();
+  const { updateUserStatus } = useManageUsers();
   const router = useRouter();
   const { data: currentUser } = useAuth().me;
   const { data: currentUserPrivileges } = usePrivilegesByUser(
     currentUser?.id.toString() || ''
   );
 
+  // Use the new paginated query
+  const { useUsers } = useManageUsers();
+  const { data: usersResponse, isLoading } = useUsers(currentPage, pageSize);
+
   // Computed values
   const isAdmin = currentUserPrivileges
     ? hasAccess('admin', currentUserPrivileges)
     : false;
 
-  const { data: users, isLoading } = useQuery({
-    queryKey: userKeys.all,
-    queryFn: fetchUsers,
-  });
+  // Extract pagination data from API response
+  const users = useMemo(
+    () => usersResponse?.data?.items || [],
+    [usersResponse]
+  );
+  const totalItems = usersResponse?.data?.count || 0;
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   // Utility functions
   const getStatusColor = (status: string) => {
@@ -146,23 +156,29 @@ export function UsersManagement() {
     router.push(`/dashboard/users/${userId}`);
   };
 
-  // Filter users
-  const filteredUsuarios =
-    (Array.isArray(users)
-      ? users.filter((usuario) => {
-          const matchesSearch =
-            usuario.firstName
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
-            usuario.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            usuario.email.toLowerCase().includes(searchTerm.toLowerCase());
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
-          const matchesStatus =
-            filterStatus === 'todos' || usuario.status === filterStatus;
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
 
-          return matchesSearch && matchesStatus;
-        })
-      : []) || [];
+  // Filter users client-side (you might want to move this to server-side filtering later)
+  const filteredUsuarios = useMemo(() => {
+    return users.filter((usuario) => {
+      const matchesSearch =
+        usuario.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        usuario.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        usuario.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        filterStatus === 'todos' || usuario.status === filterStatus;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [users, searchTerm, filterStatus]);
 
   if (isLoading) {
     return <UsersSkeleton />;
@@ -188,12 +204,12 @@ export function UsersManagement() {
               </div>
             </div>
           </div>
-        </div>
 
-        <AddUserModal
-          isOpen={isAddModalOpen}
-          onOpenChange={setIsAddModalOpen}
-        />
+          <AddUserModal
+            isOpen={isAddModalOpen}
+            onOpenChange={setIsAddModalOpen}
+          />
+        </div>
 
         {/* Stats Cards */}
         <UserStatsCards users={users} />
@@ -217,6 +233,12 @@ export function UsersManagement() {
           onViewUser={handleViewUser}
           getStatusColor={getStatusColor}
           getStatusText={getStatusText}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          pageSize={pageSize}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
         />
 
         {/* Status Change Modal */}
