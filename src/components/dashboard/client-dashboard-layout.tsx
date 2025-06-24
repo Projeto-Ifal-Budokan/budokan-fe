@@ -93,7 +93,7 @@ export function ClientDashboardLayout({
 
         {/* Scrollable Content */}
         <main className='flex-1 overflow-auto bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
-          <div className='h-full p-4 md:p-6'>{children}</div>
+          <div className='h-full p-4 md:p-6 lg:p-8'>{children}</div>
         </main>
       </div>
     </div>

@@ -58,39 +58,41 @@ export function UsersTable({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader className='bg-gray-50/50'>
-            <TableRow className='border-b border-gray-200'>
-              <TableHead className='py-4 font-semibold text-gray-700'>
-                Usuário
-              </TableHead>
-              <TableHead className='py-4 font-semibold text-gray-700'>
-                Contato
-              </TableHead>
-              <TableHead className='py-4 font-semibold text-gray-700'>
-                Status
-              </TableHead>
-              <TableHead className='py-4 font-semibold text-gray-700'>
-                Ações
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((user, index) => (
-              <UserTableRow
-                key={user.id}
-                user={user}
-                index={index}
-                isAdmin={isAdmin}
-                isPending={isPending}
-                onStatusChange={onStatusChange}
-                onView={onViewUser}
-                getStatusColor={getStatusColor}
-                getStatusText={getStatusText}
-              />
-            ))}
-          </TableBody>
-        </Table>
+        <div className='max-h-96 overflow-y-auto'>
+          <Table>
+            <TableHeader className='sticky top-0 bg-gray-50/50'>
+              <TableRow className='border-b border-gray-200'>
+                <TableHead className='py-4 font-semibold text-gray-700'>
+                  Usuário
+                </TableHead>
+                <TableHead className='py-4 font-semibold text-gray-700'>
+                  Contato
+                </TableHead>
+                <TableHead className='py-4 font-semibold text-gray-700'>
+                  Status
+                </TableHead>
+                <TableHead className='py-4 font-semibold text-gray-700'>
+                  Ações
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((user, index) => (
+                <UserTableRow
+                  key={user.id}
+                  user={user}
+                  index={index}
+                  isAdmin={isAdmin}
+                  isPending={isPending}
+                  onStatusChange={onStatusChange}
+                  onView={onViewUser}
+                  getStatusColor={getStatusColor}
+                  getStatusText={getStatusText}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         <Pagination
           currentPage={currentPage}

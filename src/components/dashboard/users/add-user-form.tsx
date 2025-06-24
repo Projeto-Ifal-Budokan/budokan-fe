@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CreateUserData } from '@/types/user';
 import {
   Calendar,
   Contact,
@@ -19,7 +20,7 @@ import { useState } from 'react';
 
 interface AddUserFormProps {
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit: (data: FormData) => void;
 }
 
 interface EmergencyContact {
@@ -27,23 +28,63 @@ interface EmergencyContact {
   relationship: string;
 }
 
-interface FormData {
-  firstName: string;
-  surname: string;
-  email: string;
-  phone: string;
-  birthDate: string;
-  password: string;
-}
+type FormData = CreateUserData;
+
+// Move FormField component outside to prevent recreation on re-renders
+const FormField = ({
+  icon: Icon,
+  label,
+  id,
+  type = 'text',
+  placeholder,
+  value,
+  onChange,
+  required = false,
+}: {
+  icon: LucideIcon;
+  label: string;
+  id: keyof FormData;
+  type?: string;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  required?: boolean;
+}) => (
+  <div className='space-y-2'>
+    <Label
+      htmlFor={id}
+      className='flex items-center gap-2 text-sm font-medium text-gray-700'
+    >
+      <Icon className='h-4 w-4 text-blue-600' />
+      {label}
+      {required && (
+        <Badge variant='secondary' className='text-xs'>
+          Obrigatório
+        </Badge>
+      )}
+    </Label>
+    <Input
+      id={id}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className='h-11 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+    />
+  </div>
+);
 
 export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<CreateUserData>({
     firstName: '',
     surname: '',
     email: '',
     phone: '',
     birthDate: '',
     password: '',
+    emergencyContacts: [],
+    isPractitioner: false,
+    healthObservations: '',
   });
 
   const [emergencyContacts, setEmergencyContacts] = useState<
@@ -76,49 +117,6 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
       )
     );
   };
-
-  const FormField = ({
-    icon: Icon,
-    label,
-    id,
-    type = 'text',
-    placeholder,
-    value,
-    onChange,
-    required = false,
-  }: {
-    icon: LucideIcon;
-    label: string;
-    id: keyof FormData;
-    type?: string;
-    placeholder: string;
-    value: string;
-    onChange: (value: string) => void;
-    required?: boolean;
-  }) => (
-    <div className='space-y-2'>
-      <Label
-        htmlFor={id}
-        className='flex items-center gap-2 text-sm font-medium text-gray-700'
-      >
-        <Icon className='h-4 w-4 text-blue-600' />
-        {label}
-        {required && (
-          <Badge variant='secondary' className='text-xs'>
-            Obrigatório
-          </Badge>
-        )}
-      </Label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className='h-11 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-      />
-    </div>
-  );
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4'>
@@ -239,11 +237,15 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
                 >
                   <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                     <div className='space-y-2'>
-                      <Label className='flex items-center gap-2 text-sm font-medium text-gray-700'>
+                      <Label
+                        htmlFor={`emergency-phone-${index}`}
+                        className='flex items-center gap-2 text-sm font-medium text-gray-700'
+                      >
                         <Phone className='h-4 w-4 text-orange-600' />
                         Telefone
                       </Label>
                       <Input
+                        id={`emergency-phone-${index}`}
                         placeholder='(82) 9 9999-9999'
                         value={contact.phone}
                         onChange={(e) =>
@@ -253,12 +255,16 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
                       />
                     </div>
                     <div className='space-y-2'>
-                      <Label className='flex items-center gap-2 text-sm font-medium text-gray-700'>
+                      <Label
+                        htmlFor={`emergency-relationship-${index}`}
+                        className='flex items-center gap-2 text-sm font-medium text-gray-700'
+                      >
                         <Contact className='h-4 w-4 text-orange-600' />
                         Relacionamento
                       </Label>
                       <div className='flex gap-2'>
                         <Input
+                          id={`emergency-relationship-${index}`}
                           placeholder='Ex: Mãe, Pai, Irmão(ã)'
                           value={contact.relationship}
                           onChange={(e) =>
@@ -301,7 +307,7 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
             </Button>
             <Button
               type='button'
-              onClick={onSubmit}
+              onClick={() => onSubmit(formData)}
               className='h-12 flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg transition-all duration-200 hover:from-blue-700 hover:to-blue-800 hover:shadow-xl sm:flex-none sm:px-8'
             >
               <UserPlus className='mr-2 h-5 w-5' />
