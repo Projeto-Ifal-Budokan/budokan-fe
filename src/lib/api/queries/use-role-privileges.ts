@@ -25,7 +25,6 @@ export function useRolePrivileges(roleId: string) {
       queryClient.invalidateQueries({
         queryKey: ['privileges', 'role', roleId],
       });
-      toast.success('Privilégio atribuído com sucesso!');
     },
     onError: () => {
       toast.error('Erro ao atribuir privilégio');
@@ -38,7 +37,6 @@ export function useRolePrivileges(roleId: string) {
       queryClient.invalidateQueries({
         queryKey: ['privileges', 'role', roleId],
       });
-      toast.success('Privilégio removido com sucesso!');
     },
     onError: () => {
       toast.error('Erro ao remover privilégio');

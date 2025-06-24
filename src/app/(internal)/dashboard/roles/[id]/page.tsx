@@ -282,26 +282,47 @@ export default function RolePrivilegesPage() {
       }
 
       const categoryPrivileges = privilegeCategories[category] || [];
-      const promises = categoryPrivileges.map((privilege) => {
+      const relevantPrivileges = categoryPrivileges.filter((privilege) => {
         const isCurrentlyAssigned = rolePrivilegeIds.has(privilege.id);
-        if (assign && !isCurrentlyAssigned) {
+        return assign ? !isCurrentlyAssigned : isCurrentlyAssigned;
+      });
+
+      if (relevantPrivileges.length === 0) {
+        toast.info(
+          `Todos os privilégios da categoria "${category}" já estão ${assign ? 'atribuídos' : 'removidos'}`
+        );
+        return;
+      }
+
+      const promises = relevantPrivileges.map((privilege) => {
+        if (assign) {
           return assignPrivilege.mutateAsync({
             idRole: Number(roleId),
             idPrivilege: privilege.id,
           });
-        } else if (!assign && isCurrentlyAssigned) {
+        } else {
           return removePrivilege.mutateAsync({
             idRole: Number(roleId),
             idPrivilege: privilege.id,
           });
         }
-        return Promise.resolve();
       });
 
-      Promise.allSettled(promises).then(() => {
-        toast.success(
-          `Privilégios da categoria "${category}" ${assign ? 'atribuídos' : 'removidos'} com sucesso`
+      const bulkOperation = Promise.allSettled(promises).then((results) => {
+        const failures = results.filter(
+          (result) => result.status === 'rejected'
         );
+        if (failures.length > 0) {
+          throw new Error(`${failures.length} operações falharam`);
+        }
+        return results;
+      });
+
+      toast.promise(bulkOperation, {
+        loading: `${assign ? 'Atribuindo' : 'Removendo'} ${relevantPrivileges.length} privilégio${relevantPrivileges.length > 1 ? 's' : ''} da categoria "${category}"...`,
+        success: `${relevantPrivileges.length} privilégio${relevantPrivileges.length > 1 ? 's' : ''} da categoria "${category}" ${assign ? 'atribuído' : 'removido'}${relevantPrivileges.length > 1 ? 's' : ''} com sucesso!`,
+        error: (err) =>
+          `Erro ao ${assign ? 'atribuir' : 'remover'} privilégios: ${err.message}`,
       });
     },
     [
@@ -630,7 +651,7 @@ export default function RolePrivilegesPage() {
                   </p>
                 </div>
               ) : (
-                <div className='space-y-8'>
+                <div className='max-h-[600px] space-y-6 overflow-y-auto pr-2'>
                   {Object.entries(privilegeCategories).map(
                     ([category, privileges]) => {
                       const categoryAssigned = privileges.filter((p) =>
@@ -641,10 +662,10 @@ export default function RolePrivilegesPage() {
                       const noneAssigned = categoryAssigned === 0;
 
                       return (
-                        <div key={category} className='space-y-4'>
-                          <div className='flex items-center justify-between border-b border-slate-200 py-3'>
-                            <div className='flex items-center space-x-4'>
-                              <h3 className='text-lg font-semibold text-slate-800 capitalize'>
+                        <div key={category} className='space-y-3'>
+                          <div className='flex items-center justify-between border-b border-slate-200 pt-1 pb-2'>
+                            <div className='flex items-center space-x-3'>
+                              <h3 className='text-base font-semibold text-slate-800 capitalize'>
                                 {category.replace('_', ' ')}
                               </h3>
                               <Badge
@@ -666,7 +687,7 @@ export default function RolePrivilegesPage() {
                                       handleBulkToggle(category, true)
                                     }
                                     disabled={allAssigned}
-                                    className='h-8 px-3 text-xs'
+                                    className='h-7 px-2 text-xs'
                                   >
                                     Ativar todos
                                   </Button>
@@ -685,7 +706,7 @@ export default function RolePrivilegesPage() {
                                       handleBulkToggle(category, false)
                                     }
                                     disabled={noneAssigned}
-                                    className='h-8 px-3 text-xs'
+                                    className='h-7 px-2 text-xs'
                                   >
                                     Desativar todos
                                   </Button>
@@ -697,7 +718,7 @@ export default function RolePrivilegesPage() {
                             </div>
                           </div>
 
-                          <div className='grid gap-3'>
+                          <div className='max-h-80 space-y-2 overflow-y-auto'>
                             {privileges.map((privilege) => {
                               const isAssigned = rolePrivilegeIds.has(
                                 privilege.id
@@ -709,17 +730,17 @@ export default function RolePrivilegesPage() {
                               return (
                                 <div
                                   key={privilege.id}
-                                  className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-200 ${
+                                  className={`group relative overflow-hidden rounded-lg border transition-all duration-200 ${
                                     isAssigned
                                       ? 'border-green-200 bg-green-50/50 hover:bg-green-50'
                                       : 'border-slate-200 bg-white hover:bg-slate-50'
                                   } ${isPending ? 'opacity-60' : ''}`}
                                 >
-                                  <div className='flex items-center space-x-4 p-4'>
-                                    <div className='relative'>
+                                  <div className='flex items-center space-x-3 p-3'>
+                                    <div className='relative flex-shrink-0'>
                                       {isAssigned ? (
                                         <CheckCircle2
-                                          className={`h-6 w-6 text-green-600 ${isPending ? 'animate-pulse' : ''}`}
+                                          className={`h-5 w-5 cursor-pointer text-green-600 ${isPending ? 'animate-pulse' : ''}`}
                                           onClick={() =>
                                             !isPending &&
                                             handlePrivilegeToggle(
@@ -730,7 +751,7 @@ export default function RolePrivilegesPage() {
                                         />
                                       ) : (
                                         <Circle
-                                          className={`h-6 w-6 cursor-pointer text-slate-400 hover:text-slate-600 ${isPending ? 'animate-pulse' : ''}`}
+                                          className={`h-5 w-5 cursor-pointer text-slate-400 hover:text-slate-600 ${isPending ? 'animate-pulse' : ''}`}
                                           onClick={() =>
                                             !isPending &&
                                             handlePrivilegeToggle(
@@ -743,8 +764,8 @@ export default function RolePrivilegesPage() {
                                     </div>
 
                                     <div className='min-w-0 flex-1'>
-                                      <div className='mb-1 flex items-center space-x-3'>
-                                        <h4 className='truncate font-medium text-slate-800'>
+                                      <div className='flex items-center space-x-2'>
+                                        <h4 className='truncate text-sm font-medium text-slate-800'>
                                           {privilege.name
                                             .replace(/_/g, ' ')
                                             .replace(/\b\w/g, (l) =>
@@ -755,7 +776,7 @@ export default function RolePrivilegesPage() {
                                         {isAssigned && (
                                           <Badge
                                             variant='secondary'
-                                            className='bg-green-100 px-2 py-0.5 text-xs text-green-700'
+                                            className='bg-green-100 px-1.5 py-0.5 text-xs text-green-700'
                                           >
                                             Ativo
                                           </Badge>
@@ -764,7 +785,7 @@ export default function RolePrivilegesPage() {
                                         {privilege.description && (
                                           <Tooltip>
                                             <TooltipTrigger asChild>
-                                              <Info className='h-4 w-4 cursor-help text-slate-400 hover:text-slate-600' />
+                                              <Info className='h-3.5 w-3.5 flex-shrink-0 cursor-help text-slate-400 hover:text-slate-600' />
                                             </TooltipTrigger>
                                             <TooltipContent
                                               side='top'
@@ -777,15 +798,15 @@ export default function RolePrivilegesPage() {
                                       </div>
 
                                       {privilege.description && (
-                                        <p className='truncate text-sm text-slate-500'>
+                                        <p className='mt-0.5 truncate text-xs text-slate-500'>
                                           {privilege.description}
                                         </p>
                                       )}
                                     </div>
 
                                     {isPending && (
-                                      <div className='flex items-center space-x-2 rounded-full bg-blue-50 px-3 py-1'>
-                                        <div className='h-3 w-3 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
+                                      <div className='flex flex-shrink-0 items-center space-x-1.5 rounded-full bg-blue-50 px-2 py-1'>
+                                        <div className='h-2.5 w-2.5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
                                         <span className='text-xs font-medium text-blue-700'>
                                           Processando
                                         </span>
@@ -795,7 +816,7 @@ export default function RolePrivilegesPage() {
 
                                   {/* Hover Effect */}
                                   <div
-                                    className={`absolute inset-y-0 left-0 w-1 transition-all duration-200 ${
+                                    className={`absolute inset-y-0 left-0 w-0.5 transition-all duration-200 ${
                                       isAssigned
                                         ? 'bg-green-500'
                                         : 'bg-transparent group-hover:bg-blue-400'
@@ -811,14 +832,14 @@ export default function RolePrivilegesPage() {
                   )}
 
                   {filteredPrivileges.length === 0 && (
-                    <div className='py-16 text-center'>
-                      <div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100'>
-                        <Search className='h-10 w-10 text-slate-400' />
+                    <div className='py-12 text-center'>
+                      <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100'>
+                        <Search className='h-8 w-8 text-slate-400' />
                       </div>
-                      <h3 className='mb-2 text-xl font-semibold text-slate-800'>
+                      <h3 className='mb-2 text-lg font-semibold text-slate-800'>
                         Nenhum privilégio encontrado
                       </h3>
-                      <p className='mx-auto max-w-md text-slate-600'>
+                      <p className='mx-auto max-w-md text-sm text-slate-600'>
                         Ajuste os filtros de pesquisa ou categoria para
                         encontrar os privilégios desejados.
                       </p>
