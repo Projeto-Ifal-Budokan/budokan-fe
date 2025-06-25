@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['budokanryu.com.br', 'budokanryu.com.br:443'],
+    },
+  },
 };
 
 export default nextConfig;
