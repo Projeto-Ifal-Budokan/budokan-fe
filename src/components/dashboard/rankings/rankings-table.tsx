@@ -26,6 +26,8 @@ interface RankingsTableProps {
   isPending: boolean;
   onStatusChange: (ranking: Ranking, newStatus: string) => void;
   onViewRanking: (rankingId: number) => void;
+  onEditRanking: (ranking: Ranking) => void;
+  onDeleteRanking: (ranking: Ranking) => void;
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -40,6 +42,8 @@ export function RankingsTable({
   isPending,
   onStatusChange,
   onViewRanking,
+  onEditRanking,
+  onDeleteRanking,
   currentPage,
   totalPages,
   totalItems,
@@ -59,7 +63,7 @@ export function RankingsTable({
       </CardHeader>
       <CardContent className='p-1'>
         <div className='overflow-x-auto'>
-          <Table>
+          <Table className='w-full'>
             <TableHeader>
               <TableRow className='bg-gray-50/50'>
                 <TableHead className='font-semibold text-gray-700'>
@@ -71,12 +75,7 @@ export function RankingsTable({
                 <TableHead className='font-semibold text-gray-700'>
                   Graduação
                 </TableHead>
-                <TableHead className='font-semibold text-gray-700'>
-                  Status
-                </TableHead>
-                <TableHead className='font-semibold text-gray-700'>
-                  Alunos
-                </TableHead>
+
                 <TableHead className='font-semibold text-gray-700'>
                   Criado em
                 </TableHead>
@@ -108,6 +107,8 @@ export function RankingsTable({
                     isPending={isPending}
                     onStatusChange={onStatusChange}
                     onViewRanking={onViewRanking}
+                    onEditRanking={onEditRanking}
+                    onDeleteRanking={onDeleteRanking}
                   />
                 ))
               )}

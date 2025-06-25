@@ -19,13 +19,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { rankingsService } from '@/lib/api/services/rankings-service';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { CreateRankData, createRankSchema } from '@/types/ranking';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Trophy } from 'lucide-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 interface Discipline {
   id: number;
@@ -47,7 +45,7 @@ export function CreateRankingDialog({
   disciplines,
   onSuccess,
 }: CreateRankingDialogProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createRanking } = useManageRankings();
 
   const {
     register,
@@ -68,26 +66,15 @@ export function CreateRankingDialog({
   const selectedDisciplineId = watch('idDiscipline');
 
   const onSubmit = async (data: CreateRankData) => {
-    setIsSubmitting(true);
     try {
-      const response = await rankingsService.createRanking(data);
-
-      if (response.ok) {
-        toast.success('Ranking criado com sucesso!');
-        reset();
-        onOpenChange(false);
-        if (onSuccess) {
-          onSuccess();
-        }
-      } else {
-        toast.error('Erro ao criar ranking. Tente novamente.');
-        console.error('Failed to create ranking:', response.status);
+      await createRanking.mutateAsync(data);
+      reset();
+      onOpenChange(false);
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error) {
       console.error('Error creating ranking:', error);
-      toast.error('Erro ao criar ranking. Tente novamente.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -173,16 +160,16 @@ export function CreateRankingDialog({
               type='button'
               variant='outline'
               onClick={handleCancel}
-              disabled={isSubmitting}
+              disabled={createRanking.isPending}
             >
               Cancelar
             </Button>
             <Button
               type='submit'
-              disabled={isSubmitting}
+              disabled={createRanking.isPending}
               className='bg-gradient-to-r from-blue-800 to-blue-900 text-white hover:from-blue-900 hover:to-blue-950'
             >
-              {isSubmitting ? (
+              {createRanking.isPending ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Criando...

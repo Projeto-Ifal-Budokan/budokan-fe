@@ -11,11 +11,12 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { AddRankingModal } from './add-ranking-modal';
+import { DeleteRankingDialog } from './delete-ranking-dialog';
+import { EditRankingDialog } from './edit-ranking-dialog';
 import { RankingFilters } from './ranking-filters';
 import { RankingStatsCards } from './ranking-stats-cards';
 import { RankingsSkeleton } from './rankings-skeleton';
 import { RankingsTable } from './rankings-table';
-import { StatusChangeModal } from './status-change-modal';
 
 export default function RankingsManagement() {
   // State
@@ -27,6 +28,8 @@ export default function RankingsManagement() {
     ranking: Ranking;
     newStatus: 'active' | 'inactive';
   } | null>(null);
+  const [editingRanking, setEditingRanking] = useState<Ranking | null>(null);
+  const [deletingRanking, setDeletingRanking] = useState<Ranking | null>(null);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,11 +48,14 @@ export default function RankingsManagement() {
   const { data: disciplinesResponse, isLoading: disciplinesLoading } =
     useDisciplines(1, 50);
 
-  // Get rankings data with discipline filter
+  // Get rankings data with server-side pagination
   const disciplineId =
     filterDiscipline === 'all' ? undefined : filterDiscipline;
-  const { data: rankingsResponse, isLoading: rankingsLoading } =
-    useRankings(disciplineId);
+  const { data: rankingsResponse, isLoading: rankingsLoading } = useRankings(
+    disciplineId,
+    currentPage,
+    pageSize
+  );
 
   // Extract data from responses
   const disciplines = useMemo(
@@ -67,7 +73,7 @@ export default function RankingsManagement() {
     ? hasAccess('admin', currentUserPrivileges)
     : false;
 
-  // Filter rankings client-side for search
+  // Filter rankings client-side for search only (no pagination)
   const filteredRankings = useMemo(() => {
     return rankings.filter((ranking) => {
       const matchesSearch =
@@ -81,15 +87,9 @@ export default function RankingsManagement() {
     });
   }, [rankings, searchTerm]);
 
-  // Paginate filtered rankings
-  const paginatedRankings = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return filteredRankings.slice(startIndex, endIndex);
-  }, [filteredRankings, currentPage, pageSize]);
-
-  // Pagination calculations
-  const totalPages = Math.ceil(filteredRankings.length / pageSize);
+  // Use server pagination info
+  const totalPages = Math.ceil((rankingsResponse?.data?.count || 0) / pageSize);
+  const totalItems = rankingsResponse?.data?.count || 0;
 
   // Event handlers
   const handleStatusChangeRequest = (ranking: Ranking, newStatus: string) => {
@@ -98,46 +98,11 @@ export default function RankingsManagement() {
       return;
     }
 
-    // if (ranking.status === newStatus) {
-    //   return;
-    // }
-
     setPendingStatusChange({
       ranking,
       newStatus: newStatus as 'active' | 'inactive',
     });
     setIsStatusChangeModalOpen(true);
-  };
-
-  const confirmStatusChange = async () => {
-    if (!pendingStatusChange) return;
-
-    const { ranking, newStatus } = pendingStatusChange;
-
-    try {
-      await updateRanking.mutateAsync({
-        id: ranking.id.toString(),
-        data: { ...ranking },
-      });
-
-      const statusMessages = {
-        active: 'ativado',
-        inactive: 'desativado',
-      };
-
-      toast.success(`Ranking ${statusMessages[newStatus]} com sucesso!`);
-    } catch (error) {
-      console.error('Error updating ranking status:', error);
-      toast.error('Erro ao alterar status do ranking');
-    } finally {
-      setIsStatusChangeModalOpen(false);
-      setPendingStatusChange(null);
-    }
-  };
-
-  const cancelStatusChange = () => {
-    setIsStatusChangeModalOpen(false);
-    setPendingStatusChange(null);
   };
 
   const handleViewRanking = (rankingId: number) => {
@@ -151,6 +116,14 @@ export default function RankingsManagement() {
   const handlePageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
     setCurrentPage(1);
+  };
+
+  const handleEditRanking = (ranking: Ranking) => {
+    setEditingRanking(ranking);
+  };
+
+  const handleDeleteRanking = (ranking: Ranking) => {
+    setDeletingRanking(ranking);
   };
 
   // Loading state
@@ -204,14 +177,16 @@ export default function RankingsManagement() {
 
         {/* Rankings Table */}
         <RankingsTable
-          rankings={paginatedRankings}
+          rankings={filteredRankings}
           isAdmin={isAdmin}
           isPending={updateRanking.isPending}
           onStatusChange={handleStatusChangeRequest}
           onViewRanking={handleViewRanking}
+          onEditRanking={handleEditRanking}
+          onDeleteRanking={handleDeleteRanking}
           currentPage={currentPage}
           totalPages={totalPages}
-          totalItems={filteredRankings.length}
+          totalItems={totalItems}
           pageSize={pageSize}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
@@ -224,20 +199,22 @@ export default function RankingsManagement() {
           disciplines={disciplines.filter((d) => d.status === 'active')}
         />
 
-        {pendingStatusChange && (
-          <StatusChangeModal
-            isOpen={isStatusChangeModalOpen}
-            onOpenChange={setIsStatusChangeModalOpen}
-            title={`${pendingStatusChange.newStatus === 'active' ? 'Ativar' : 'Desativar'} Ranking`}
-            description={`Tem certeza que deseja ${pendingStatusChange.newStatus === 'active' ? 'ativar' : 'desativar'} o ranking "${pendingStatusChange.ranking.name}"?`}
-            confirmLabel={
-              pendingStatusChange.newStatus === 'active'
-                ? 'Ativar'
-                : 'Desativar'
-            }
-            onConfirm={confirmStatusChange}
-            onCancel={cancelStatusChange}
-            isLoading={updateRanking.isPending}
+        {/* Edit Ranking Dialog */}
+        {editingRanking && (
+          <EditRankingDialog
+            open={!!editingRanking}
+            onOpenChange={(open) => !open && setEditingRanking(null)}
+            ranking={editingRanking}
+            disciplines={disciplines.filter((d) => d.status === 'active')}
+          />
+        )}
+
+        {/* Delete Ranking Dialog */}
+        {deletingRanking && (
+          <DeleteRankingDialog
+            open={!!deletingRanking}
+            onOpenChange={(open) => !open && setDeletingRanking(null)}
+            ranking={deletingRanking}
           />
         )}
       </div>

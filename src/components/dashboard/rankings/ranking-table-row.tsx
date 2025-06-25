@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Ranking } from '@/types/ranking';
-import { Edit, Eye, MoreHorizontal, Trash2, Users } from 'lucide-react';
+import { Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
 
 interface RankingTableRowProps {
   ranking: Ranking;
@@ -18,6 +18,8 @@ interface RankingTableRowProps {
   isPending: boolean;
   onStatusChange: (ranking: Ranking, newStatus: string) => void;
   onViewRanking: (rankingId: number) => void;
+  onEditRanking: (ranking: Ranking) => void;
+  onDeleteRanking: (ranking: Ranking) => void;
 }
 
 export function RankingTableRow({
@@ -26,6 +28,8 @@ export function RankingTableRow({
   isPending,
   onStatusChange,
   onViewRanking,
+  onEditRanking,
+  onDeleteRanking,
 }: RankingTableRowProps) {
   const getBeltColor = (description: string) => {
     const colorMap: { [key: string]: string } = {
@@ -93,19 +97,6 @@ export function RankingTableRow({
         </Badge>
       </TableCell>
 
-      {/* <TableCell className='py-4'>
-        <Badge variant={getStatusColor(ranking.status || 'inactive')}>
-          {getStatusText(ranking.status || 'inactive')}
-        </Badge>
-      </TableCell> */}
-
-      <TableCell className='py-4'>
-        <div className='flex items-center gap-2 text-sm text-gray-600'>
-          <Users className='h-4 w-4' />
-          <span>{studentCount}</span>
-        </div>
-      </TableCell>
-
       <TableCell className='py-4'>
         <span className='text-sm text-gray-600'>
           {formatDate(ranking.createdAt)}
@@ -130,32 +121,13 @@ export function RankingTableRow({
             </DropdownMenuItem>
             {isAdmin && (
               <>
-                <DropdownMenuItem
-                  onClick={() => {
-                    // Handle edit - would open edit modal
-                    console.log('Edit ranking:', ranking.id);
-                  }}
-                >
+                <DropdownMenuItem onClick={() => onEditRanking(ranking)}>
                   <Edit className='mr-2 h-4 w-4' />
                   Editar
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem
-                  onClick={() =>
-                    onStatusChange(
-                      ranking,
-                      ranking.status === 'active' ? 'inactive' : 'active'
-                    )
-                  }
-                  className='text-orange-600'
-                >
-                  <Edit className='mr-2 h-4 w-4' />
-                  {ranking.status === 'active' ? 'Desativar' : 'Ativar'}
-                </DropdownMenuItem> */}
+
                 <DropdownMenuItem
-                  onClick={() => {
-                    // Handle delete - would open delete confirmation
-                    console.log('Delete ranking:', ranking.id);
-                  }}
+                  onClick={() => onDeleteRanking(ranking)}
                   className='text-red-600'
                 >
                   <Trash2 className='mr-2 h-4 w-4' />

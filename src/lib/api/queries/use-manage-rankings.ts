@@ -15,10 +15,18 @@ export const rankingKeys = {
     [...rankingKeys.all, 'discipline', disciplineId] as const,
 } as const;
 
-const getRankingsQuery = (disciplineId?: string) => ({
-  queryKey: rankingKeys.list({ disciplineId }),
+const getRankingsQuery = (
+  disciplineId?: string,
+  page?: number,
+  limit?: number
+) => ({
+  queryKey: rankingKeys.list({ disciplineId, page, limit }),
   queryFn: async () => {
-    const response = await rankingsService.getRankings(disciplineId);
+    const response = await rankingsService.getRankings(
+      disciplineId,
+      page,
+      limit
+    );
     return response;
   },
 });
@@ -43,9 +51,13 @@ const getRankingsByDisciplineQuery = (disciplineId: string) => ({
 export function useManageRankings() {
   const queryClient = useQueryClient();
 
-  const useRankings = (disciplineId?: string) => {
+  const useRankings = (
+    disciplineId?: string,
+    page?: number,
+    limit?: number
+  ) => {
     return useQuery({
-      ...getRankingsQuery(disciplineId),
+      ...getRankingsQuery(disciplineId, page, limit),
     });
   };
 
