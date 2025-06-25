@@ -47,10 +47,10 @@ export function DisciplineRanksTab({
       <div className='flex items-center justify-between'>
         <div>
           <h3 className='text-lg font-semibold text-gray-900'>
-            Graduações da Disciplina
+            Ranks da Disciplina
           </h3>
           <p className='text-sm text-gray-600'>
-            Gerencie as graduações e rankings desta disciplina
+            Gerencie as Ranks e rankings desta disciplina
           </p>
         </div>
         <Button
@@ -58,7 +58,7 @@ export function DisciplineRanksTab({
           className='bg-gradient-to-r from-emerald-600 to-teal-600'
         >
           <Plus className='mr-2 h-4 w-4' />
-          Nova Graduação
+          Nova Rank
         </Button>
       </div>
 
@@ -67,18 +67,18 @@ export function DisciplineRanksTab({
           <CardContent className='flex flex-col items-center justify-center py-12'>
             <Award className='mb-4 h-12 w-12 text-gray-400' />
             <h4 className='mb-2 text-lg font-medium text-gray-900'>
-              Nenhuma graduação cadastrada
+              Nenhuma Rank cadastrada
             </h4>
             <p className='mb-6 text-center text-gray-600'>
-              Esta disciplina ainda não possui graduações definidas. Adicione a
-              primeira graduação para começar.
+              Esta disciplina ainda não possui Ranks definidas. Adicione a
+              primeira Rank para começar.
             </p>
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className='bg-gradient-to-r from-emerald-600 to-teal-600'
             >
               <Plus className='mr-2 h-4 w-4' />
-              Adicionar Graduação
+              Adicionar Rank
             </Button>
           </CardContent>
         </Card>
@@ -87,7 +87,7 @@ export function DisciplineRanksTab({
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Award className='h-5 w-5 text-emerald-600' />
-              Graduações ({ranks.length})
+              Ranks ({ranks.length})
             </CardTitle>
           </CardHeader>
           <CardContent className='p-0'>

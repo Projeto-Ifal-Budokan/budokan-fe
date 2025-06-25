@@ -76,7 +76,7 @@ export function DisciplinesTable({
                   Status
                 </TableHead>
                 <TableHead className='font-semibold text-gray-700'>
-                  Graduações
+                  Ranks
                 </TableHead>
                 <TableHead className='font-semibold text-gray-700'>
                   Instrutores

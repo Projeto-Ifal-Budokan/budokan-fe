@@ -121,7 +121,7 @@ export function DisciplineDetailView({
           <Card className='border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-100/50'>
             <CardHeader className='pb-3'>
               <CardTitle className='text-sm font-medium text-emerald-700'>
-                Total de Graduações
+                Total de Ranks
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -194,7 +194,7 @@ export function DisciplineDetailView({
                   className='flex items-center gap-2 data-[state=active]:bg-white'
                 >
                   <Award className='h-4 w-4' />
-                  Graduações
+                  Ranks
                 </TabsTrigger>
                 <TabsTrigger
                   value='enrollments'

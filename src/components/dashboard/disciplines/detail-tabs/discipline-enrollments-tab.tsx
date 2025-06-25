@@ -113,7 +113,7 @@ export function DisciplineEnrollmentsTab({
                   <TableHeader>
                     <TableRow className='bg-gray-50/50'>
                       <TableHead>Nome do Estudante</TableHead>
-                      <TableHead>Graduação Atual</TableHead>
+                      <TableHead>Rank Atual</TableHead>
                       <TableHead>Data de Matrícula</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className='text-right'>Ações</TableHead>
@@ -195,7 +195,7 @@ export function DisciplineEnrollmentsTab({
                   <TableHeader>
                     <TableRow className='bg-gray-50/50'>
                       <TableHead>Nome do Instrutor</TableHead>
-                      <TableHead>Graduação</TableHead>
+                      <TableHead>Rank</TableHead>
                       <TableHead>Data de Atribuição</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className='text-right'>Ações</TableHead>

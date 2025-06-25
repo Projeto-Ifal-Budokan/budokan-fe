@@ -438,7 +438,7 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
                   <div>
                     <div className='mb-2 flex items-center justify-between'>
                       <span className='text-sm font-medium'>
-                        Graduação Atual
+                        Rank Atual
                       </span>
                       <Badge variant='default'>
                         {(user as any).graduacao_atual}
@@ -446,7 +446,7 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
                     </div>
                     <div className='mb-2 flex items-center justify-between'>
                       <span className='text-muted-foreground text-sm'>
-                        Próxima Graduação
+                        Próxima Rank
                       </span>
                       <span className='text-sm'>
                         {(user as any).proxima_graduacao}
@@ -544,7 +544,7 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
               <CardHeader>
                 <CardTitle className='flex items-center gap-2'>
                   <History className='h-5 w-5' />
-                  Histórico de Graduações
+                  Histórico de Ranks
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -587,7 +587,7 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
                 </CardHeader>
                 <CardContent className='space-y-4'>
                   <div>
-                    <p className='text-muted-foreground text-sm'>Graduação</p>
+                    <p className='text-muted-foreground text-sm'>Rank</p>
                     <p className='text-lg font-medium'>
                       {(user as any).graduacao}
                     </p>

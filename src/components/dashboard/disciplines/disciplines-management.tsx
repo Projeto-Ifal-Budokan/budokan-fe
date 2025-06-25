@@ -199,7 +199,7 @@ export default function DisciplinesManagement() {
                   Gerenciamento de Disciplinas
                 </h1>
                 <p className='text-lg text-gray-600'>
-                  Controle total sobre as modalidades e graduações do sistema
+                  Controle total sobre as modalidades e Ranks do sistema
                 </p>
               </div>
             </div>

@@ -51,13 +51,13 @@ export function DisciplineStatsCards({
         <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
         <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
           <CardTitle className='text-sm font-medium opacity-90'>
-            Total Graduações
+            Total Ranks
           </CardTitle>
           <Award className='h-5 w-5 opacity-80' />
         </CardHeader>
         <CardContent className='relative'>
           <div className='text-3xl font-bold'>{totalRanks}</div>
-          <p className='mt-1 text-xs opacity-80'>graduações cadastradas</p>
+          <p className='mt-1 text-xs opacity-80'>Ranks cadastradas</p>
         </CardContent>
       </Card>
 

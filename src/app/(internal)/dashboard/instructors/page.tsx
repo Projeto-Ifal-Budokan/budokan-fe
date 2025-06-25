@@ -182,7 +182,7 @@ export default function InstrutoresManagement() {
                   <Input id='telefone' placeholder='(11) 99999-9999' />
                 </div>
                 <div className='space-y-2'>
-                  <Label htmlFor='graduacao'>Graduação</Label>
+                  <Label htmlFor='graduacao'>Rank</Label>
                   <Input id='graduacao' placeholder='Ex: 5º Dan' />
                 </div>
               </div>
@@ -469,7 +469,7 @@ export default function InstrutoresManagement() {
                 <TableRow>
                   <TableHead>Instrutor</TableHead>
                   <TableHead>Modalidades</TableHead>
-                  <TableHead>Graduação</TableHead>
+                  <TableHead>Rank</TableHead>
                   <TableHead>Experiência</TableHead>
                   <TableHead>Alunos</TableHead>
                   <TableHead>Status</TableHead>
