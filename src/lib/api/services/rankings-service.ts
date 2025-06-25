@@ -1,13 +1,15 @@
-import { api, ApiResponse } from '@/lib/api/api';
+import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
 import { Response } from '@/types/api';
 import { CreateRankData, Ranking, UpdateRankData } from '@/types/ranking';
 
 export const rankingsService = {
   getRankings: async (
     disciplineId?: string
-  ): Promise<ApiResponse<Ranking[]>> => {
+  ): Promise<ApiResponse<ApiPaginatedResponse<Ranking[]>>> => {
     const params = disciplineId ? `?disciplineId=${disciplineId}` : '';
-    const response = await api.get<Ranking[]>(`/ranks${params}`);
+    const response = await api.get<ApiPaginatedResponse<Ranking[]>>(
+      `/ranks${params}`
+    );
     return response;
   },
 
@@ -40,7 +42,8 @@ export const rankingsService = {
     disciplineId: string
   ): Promise<ApiResponse<Ranking[]>> => {
     const response = await api.get<Ranking[]>(
-      `/rankings/discipline/${disciplineId}`);
+      `/rankings/discipline/${disciplineId}`
+    );
     return response;
   },
 };
