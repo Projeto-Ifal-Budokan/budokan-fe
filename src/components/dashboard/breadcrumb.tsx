@@ -20,6 +20,7 @@ export function Breadcrumb() {
   const pathNames: Record<string, string> = {
     dashboard: 'Dashboard',
     disciplines: 'Modalidades',
+    matriculations: 'Matriculas',
     attendance: 'Frequência',
     instructors: 'Instrutores',
     users: 'Usuários',
