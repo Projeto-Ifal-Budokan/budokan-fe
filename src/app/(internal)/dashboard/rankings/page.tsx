@@ -9,7 +9,7 @@ export default async function RankingsPage() {
     user.id.toString()
   );
 
-  if (user && hasAccess('admin', userPrivileges)) {
+  if (user && hasAccess('admin', userPrivileges.items)) {
     return <AdminRankingsView />;
   }
 

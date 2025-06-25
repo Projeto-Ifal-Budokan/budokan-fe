@@ -19,13 +19,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { rankingsService } from '@/lib/api/services/rankings-service';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { Ranking, UpdateRankData, updateRankSchema } from '@/types/ranking';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Edit, Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 // Schema para edição de ranking
 const editRankSchema = updateRankSchema;
@@ -54,7 +53,7 @@ export function EditRankingDialog({
   disciplines,
   onSuccess,
 }: EditRankingDialogProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { updateRanking } = useManageRankings();
 
   const {
     register,
@@ -86,28 +85,17 @@ export function EditRankingDialog({
   }, [ranking, reset]);
 
   const onSubmit = async (data: EditRankData) => {
-    setIsSubmitting(true);
     try {
-      const response = await rankingsService.updateRanking(
-        ranking.id.toString(),
-        data
-      );
-
-      if (response.ok) {
-        toast.success('Ranking atualizado com sucesso!');
-        onOpenChange(false);
-        if (onSuccess) {
-          onSuccess();
-        }
-      } else {
-        toast.error('Erro ao atualizar ranking. Tente novamente.');
-        console.error('Failed to update ranking:', response.status);
+      await updateRanking.mutateAsync({
+        id: ranking.id.toString(),
+        data: { ...ranking, ...data },
+      });
+      onOpenChange(false);
+      if (onSuccess) {
+        onSuccess();
       }
     } catch (error) {
       console.error('Error updating ranking:', error);
-      toast.error('Erro ao atualizar ranking. Tente novamente.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -193,16 +181,16 @@ export function EditRankingDialog({
               type='button'
               variant='outline'
               onClick={handleCancel}
-              disabled={isSubmitting}
+              disabled={updateRanking.isPending}
             >
               Cancelar
             </Button>
             <Button
               type='submit'
-              disabled={isSubmitting}
+              disabled={updateRanking.isPending}
               className='bg-gradient-to-r from-blue-800 to-blue-900 text-white hover:from-blue-900 hover:to-blue-950'
             >
-              {isSubmitting ? (
+              {updateRanking.isPending ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Atualizando...

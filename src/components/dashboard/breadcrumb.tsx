@@ -29,6 +29,7 @@ export function Breadcrumb() {
     profile: 'Perfil',
     roles: 'Papéis',
     privileges: 'Privilégios',
+    rankings: 'Rankings',
   };
 
   return (
