@@ -5,10 +5,6 @@ export interface Discipline {
   status: 'active' | 'inactive';
   createdAt: string;
   updatedAt: string;
-  ranks?: Rank[];
-  instructors?: InstructorDiscipline[];
-  studentEnrollments?: StudentEnrollment[];
-  schedules?: Schedule[];
 }
 
 export interface Rank {

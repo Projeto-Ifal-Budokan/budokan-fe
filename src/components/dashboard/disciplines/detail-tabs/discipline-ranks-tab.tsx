@@ -10,9 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { Discipline, Rank } from '@/types/discipline';
-import { Award, Edit, Plus, Trash2 } from 'lucide-react';
+import { Award, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { AddRankToDisciplineModal } from './modals/add-rank-to-discipline-modal';
+import { DeleteRankModal } from './modals/delete-rank-modal';
 
 interface DisciplineRanksTabProps {
   disciplineId: string;
@@ -27,7 +30,8 @@ export function DisciplineRanksTab({
   const [editingRank, setEditingRank] = useState<Rank | null>(null);
   const [deletingRank, setDeletingRank] = useState<Rank | null>(null);
 
-  const ranks = discipline.ranks || [];
+  const { useRankings } = useManageRankings();
+  const { data: ranks } = useRankings(disciplineId);
 
   const getBeltColor = (description: string) => {
     const colors: { [key: string]: string } = {
@@ -58,11 +62,11 @@ export function DisciplineRanksTab({
           className='bg-gradient-to-r from-emerald-600 to-teal-600'
         >
           <Plus className='mr-2 h-4 w-4' />
-          Nova Rank
+          Adicionar Rank
         </Button>
       </div>
 
-      {ranks.length === 0 ? (
+      {ranks?.data.count === 0 ? (
         <Card className='border-2 border-dashed border-gray-200'>
           <CardContent className='flex flex-col items-center justify-center py-12'>
             <Award className='mb-4 h-12 w-12 text-gray-400' />
@@ -87,7 +91,7 @@ export function DisciplineRanksTab({
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Award className='h-5 w-5 text-emerald-600' />
-              Ranks ({ranks.length})
+              Ranks ({ranks?.data.count})
             </CardTitle>
           </CardHeader>
           <CardContent className='p-0'>
@@ -101,7 +105,7 @@ export function DisciplineRanksTab({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {ranks.map((rank) => (
+                {ranks?.data.items.map((rank) => (
                   <TableRow key={rank.id}>
                     <TableCell className='font-medium'>{rank.name}</TableCell>
                     <TableCell>
@@ -116,13 +120,13 @@ export function DisciplineRanksTab({
                     </TableCell>
                     <TableCell className='text-right'>
                       <div className='flex items-center justify-end gap-2'>
-                        <Button
+                        {/* <Button
                           variant='ghost'
                           size='sm'
                           onClick={() => setEditingRank(rank)}
                         >
                           <Edit className='h-4 w-4' />
-                        </Button>
+                        </Button> */}
                         <Button
                           variant='ghost'
                           size='sm'
@@ -142,19 +146,12 @@ export function DisciplineRanksTab({
       )}
 
       {/* Modals */}
-      {/* <AddRankModal
+      <AddRankToDisciplineModal
         isOpen={isAddModalOpen}
         onOpenChange={setIsAddModalOpen}
         disciplineId={disciplineId}
-      /> */}
-
-      {/* {editingRank && (
-        <EditRankModal
-          isOpen={!!editingRank}
-          onOpenChange={(open) => !open && setEditingRank(null)}
-          rank={editingRank}
-        />
-      )}
+        disciplineName={discipline.name}
+      />
 
       {deletingRank && (
         <DeleteRankModal
@@ -162,7 +159,7 @@ export function DisciplineRanksTab({
           onOpenChange={(open) => !open && setDeletingRank(null)}
           rank={deletingRank}
         />
-      )} */}
+      )}
     </>
   );
 }

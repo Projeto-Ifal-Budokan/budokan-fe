@@ -8,6 +8,7 @@ import { useManageDisciplines } from '@/lib/api/queries/use-manage-disciplines';
 import { Award, BookOpen, Calendar, ChevronLeft, Users } from 'lucide-react';
 import Link from 'next/link';
 
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { DisciplineEnrollmentsTab } from './detail-tabs/discipline-enrollments-tab';
 import { DisciplineRanksTab } from './detail-tabs/discipline-ranks-tab';
 import { DisciplineSchedulesTab } from './detail-tabs/discipline-schedules-tab';
@@ -21,6 +22,8 @@ export function DisciplineDetailView({
   disciplineId,
 }: DisciplineDetailViewProps) {
   const { useDiscipline } = useManageDisciplines();
+  const { useRankings } = useManageRankings();
+  const { data: ranks } = useRankings(disciplineId);
   const { data: discipline, isLoading } = useDiscipline(disciplineId);
 
   if (isLoading) {
@@ -128,7 +131,7 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Award className='h-5 w-5 text-emerald-600' />
                 <span className='text-2xl font-bold text-emerald-900'>
-                  {discipline.ranks?.length || 0}
+                  {ranks?.data.count || 0}
                 </span>
               </div>
             </CardContent>
@@ -144,7 +147,7 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Users className='h-5 w-5 text-blue-600' />
                 <span className='text-2xl font-bold text-blue-900'>
-                  {discipline.studentEnrollments?.length || 0}
+                  {/* {discipline.studentEnrollments?.length || 0} */}
                 </span>
               </div>
             </CardContent>
@@ -160,8 +163,8 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Users className='h-5 w-5 text-purple-600' />
                 <span className='text-2xl font-bold text-purple-900'>
-                  {discipline.instructors?.filter((i) => i.status === 'active')
-                    .length || 0}
+                  {/* {discipline.instructors?.filter((i) => i.status === 'active')
+                    .length || 0} */}
                 </span>
               </div>
             </CardContent>
@@ -177,7 +180,7 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Calendar className='h-5 w-5 text-orange-600' />
                 <span className='text-2xl font-bold text-orange-900'>
-                  {discipline.schedules?.length || 0}
+                  {/* {discipline.schedules?.length || 0} */}
                 </span>
               </div>
             </CardContent>
