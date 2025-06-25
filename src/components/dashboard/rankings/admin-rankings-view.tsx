@@ -104,6 +104,7 @@ export function AdminRankingsView() {
   }, []);
 
   // Load rankings when discipline filter changes
+  //TODO: fetch it from API
   useEffect(() => {
     if (selectedDiscipline === 'all') {
       loadRankings();
