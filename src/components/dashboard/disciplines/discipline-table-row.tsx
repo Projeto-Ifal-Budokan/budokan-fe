@@ -15,8 +15,9 @@ import {
 } from '@/components/ui/select';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { useManageDisciplines } from '@/lib/api/queries/use-manage-disciplines';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { Discipline, UpdateDisciplineData } from '@/types/discipline';
-import { Award, Edit, Eye, MoreHorizontal, Trash2, Users } from 'lucide-react';
+import { Award, Edit, Eye, MoreHorizontal, Users } from 'lucide-react';
 import { useState } from 'react';
 import { DeleteDisciplineModal } from './delete-discipline-modal';
 import { EditDisciplineModal } from './edit-discipline-modal';
@@ -44,6 +45,8 @@ export function DisciplineTableRow({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { updateDiscipline, deleteDiscipline } = useManageDisciplines();
+  const { useRankings } = useManageRankings();
+  const { data: ranks } = useRankings(discipline.id.toString());
 
   const handleEdit = async (disciplineData: Partial<Discipline>) => {
     await updateDiscipline.mutateAsync(disciplineData as UpdateDisciplineData);
@@ -115,20 +118,14 @@ export function DisciplineTableRow({
         <TableCell className='py-4'>
           <div className='flex items-center gap-2 text-sm text-gray-600'>
             <Award className='h-4 w-4' />
-            <span>{discipline.ranks?.length || 0}</span>
+            <span>{ranks?.data.count || 0}</span>
           </div>
         </TableCell>
 
         <TableCell className='py-4'>
           <div className='flex items-center gap-2 text-sm text-gray-600'>
             <Users className='h-4 w-4' />
-            <span>
-              {discipline.instructors?.filter((i) => i.status === 'active')
-                .length || 0}
-            </span>
-            <span className='text-gray-400'>
-              / {discipline.instructors?.length || 0}
-            </span>
+            {/* <span>{ranks?.data.count || 0}</span> */}
           </div>
         </TableCell>
 
@@ -166,13 +163,13 @@ export function DisciplineTableRow({
                     <Edit className='mr-2 h-4 w-4' />
                     Editar
                   </DropdownMenuItem>
-                  <DropdownMenuItem
+                  {/* <DropdownMenuItem
                     onClick={() => setShowDeleteModal(true)}
                     className='text-destructive cursor-pointer'
                   >
                     <Trash2 className='mr-2 h-4 w-4' />
                     Excluir
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </>
               )}
             </DropdownMenuContent>
