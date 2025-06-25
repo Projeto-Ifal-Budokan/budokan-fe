@@ -1,5 +1,5 @@
-import Image from "next/image";
-import kendoAsset from '@/assets/images/kendo.png'
+import kendoAsset from '@/assets/images/kendo.png';
+import Image from 'next/image';
 
 export const AboutSection = () => {
   return (
@@ -13,17 +13,17 @@ export const AboutSection = () => {
               </h2>
               <div className='mb-6 h-1 w-20 bg-yellow-500'></div>
               <p className='mb-4 text-gray-600'>
-                Kendo, ou "O Caminho da Espada", é uma arte marcial japonesa
-                moderna que descende diretamente das técnicas de combate dos
-                samurais. Utilizando espadas de bambu (shinai) e armaduras
-                protetoras (bogu), o Kendo preserva a essência do combate com
-                espadas japonesas em um formato seguro e esportivo.
+                Kendo, ou &quot;O Caminho da Espada&quot;, é uma arte marcial
+                japonesa moderna que descende diretamente das técnicas de
+                combate dos samurais. Utilizando espadas de bambu (shinai) e
+                armaduras protetoras (bogu), o Kendo preserva a essência do
+                combate com espadas japonesas em um formato seguro e esportivo.
               </p>
               <p className='mb-4 text-gray-600'>
-                Na Budokan-Ryu, praticamos o Kendo seguindo os princípios e técnicas
-                estabelecidos pela Federação Internacional de Kendo, com ênfase
-                tanto no aspecto técnico quanto no desenvolvimento espiritual e
-                filosófico desta arte.
+                Na Budokan-Ryu, praticamos o Kendo seguindo os princípios e
+                técnicas estabelecidos pela Federação Internacional de Kendo,
+                com ênfase tanto no aspecto técnico quanto no desenvolvimento
+                espiritual e filosófico desta arte.
               </p>
               <p className='text-gray-600'>
                 O treinamento de Kendo desenvolve força, velocidade, precisão e,

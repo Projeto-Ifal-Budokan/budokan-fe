@@ -1,10 +1,5 @@
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import InstructorsManagement from '@/components/dashboard/instructors/instructors-management';
 
-export default function InstrutoresPage() {
-  return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-6">Instrutores</h1>
-      <p>Gerencie os instrutores e professores do Budokan.</p>
-    </DashboardLayout>
-  )
+export default function InstructorsPage() {
+  return <InstructorsManagement />;
 }

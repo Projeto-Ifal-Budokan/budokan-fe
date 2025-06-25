@@ -7,7 +7,7 @@ export async function meAction() {
   try {
     const userData = await authService.me();
 
-    return userData;
+    return userData.data;
   } catch (error) {
     console.error('user data error:', error);
     return { error: 'An error occurred during login' };

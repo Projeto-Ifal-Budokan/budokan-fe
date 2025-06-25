@@ -60,7 +60,7 @@ export default function HeroCarousel() {
 
   // Auto-play functionality
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
 
     if (isAutoPlaying) {
       interval = setInterval(() => {

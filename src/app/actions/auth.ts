@@ -40,3 +40,26 @@ export async function logoutAction() {
   // Redirect to home page
   redirect('/login');
 }
+
+// Add this new server action
+export async function handleUnauthorized() {
+  // Delete the auth cookie
+  (await cookies()).delete('access_token');
+
+  // Revalidate relevant paths
+  revalidatePath('/');
+
+  // Redirect to login page
+  redirect('/login');
+}
+
+// Add this new server action
+export async function handleNotAccessPage() {
+  // Delete the auth cookie
+
+  // Revalidate relevant paths
+  revalidatePath('/');
+
+  // Redirect to login page
+  redirect('/dashboard');
+}

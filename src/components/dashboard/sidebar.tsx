@@ -3,80 +3,53 @@
 import { logoutAction } from '@/app/actions/auth';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useAuth } from '@/lib/api/queries/useAuth';
+import { useAuth } from '@/lib/api/queries/use-auth';
 
 import { cn } from '@/lib/utils';
 import {
-  BarChart3,
   BookOpen,
   Calendar,
   ChevronLeft,
   ChevronRight,
-  CreditCard,
+  Clock,
   Home,
+  Key,
   LogOut,
+  LucideIcon,
+  Shield,
+  Trophy,
+  User,
+  UserCheck,
   UserCircle,
+  UserPlus,
   Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { createElement, HTMLAttributes } from 'react';
+import { SidebarItem } from './sidebar-items';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SidebarProps extends HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   onToggle: () => void;
+  items: SidebarItem[];
 }
 
-// Mock user data - in a real app, this would come from authentication
-// const user = {
-//   name: 'João Silva',
-//   role: 'Administrador',
-//   avatar: '/placeholder.svg?height=32&width=32',
-// };
-
-// Navigation items
-const navItems = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: Home,
-  },
-  {
-    title: 'Modalidades',
-    href: '/dashboard/disciplines',
-    icon: BookOpen,
-  },
-  {
-    title: 'Frequência',
-    href: '/dashboard/attendance',
-    icon: Calendar,
-  },
-  {
-    title: 'Instrutores',
-    href: '/dashboard/instructors',
-    icon: UserCircle,
-  },
-  {
-    title: 'Usuários',
-    href: '/dashboard/users',
-    icon: Users,
-  },
-  {
-    title: 'Alunos',
-    href: '/dashboard/students',
-    icon: Users,
-  },
-  {
-    title: 'Pagamentos',
-    href: '/dashboard/payments',
-    icon: CreditCard,
-  },
-  {
-    title: 'Relatórios',
-    href: '/dashboard/reports',
-    icon: BarChart3,
-  },
-];
+// Add this icon mapping object
+const iconMap: { [key: string]: LucideIcon } = {
+  Home,
+  BookOpen,
+  Calendar,
+  UserCheck,
+  Clock,
+  Users,
+  Trophy,
+  User,
+  Shield,
+  Key,
+  UserPlus,
+};
 
 export function UserInfo() {
   const { me } = useAuth();
@@ -104,9 +77,9 @@ export function UserInfo() {
         <span className='text-sm font-medium text-orange-300'>
           {user?.firstName} {user?.surname}
         </span>
-        <span className='text-xs text-white/70'>
+        {/* <span className='text-xs text-white/70'>
           {user?.roles[0]?.name || 'Usuário'}
-        </span>
+        </span> */}
       </div>
     </div>
   );
@@ -116,9 +89,16 @@ export default function Sidebar({
   className,
   isCollapsed,
   onToggle,
+  items,
   ...props
 }: SidebarProps) {
+  const { clearAuthCache } = useAuth();
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    clearAuthCache(); // Clear the cache before logging out
+    await logoutAction();
+  };
 
   return (
     <div className='relative h-full'>
@@ -126,7 +106,7 @@ export default function Sidebar({
       <div
         className={cn(
           'group h-full overflow-hidden border-r bg-blue-900 text-white transition-all duration-300',
-          isCollapsed ? 'w-[70px]' : 'w-[240px]',
+          isCollapsed ? 'w-20' : 'w-[240px]',
           className
         )}
         {...props}
@@ -160,24 +140,28 @@ export default function Sidebar({
           {/* Navigation */}
           <ScrollArea className='flex-1 px-1'>
             <div className='flex flex-col gap-0.5 py-2'>
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-                    pathname === item.href
-                      ? 'bg-primary-foreground/10 text-primary font-medium'
-                      : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
-                    isCollapsed && 'justify-center px-2'
-                  )}
-                >
-                  <item.icon
-                    className={cn('h-4 w-4', isCollapsed && 'h-5 w-5')}
-                  />
-                  {!isCollapsed && <span>{item.title}</span>}
-                </Link>
-              ))}
+              {items.map((item) => {
+                const IconComponent = iconMap[item.icon];
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
+                      pathname === item.href
+                        ? 'bg-primary-foreground/10 text-primary font-medium'
+                        : 'hover:bg-primary-foreground/10 hover:text-primary/80 text-white',
+                      isCollapsed && 'justify-center px-2'
+                    )}
+                  >
+                    {IconComponent &&
+                      createElement(IconComponent, {
+                        className: cn('h-4 w-4', isCollapsed && 'h-5 w-5'),
+                      })}
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </Link>
+                );
+              })}
             </div>
           </ScrollArea>
 
@@ -190,12 +174,9 @@ export default function Sidebar({
             >
               <UserInfo />
               {!isCollapsed && (
-                <LogOut
-                  className='h-4 w-4 text-white/70 hover:text-orange-300'
-                  onClick={() => {
-                    logoutAction();
-                  }}
-                />
+                <Button variant='ghost' size='icon' onClick={handleLogout}>
+                  <LogOut className='h-4 w-4 text-white/70 hover:text-orange-300' />
+                </Button>
               )}
             </div>
           </div>

@@ -19,9 +19,8 @@ const calculatePasswordStrength = (password: string): number => {
   if (/[A-Z]/.test(password)) strength += 1;
   if (/[a-z]/.test(password)) strength += 1;
   if (/[0-9]/.test(password)) strength += 1;
-  if (/[^A-Za-z0-9]/.test(password)) strength += 1;
 
-  return Math.min(strength, 5);
+  return Math.min(strength, 4);
 };
 
 // Password strength label
@@ -37,8 +36,6 @@ const getPasswordStrengthLabel = (strength: number): string => {
       return 'Média';
     case 4:
       return 'Forte';
-    case 5:
-      return 'Muito forte';
     default:
       return '';
   }
@@ -57,8 +54,6 @@ const getPasswordStrengthColor = (strength: number): string => {
       return 'bg-yellow-500';
     case 4:
       return 'bg-green-500';
-    case 5:
-      return 'bg-emerald-500';
     default:
       return 'bg-gray-200';
   }
@@ -92,7 +87,7 @@ export function PasswordStrengthMeter({
             'h-full transition-all duration-300',
             getPasswordStrengthColor(passwordStrength)
           )}
-          style={{ width: `${(passwordStrength / 5) * 100}%` }}
+          style={{ width: `${(passwordStrength / 4) * 100}%` }}
         />
       </div>
       <div className='mt-1 grid grid-cols-2 gap-x-2 gap-y-1'>
@@ -151,20 +146,6 @@ export function PasswordStrengthMeter({
             })}
           />
           <span>Número</span>
-        </div>
-        <div
-          className={cn('flex items-center text-xs', {
-            'text-green-600': /[^A-Za-z0-9]/.test(password),
-            'text-gray-500': !/[^A-Za-z0-9]/.test(password),
-          })}
-        >
-          <CheckCircle2
-            className={cn('mr-1 h-3 w-3', {
-              'opacity-100': /[^A-Za-z0-9]/.test(password),
-              'opacity-40': !/[^A-Za-z0-9]/.test(password),
-            })}
-          />
-          <span>Caractere especial</span>
         </div>
       </div>
     </div>
