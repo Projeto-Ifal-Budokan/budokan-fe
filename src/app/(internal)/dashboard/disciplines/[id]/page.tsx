@@ -3,12 +3,14 @@ import { authService } from '@/lib/api/services/auth-service';
 import { privilegesService } from '@/lib/api/services/privileges-service';
 
 interface DisciplinePageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function DisciplinePage({ params }: DisciplinePageProps) {
+  const { id } = await params;
+
   const { data: user } = await authService.me();
   const { data: userPrivileges } = await privilegesService.getPrivilegesByUser(
     String(user?.id)
@@ -18,5 +20,5 @@ export default async function DisciplinePage({ params }: DisciplinePageProps) {
   //     notFound();
   //   }
 
-  return <DisciplineDetailView disciplineId={params.id} />;
+  return <DisciplineDetailView disciplineId={id} />;
 }

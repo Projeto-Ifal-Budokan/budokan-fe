@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useInstructorDisciplines } from '@/lib/api/queries/use-instructor-disciplines';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { Discipline } from '@/types/discipline';
 
-import { Award, BookOpen, TrendingUp, Users } from 'lucide-react';
+import { Award, BookOpen } from 'lucide-react';
 
 interface DisciplineStatsCardsProps {
   disciplines: Discipline[] | undefined;
@@ -12,24 +14,24 @@ export function DisciplineStatsCards({
 }: DisciplineStatsCardsProps) {
   const activeDisciplines =
     disciplines?.filter((d) => d.status === 'active').length || 0;
-  const totalRanks =
-    disciplines?.reduce(
-      (acc, discipline) => acc + (discipline.ranks?.length || 0),
-      0
-    ) || 0;
-  const totalInstructors =
-    disciplines?.reduce(
-      (acc, discipline) => acc + (discipline.instructors?.length || 0),
-      0
-    ) || 0;
-  const activeInstructors =
-    disciplines?.reduce(
-      (acc, discipline) =>
-        acc +
-        (discipline.instructors?.filter((i) => i.status === 'active').length ||
-          0),
-      0
-    ) || 0;
+  const { useRankings } = useManageRankings();
+  const { data: ranks } = useRankings();
+  const totalRanks = ranks?.data.count || 0;
+
+  const { useInstructorDiscipline } = useInstructorDisciplines();
+  const { data: instructors } = useInstructorDiscipline(
+    disciplines?.[0]?.id.toString() || ''
+  );
+  // const totalInstructors = instructors?.data.count || 0;
+
+  // const activeInstructors =
+  //   disciplines?.reduce(
+  //     (acc, discipline) =>
+  //       acc +
+  //       (discipline.instructors?.filter((i) => i.status === 'active').length ||
+  //         0),
+  //     0
+  //   ) || 0;
 
   return (
     <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
@@ -61,7 +63,7 @@ export function DisciplineStatsCards({
         </CardContent>
       </Card>
 
-      <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl'>
+      {/* <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl'>
         <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
         <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
           <CardTitle className='text-sm font-medium opacity-90'>
@@ -87,7 +89,7 @@ export function DisciplineStatsCards({
           <div className='text-3xl font-bold'>{totalInstructors}</div>
           <p className='mt-1 text-xs opacity-80'>instrutores cadastrados</p>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }
