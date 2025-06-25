@@ -7,7 +7,6 @@ import { useManageInstructors } from '@/lib/api/queries/use-manage-instructors';
 import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
 import { InstructorDiscipline, InstructorStatus } from '@/types/instructor';
 import { hasAccess } from '@/utils/access-control';
-import { motion } from 'framer-motion';
 import { Grid3X3, List, Sparkles, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -191,12 +190,7 @@ export default function InstructorsManagement() {
     <div className='min-h-screen'>
       <div className='mx-auto space-y-8'>
         {/* Enhanced Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className='flex flex-col gap-6 pt-8 md:flex-row md:items-center md:justify-between'
-        >
+        <div className='flex flex-col gap-6 pt-8 md:flex-row md:items-center md:justify-between'>
           <div className='space-y-3'>
             <div className='flex items-center gap-4'>
               <div className='relative'>
@@ -260,23 +254,15 @@ export default function InstructorsManagement() {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
 
         {/* Enhanced Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
+        <div>
           <InstructorStatsCards instructors={instructors} />
-        </motion.div>
+        </div>
 
         {/* Enhanced Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <div>
           <InstructorFilters
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -285,15 +271,10 @@ export default function InstructorsManagement() {
             filterDiscipline={filterDiscipline}
             setFilterDiscipline={setFilterDiscipline}
           />
-        </motion.div>
+        </div>
 
         {/* Content with smooth transitions */}
-        <motion.div
-          key={viewMode}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-        >
+        <div>
           {viewMode === 'table' ? (
             <InstructorsTable
               instructors={instructors}
@@ -325,7 +306,7 @@ export default function InstructorsManagement() {
               onPageSizeChange={handlePageSizeChange}
             />
           )}
-        </motion.div>
+        </div>
 
         {/* Status Change Modal */}
         <StatusChangeModal
