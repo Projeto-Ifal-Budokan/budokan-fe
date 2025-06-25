@@ -1,20 +1,38 @@
 import { z } from 'zod';
 
-// Schema for creating matriculation
-export const createMatriculationSchema = z.object({
-  idUser: z.number().positive('Usuário é obrigatório'),
-  idDiscipline: z.number().positive('Disciplina é obrigatória'),
-  idRank: z.number().positive('Rank é obrigatório'),
-  type: z.enum(['student', 'instructor'], {
-    required_error: 'Tipo de matrícula é obrigatório',
-  }),
-  paymentExempt: z.boolean().optional(),
-  isPaymentExempt: z.boolean().optional(),
-});
+// Schema for creating matriculation with conditional validation
+export const createMatriculationSchema = z
+  .object({
+    idStudent: z.number().optional(),
+    idInstructor: z.number().optional(),
+    idDiscipline: z.number().positive('Disciplina é obrigatória'),
+    idRank: z.number().positive('Rank é obrigatório'),
+    type: z.enum(['student', 'instructor'], {
+      required_error: 'Tipo de matrícula é obrigatório',
+    }),
+    paymentExempt: z.boolean().optional(),
+    isPaymentExempt: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.type === 'student') {
+        return data.idStudent && data.idStudent > 0;
+      }
+      if (data.type === 'instructor') {
+        return data.idInstructor && data.idInstructor > 0;
+      }
+      return false;
+    },
+    {
+      message: 'Usuário é obrigatório',
+      path: ['idStudent'], // This will show the error on the user field
+    }
+  );
 
 // Schema for updating matriculation
 export const updateMatriculationSchema = z.object({
-  idUser: z.number().positive('Usuário é obrigatório'),
+  idStudent: z.number().positive('Aluno é obrigatório').optional(),
+  idInstructor: z.number().positive('Instrutor é obrigatório').optional(),
   idDiscipline: z.number().positive('Disciplina é obrigatória'),
   idRank: z.number().positive('Rank é obrigatório'),
   type: z.enum(['student', 'instructor']),
@@ -30,7 +48,8 @@ export type UpdateMatriculationData = z.infer<typeof updateMatriculationSchema>;
 // Interface for complete matriculation
 export interface Matriculation {
   id: number;
-  idUser: number;
+  idStudent?: number;
+  idInstructor?: number;
   idDiscipline: number;
   idRank: number;
   type: 'student' | 'instructor';

@@ -3,12 +3,10 @@ import { Response } from '@/types/api';
 import { Matriculation } from '@/types/matriculation';
 
 export interface CreateMatriculationServiceData {
-  idUser: number;
+  idStudent?: number;
+  idInstructor?: number;
   idDiscipline: number;
   idRank: number;
-  type: 'student' | 'instructor';
-  paymentExempt?: boolean;
-  isPaymentExempt?: boolean;
 }
 
 export const matriculationsService = {
