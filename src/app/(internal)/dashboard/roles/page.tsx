@@ -8,6 +8,7 @@ import { RoleFilters } from '@/components/dashboard/roles/role-filters';
 
 import { RoleStatsCards } from '@/components/dashboard/roles/role-stats-cards';
 import { RolesTable } from '@/components/dashboard/roles/roles-table';
+import { AssignUserRoleModal } from '@/components/dashboard/users/assign-user-role-modal';
 
 import { useAuth } from '@/lib/api/queries/use-auth';
 import { useManageRoles } from '@/lib/api/queries/use-manage-roles';
@@ -25,6 +26,8 @@ export default function RolesManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAssignUserRoleModalOpen, setIsAssignUserRoleModalOpen] =
+    useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
@@ -145,10 +148,16 @@ export default function RolesManagement() {
             </div>
           </div>
 
-          <AddRoleModal
-            isOpen={isAddModalOpen}
-            onOpenChange={setIsAddModalOpen}
-          />
+          <div className='flex items-center gap-3'>
+            <AddRoleModal
+              isOpen={isAddModalOpen}
+              onOpenChange={setIsAddModalOpen}
+            />
+            <AssignUserRoleModal
+              open={isAssignUserRoleModalOpen}
+              onOpenChange={setIsAssignUserRoleModalOpen}
+            />
+          </div>
         </div>
 
         {/* Stats Cards */}
