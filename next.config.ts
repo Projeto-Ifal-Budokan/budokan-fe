@@ -2,21 +2,23 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins:
-        process.env.NODE_ENV === 'production'
-          ? ['*'] // Em produção, aceita qualquer origin
-          : ['localhost:3000'], // Em desenvolvimento, só localhost
+      allowedOrigins: [
+        'localhost:3000',
+        'budokanryu.com.br',
+        'budokanryu.com.br:443',
+        'https://budokanryu.com.br',
+        'https://budokanryu.com.br:443',
+      ],
       bodySizeLimit: '2mb',
     },
   },
 
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  // SOLUÇÃO: Configurar o hostname para não incluir porta
+  async rewrites() {
+    return [];
   },
 
-  poweredByHeader: false,
-  compress: true,
-
+  // Headers customizados para resolver o problema
   async headers() {
     return [
       {
@@ -30,10 +32,26 @@ const nextConfig = {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
+          // Força o host sem porta em produção
+          ...(process.env.NODE_ENV === 'production'
+            ? [
+                {
+                  key: 'X-Forwarded-Host',
+                  value: 'budokanryu.com.br',
+                },
+              ]
+            : []),
         ],
       },
     ];
   },
+
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
+
+  poweredByHeader: false,
+  compress: true,
 };
 
 module.exports = nextConfig;
