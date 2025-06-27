@@ -3,12 +3,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Build-time variables if needed
+        - NODE_ENV=production
     container_name: frontend-budokanryu
+    env_file:
+      - .env
+    environment:
+      # Explicit environment variables (optional, since you're using .env file)
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
     ports:
       - '3000:3000'
     volumes:
-      - .:/app
-      - /app/node_modules
+      # For production, you might want to remove the source code volume
+      # and only keep node_modules volume for better security
+      - /opt/budokan-fe/node_modules
+      # Uncomment below for development
+      # - ./:/opt/budokan-fe
+    restart: unless-stopped
     healthcheck:
       test:
         [
@@ -23,8 +36,17 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    # Add resource limits for production
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
 
 networks:
   swag_default:
     name: swag_default
-    driver: bridge
+    external: true
