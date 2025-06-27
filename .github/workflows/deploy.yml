@@ -25,17 +25,12 @@ jobs:
           host: ${{ secrets.CONTABO_HOST }}
           username: ${{ secrets.CONTABO_USER }}
           key: ${{ secrets.CONTABO_KEY }}
-          envs: NEXT_PUBLIC_API_URL
           script: |
             cd /home/budokan/budokan-fe
 
-            # Garante permissão de execução ao script
             chmod +x deploy.sh
 
-            # Executa o script (ele mesmo cria o .env com as variáveis que você passou)
-            ./deploy.sh
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_API_URL="${{ secrets.NEXT_PUBLIC_API_URL }}" ./deploy.sh
 
       - name: Calculate duration
         run: |
