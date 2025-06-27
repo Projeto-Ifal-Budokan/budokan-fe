@@ -2,13 +2,12 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: [
-        'localhost:3000',
-        process.env.NEXT_PUBLIC_API_URL?.replace(/^https?:\/\//, ''),
-      ],
+      allowedOrigins:
+        process.env.NODE_ENV === 'production'
+          ? ['*'] // Em produção, aceita qualquer origin
+          : ['localhost:3000'], // Em desenvolvimento, só localhost
       bodySizeLimit: '2mb',
     },
-    appDir: true,
   },
 
   env: {
