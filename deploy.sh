@@ -30,10 +30,16 @@ if [ "$(docker ps -aq -f name=^/${CONTAINER_NAME}$)" ]; then
   }
 fi
 
-# Remover imagens antigas para forçar rebuild
-echo "🧹 Limpando imagens antigas..."
-docker image prune -f
-docker builder prune -f
+# Remover imagens antigas do projeto
+echo "🧹 Limpando imagens antigas do projeto..."
+# Remove apenas containers, imagens e volumes do projeto atual
+docker compose down --rmi all --volumes --remove-orphans
+
+# Remove imagens órfãs específicas do projeto (se houver)
+docker rmi $(docker images -f "dangling=true" -f "label=com.docker.compose.project=budokan-fe" -q) 2>/dev/null || true
+
+# Opcional: remover apenas volumes não utilizados (mais seguro que prune geral)
+docker volume ls -qf dangling=true | grep "budokan-fe" | xargs -r docker volume rm 2>/dev/null || true
 
 echo "🐳 Reconstruindo e reiniciando containers..."
 if docker compose down --remove-orphans && docker compose up -d --build --force-recreate; then
