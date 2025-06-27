@@ -1,37 +1,50 @@
-FROM node:22.14-alpine
+# Etapa 1: build
+FROM node:22.14-alpine AS builder
 
-# Instalar dependências do sistema primeiro
 RUN apk add --no-cache wget bash
 
-# Instalar pnpm globalmente
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
-ENV PATH="/root/.local/share/pnpm:$PATH"
+# Instalar pnpm
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
+  && ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm
 
-# Definir diretório de trabalho
-WORKDIR /opt/budokan-fe
+WORKDIR /app
 
-# Copiar arquivos de dependências primeiro (para cache layers)
+# Copiar e instalar dependências
 COPY package.json pnpm-lock.yaml* ./
-
-# Instalar dependências
 RUN pnpm install --frozen-lockfile
 
-# Copiar todo o código fonte
+# Copiar o código
 COPY . .
 
-# Definir ARGs que serão passados durante o build
+# Definir variáveis de ambiente para build
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-
-# Outras variáveis de ambiente para o build
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Fazer o build da aplicação (agora com as variáveis disponíveis)
+# Fazer o build
 RUN pnpm build
+
+# Etapa 2: produção
+FROM node:22.14-alpine AS runner
+
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Instalar pnpm novamente
+RUN apk add --no-cache wget bash \
+  && wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
+  && ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm
+
+# Copiar apenas o necessário da etapa anterior
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
 
 # Expor a porta
 EXPOSE 3000
 
-# Comando de inicialização
-ENTRYPOINT ["pnpm", "start"]
+# Rodar a aplicação
+CMD ["pnpm", "start"]

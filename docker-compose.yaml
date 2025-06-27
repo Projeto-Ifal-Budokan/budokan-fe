@@ -13,8 +13,6 @@ services:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
       - '3000:3000'
-    volumes:
-      - /opt/budokan-fe/node_modules
     restart: unless-stopped
     healthcheck:
       test:
