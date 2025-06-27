@@ -25,12 +25,18 @@ jobs:
           host: ${{ secrets.CONTABO_HOST }}
           username: ${{ secrets.CONTABO_USER }}
           key: ${{ secrets.CONTABO_KEY }}
+          envs: NEXT_PUBLIC_API_URL
           script: |
             cd /home/budokan/budokan-fe
 
             chmod +x deploy.sh
 
-            NEXT_PUBLIC_API_URL="${{ secrets.NEXT_PUBLIC_API_URL }}" ./deploy.sh
+            # Mostra o valor da variável para debug
+            echo "🔍 Debug - NEXT_PUBLIC_API_URL: '$NEXT_PUBLIC_API_URL'"
+
+            ./deploy.sh
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Calculate duration
         run: |
