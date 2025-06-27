@@ -1,50 +1,63 @@
-# Etapa 1: build
-FROM node:22.14-alpine AS builder
+# Make sure it uses up to date node js version
+FROM node:23-alpine AS base
 
-RUN apk add --no-cache wget bash
-
-# Instalar pnpm
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
-  && ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm
-
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+# If you still run into build issue, go to "Problem #3: Making /app is read only.
+# in case you have permission issues.
 WORKDIR /app
 
-# Copiar e instalar dependências
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Copiar o código
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Definir variáveis de ambiente para build
+
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE=true
 
-# Fazer o build
-RUN pnpm build
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Etapa 2: produção
-FROM node:22.14-alpine AS runner
-
+FROM base AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+# Uncomment the following line in case you want to disable telemetry during the build.
+# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE=true
 
-# Instalar pnpm novamente
-RUN apk add --no-cache wget bash \
-  && wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh - \
-  && ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copiar apenas o necessário da etapa anterior
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/node_modules ./node_modules
 
-# Expor a porta
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Ensuring no unnecessary permissions are given and add necessary permissions for it to run server.js properly.
+RUN chmod -R a-w+x . && chmod -R a+x .next node_modules
+
+USER nextjs
+
 EXPOSE 3000
 
-# Rodar a aplicação
-CMD ["pnpm", "start"]
+ENV PORT=3000
+
+ENV HOSTNAME="0.0.0.0"
+CMD ["node", "server.js"]

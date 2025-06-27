@@ -28,16 +28,17 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-          cpus: '0.5'
-        reservations:
-          memory: 512M
-          cpus: '0.5'
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 1G
+    #       cpus: '0.5'
+    #     reservations:
+    #       memory: 512M
+    #       cpus: '0.5'
+    networks:
+      - swag_default
 
 networks:
   swag_default:
-    name: swag_default
     external: true
