@@ -25,20 +25,14 @@ jobs:
           host: ${{ secrets.CONTABO_HOST }}
           username: ${{ secrets.CONTABO_USER }}
           key: ${{ secrets.CONTABO_KEY }}
-          envs: NEXT_PUBLIC_API_URL,NEXTAUTH_SECRET,NEXTAUTH_URL,DATABASE_URL
+          envs: NEXT_PUBLIC_API_URL
           script: |
-            cd /home/budokan
+            cd /home/budokan/budokan-fe
 
-            # Create .env file with passed environment variables
-            cat > .env << EOF
-            NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-            EOF
+            # Garante permissão de execução ao script
+            chmod +x deploy.sh
 
-            # Export variables for docker-compose
-            export NEXT_PUBLIC_API_URL="${NEXT_PUBLIC_API_URL}"
-
-
-            # Run deploy script
+            # Executa o script (ele mesmo cria o .env com as variáveis que você passou)
             ./deploy.sh
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
