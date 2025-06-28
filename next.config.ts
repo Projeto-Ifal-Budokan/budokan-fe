@@ -1,24 +1,20 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'hebbkx1anhila5yf.public.blob.vercel-storage.com',
-      },
-    ],
-  },
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'standalone',
   experimental: {
     serverActions: {
       allowedOrigins: [
+        'localhost:3000',
         'budokanryu.com.br',
         'budokanryu.com.br:443',
-        'dev.budokanryu.com.br',
-        'dev.budokanryu.com.br:443',
+        'https://budokanryu.com.br',
+        'https://budokanryu.com.br:443',
       ],
+      bodySizeLimit: '2mb',
     },
   },
+  poweredByHeader: false,
+  compress: true,
 };
 
-export default nextConfig;
+module.exports = nextConfig;

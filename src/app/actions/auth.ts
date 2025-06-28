@@ -31,13 +31,21 @@ export async function loginAction(data: LoginFormData) {
 
 // Server action for logout
 export async function logoutAction() {
-  // Delete the auth cookie
-  (await cookies()).delete('access_token');
+  const cookieStore = await cookies();
+
+  // Delete the auth cookie with the same configuration used to set it
+  cookieStore.delete({
+    name: 'access_token',
+    domain: '.budokanryu.com.br',
+    path: '/',
+  });
 
   // Revalidate relevant paths after logout
+  revalidatePath('/');
   revalidatePath('/login');
+  revalidatePath('/dashboard');
 
-  // Redirect to home page
+  // Redirect to login page
   redirect('/login');
 }
 

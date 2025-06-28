@@ -1,23 +1,74 @@
-FROM node:22.14-alpine
+# Base image with latest Node.js (alpine = smaller image)
+FROM node:23-alpine AS base
 
-COPY . /opt/budokan-fe
+# Dependency installation stage
+FROM base AS deps
 
-WORKDIR /opt/budokan-fe
+RUN apk add --no-cache libc6-compat
 
-RUN apk add --no-cache wget bash
+WORKDIR /app
 
-ENV SHELL=/bin/sh
+# Copy dependency files
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
-ENV PATH="/root/.local/share/pnpm:$PATH"
-#RUN pnpm install
-RUN pnpm install \
-    && pnpm build
+# Install dependencies using available lockfile
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install --frozen-lockfile; \
+  else echo "No lockfile found." && exit 1; \
+  fi
 
-# Cria diretório de trabalho
-WORKDIR /opt/budokan-fe
+# Application build stage
+FROM base AS builder
 
-# Expõe a porta padrão da aplicação (altere se necessário)
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Set environment variables for build
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NODE_ENV=production
+# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE=true
+
+# Build the application
+RUN \
+  if [ -f yarn.lock ]; then yarn build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "No lockfile found." && exit 1; \
+  fi
+
+# Final runtime stage
+FROM base AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+# ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE=true
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+
+# Copy necessary build output
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Ensure cache folder exists and is writable by the app user
+RUN mkdir -p /app/.next/cache \
+  && chown -R nextjs:nodejs /app/.next
+
+# Drop privileges to the non-root user
+USER nextjs
+
 EXPOSE 3000
 
-ENTRYPOINT ["pnpm", "start"]
+CMD ["node", "server.js"]
