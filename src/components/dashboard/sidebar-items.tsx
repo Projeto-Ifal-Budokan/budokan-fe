@@ -181,7 +181,13 @@ const adminSidebarItems: SidebarItem[] = [
     label: 'Horários de Treino',
     href: '/dashboard/training-schedules',
     icon: 'Clock',
-    privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+    privileges: [
+      PRIVILEGES.LIST_TRAINING_SCHEDULES,
+      PRIVILEGES.VIEW_TRAINING_SCHEDULE,
+      PRIVILEGES.CREATE_TRAINING_SCHEDULE,
+      PRIVILEGES.UPDATE_TRAINING_SCHEDULE,
+      PRIVILEGES.DELETE_TRAINING_SCHEDULE,
+    ],
   },
   {
     label: ' Rankings',

@@ -1,4 +1,7 @@
 export const PRIVILEGES = {
+  // Admin privilege
+  ADMIN: 'admin',
+
   // User management
   LIST_USERS: 'list_users',
   VIEW_USER: 'view_user',
@@ -54,6 +57,48 @@ export const PRIVILEGES = {
   CREATE_INSTRUCTOR_DISCIPLINE: 'create_instructor_discipline',
   UPDATE_INSTRUCTOR_DISCIPLINE: 'update_instructor_discipline',
   DELETE_INSTRUCTOR_DISCIPLINE: 'delete_instructor_discipline',
+
+  // Session management
+  LIST_SESSIONS: 'list_sessions',
+  CREATE_SESSION: 'create_session',
+  UPDATE_SESSION: 'update_session',
+  DELETE_SESSION: 'delete_session',
+
+  // Attendance management
+  VIEW_MATRICULATION_SESSIONS: 'view_matriculation_sessions',
+  LIST_ATTENDANCES: 'list_attendances',
+  CREATE_ATTENDANCE: 'create_attendance',
+  UPDATE_ATTENDANCE: 'update_attendance',
+  DELETE_ATTENDANCE: 'delete_attendance',
+
+  // Daily absence management
+  LIST_DAILY_ABSENCES: 'list_daily_absences',
+  VIEW_DAILY_ABSENCE: 'view_daily_absence',
+  CREATE_DAILY_ABSENCE: 'create_daily_absence',
+  UPDATE_DAILY_ABSENCE: 'update_daily_absence',
+  DELETE_DAILY_ABSENCE: 'delete_daily_absence',
+  COUNT_ABSENCE_DAYS: 'count_absence_days',
+  PROCESS_DAILY_ABSENCES: 'process_daily_absences',
+
+  // Training schedule management
+  LIST_TRAINING_SCHEDULES: 'list_training_schedules',
+  VIEW_TRAINING_SCHEDULE: 'view_training_schedule',
+  CREATE_TRAINING_SCHEDULE: 'create_training_schedule',
+  UPDATE_TRAINING_SCHEDULE: 'update_training_schedule',
+  DELETE_TRAINING_SCHEDULE: 'delete_training_schedule',
+
+  // Practitioner contact management
+  LIST_PRACTITIONER_CONTACTS: 'list_practitioner_contacts',
+  VIEW_PRACTITIONER_CONTACT: 'view_practitioner_contact',
+  CREATE_PRACTITIONER_CONTACT: 'create_practitioner_contact',
+  UPDATE_PRACTITIONER_CONTACT: 'update_practitioner_contact',
+  DELETE_PRACTITIONER_CONTACT: 'delete_practitioner_contact',
+
+  // PIX key management
+  LIST_PIX_KEYS: 'list_pix_keys',
+  VIEW_PIX_KEY: 'view_pix_key',
+  CREATE_PIX_KEY: 'create_pix_key',
+  UPDATE_PIX_KEY: 'update_pix_key',
 } as const;
 
 // Type for the privilege values
