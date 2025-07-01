@@ -38,8 +38,6 @@ export default function InstructorDetailPage({
 
   const { data: instructor, isLoading, error } = useInstructorDiscipline(id);
 
-  console.log({ instructor });
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':

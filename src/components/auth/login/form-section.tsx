@@ -34,7 +34,7 @@ export function LoginFormSection() {
     setIsLoading(true);
     try {
       const response = await authService.login(credentials);
-      console.log({ response });
+
       if (!response.ok) {
         return toast.error(response.data.message);
       }

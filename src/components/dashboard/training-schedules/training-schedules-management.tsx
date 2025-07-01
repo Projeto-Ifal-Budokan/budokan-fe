@@ -1,10 +1,11 @@
 'use client';
 
+import { TrainingSchedulesSkeleton } from '@/app/(internal)/dashboard/training-schedules/training-schedules-skeleton';
 import { AddTrainingScheduleModal } from '@/components/dashboard/training-schedules/add-training-schedule-modal';
 import { TrainingScheduleFilters } from '@/components/dashboard/training-schedules/training-schedule-filters';
 import { TrainingSchedulesTable } from '@/components/dashboard/training-schedules/training-schedules-table';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useDebounce } from '@/hooks/use-debounce';
 import { useAuth } from '@/lib/api/queries/use-auth';
 import { useInstructorDisciplines } from '@/lib/api/queries/use-instructor-disciplines';
 import { useManageDisciplines } from '@/lib/api/queries/use-manage-disciplines';
@@ -17,8 +18,6 @@ import { hasAccess } from '@/utils/access-control';
 import { Calendar, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-console.log('TrainingSchedulesManagement mounted');
-
 export default function TrainingSchedulesManagement() {
   // State
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,9 +25,12 @@ export default function TrainingSchedulesManagement() {
   const [filterWeekday, setFilterWeekday] = useState('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Pagination state
+  // Pagination state for display (client-side pagination)
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  // Debounce search term for better UX
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   // Hooks
   const { useTrainingSchedules } = useManageTrainingSchedules();
@@ -43,20 +45,17 @@ export default function TrainingSchedulesManagement() {
   const { useDisciplines } = useManageDisciplines();
   const { data: allDisciplines } = useDisciplines(1, 100);
 
+  // Get all training schedules (we'll filter client-side)
   const { data: trainingSchedulesResponse, isLoading } = useTrainingSchedules(
-    currentPage,
-    pageSize
+    1,
+    1000
   );
 
-  console.log({ trainingSchedulesResponse });
-
-  // Extract pagination data from API response
-  const trainingSchedules = useMemo(
+  // Extract all training schedules from API response
+  const allTrainingSchedules = useMemo(
     () => trainingSchedulesResponse?.data?.items || [],
     [trainingSchedulesResponse]
   );
-  const totalItems = trainingSchedulesResponse?.data?.count || 0;
-  const totalPages = Math.ceil(totalItems / pageSize);
 
   // Computed values
   const isAdmin = currentUserPrivileges
@@ -64,9 +63,9 @@ export default function TrainingSchedulesManagement() {
     : false;
 
   // If not admin, filter schedules to only show disciplines the user is linked to
-  const filteredTrainingSchedules = useMemo(() => {
+  const userAccessibleSchedules = useMemo(() => {
     if (isAdmin) {
-      return trainingSchedules;
+      return allTrainingSchedules;
     }
 
     const userDisciplineIds =
@@ -74,10 +73,56 @@ export default function TrainingSchedulesManagement() {
         item.idDiscipline.toString()
       ) || [];
 
-    return trainingSchedules.filter((schedule: TrainingSchedule) =>
+    return allTrainingSchedules.filter((schedule: TrainingSchedule) =>
       userDisciplineIds.includes(schedule.idDiscipline.toString())
     );
-  }, [trainingSchedules, isAdmin, instructorDisciplines]);
+  }, [allTrainingSchedules, isAdmin, instructorDisciplines]);
+
+  // Apply client-side filters
+  const filteredTrainingSchedules = useMemo(() => {
+    let filtered = userAccessibleSchedules;
+
+    // Apply search filter
+    if (debouncedSearchTerm.trim()) {
+      const searchLower = debouncedSearchTerm.toLowerCase().trim();
+      filtered = filtered.filter((schedule: TrainingSchedule) =>
+        schedule.disciplineName.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply discipline filter
+    if (filterDiscipline !== 'all') {
+      filtered = filtered.filter(
+        (schedule: TrainingSchedule) =>
+          schedule.idDiscipline.toString() === filterDiscipline
+      );
+    }
+
+    // Apply weekday filter
+    if (filterWeekday !== 'all') {
+      filtered = filtered.filter(
+        (schedule: TrainingSchedule) => schedule.weekday === filterWeekday
+      );
+    }
+
+    return filtered;
+  }, [
+    userAccessibleSchedules,
+    debouncedSearchTerm,
+    filterDiscipline,
+    filterWeekday,
+  ]);
+
+  // Client-side pagination
+  const paginatedSchedules = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredTrainingSchedules.slice(startIndex, endIndex);
+  }, [filteredTrainingSchedules, currentPage, pageSize]);
+
+  // Pagination calculations
+  const totalItems = filteredTrainingSchedules.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
 
   // Check if user can manage (create/edit/delete)
   const canManage = useMemo(() => {
@@ -129,6 +174,22 @@ export default function TrainingSchedulesManagement() {
     setCurrentPage(1);
   };
 
+  // Reset to first page when filters change
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  const handleDisciplineFilterChange = (value: string) => {
+    setFilterDiscipline(value);
+    setCurrentPage(1);
+  };
+
+  const handleWeekdayFilterChange = (value: string) => {
+    setFilterWeekday(value);
+    setCurrentPage(1);
+  };
+
   const userDisciplines: Discipline[] = useMemo(() => {
     if (!instructorDisciplines?.data?.items || !allDisciplines?.data?.items)
       return [];
@@ -142,15 +203,7 @@ export default function TrainingSchedulesManagement() {
   }, [instructorDisciplines, allDisciplines]);
 
   if (isLoading && !trainingSchedulesResponse) {
-    return (
-      <div className='min-h-screen'>
-        <div className='mx-auto space-y-8'>
-          <Skeleton className='h-32 w-full' />
-          <Skeleton className='h-20 w-full' />
-          <Skeleton className='h-96 w-full' />
-        </div>
-      </div>
-    );
+    return <TrainingSchedulesSkeleton />;
   }
 
   return (
@@ -190,16 +243,16 @@ export default function TrainingSchedulesManagement() {
         {/* Filters Section */}
         <TrainingScheduleFilters
           searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+          setSearchTerm={handleSearchChange}
           filterDiscipline={filterDiscipline}
-          setFilterDiscipline={setFilterDiscipline}
+          setFilterDiscipline={handleDisciplineFilterChange}
           filterWeekday={filterWeekday}
-          setFilterWeekday={setFilterWeekday}
+          setFilterWeekday={handleWeekdayFilterChange}
           availableDisciplines={availableDisciplines}
         />
 
-        {/* Loading state for filtering */}
-        {isLoading && trainingSchedulesResponse && (
+        {/* Loading state */}
+        {isLoading && (
           <div className='flex justify-center py-4'>
             <div className='flex items-center gap-2 text-sm text-gray-600'>
               <div className='h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600'></div>
@@ -210,7 +263,7 @@ export default function TrainingSchedulesManagement() {
 
         {/* Table Section */}
         <TrainingSchedulesTable
-          trainingSchedules={filteredTrainingSchedules}
+          trainingSchedules={paginatedSchedules}
           canManage={canManage}
           isAdmin={isAdmin}
           currentPage={currentPage}

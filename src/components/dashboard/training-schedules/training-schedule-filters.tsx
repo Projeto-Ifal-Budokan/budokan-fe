@@ -61,10 +61,10 @@ export function TrainingScheduleFilters({
     return getWeekdayText(filterWeekday);
   }, [filterWeekday]);
 
-  // Active filters count
+  // Active filters count (use trimmed search term for counting)
   const activeFiltersCount = useMemo(() => {
     let count = 0;
-    if (searchTerm) count++;
+    if (searchTerm.trim()) count++;
     if (filterDiscipline !== 'all') count++;
     if (filterWeekday !== 'all') count++;
     return count;
@@ -156,9 +156,9 @@ export function TrainingScheduleFilters({
         <div className='flex flex-wrap items-center gap-2'>
           <span className='text-sm text-gray-600'>Filtros ativos:</span>
 
-          {searchTerm && (
+          {searchTerm.trim() && (
             <Badge variant='secondary' className='gap-1'>
-              Busca: &quot;{searchTerm}&quot;
+              Busca: &quot;{searchTerm.trim()}&quot;
               <Button
                 variant='ghost'
                 size='sm'
