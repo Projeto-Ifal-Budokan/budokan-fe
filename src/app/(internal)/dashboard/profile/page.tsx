@@ -1,18 +1,11 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/lib/api/queries/use-auth';
@@ -25,7 +18,6 @@ import {
   Calendar,
   Camera,
   Edit3,
-  Lock,
   Mail,
   Phone,
   Save,
@@ -35,6 +27,8 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+
+import { AvatarUploadModal } from '@/components/dashboard/profile/avatar-upload-modal';
 import { ProfileSkeleton } from './profile-skeleton';
 
 type UserProfile = User;
@@ -43,12 +37,10 @@ export default function ProfilePage() {
   const { me } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const { data: user } = me;
   const { updateUser } = useManageUsers();
 
-  // const userPrivileges = use(
-  //   privilegesService.getPrivilegesByUser(user?.id?.toString() || '')
-  // );
   const { data: userPrivileges } = usePrivilegesByUser(
     user?.id?.toString() || ''
   );
@@ -56,23 +48,28 @@ export default function ProfilePage() {
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
   const handleSave = async () => {
-    // setProfile(editedProfile);
-    await updateUser.mutateAsync(editedProfile as UserProfile);
-    setIsEditing(false);
-    setEditedProfile(null);
-    toast.success('Perfil atualizado', {
-      description: 'Suas informações foram salvas com sucesso.',
-    });
+    try {
+      if (editedProfile) {
+        await updateUser.mutateAsync(editedProfile as UserProfile);
+      }
+
+      setIsEditing(false);
+      setEditedProfile(null);
+
+      toast.success('Perfil atualizado', {
+        description: 'Suas informações foram salvas com sucesso.',
+      });
+    } catch (error) {
+      toast.error('Erro ao atualizar perfil', {
+        description: 'Tente novamente mais tarde.',
+      });
+    }
   };
 
   const handleCancel = () => {
     setEditedProfile(null);
     setIsEditing(false);
   };
-
-  // const formatDate = (dateString: string) => {
-  //   return new Date(dateString).toLocaleDateString('pt-BR');
-  // };
 
   const getInitials = (firstName: string, surname: string) => {
     if (!firstName || !surname) return '';
@@ -86,14 +83,6 @@ export default function ProfilePage() {
   return (
     <div className='space-y-6'>
       {/* Header */}
-
-      {/* <>
-        {user && hasAccess('admin', user) && (
-          <div className='flex items-center justify-between'>
-            Eu sou admin rpz
-          </div>
-        )}
-      </> */}
       <div className='flex items-center justify-between'>
         <div>
           <h1 className='text-3xl font-bold tracking-tight'>Meu Perfil</h1>
@@ -108,7 +97,7 @@ export default function ProfilePage() {
                 <X className='mr-2 h-4 w-4' />
                 Cancelar
               </Button>
-              <Button onClick={handleSave}>
+              <Button onClick={handleSave} disabled={updateUser.isPending}>
                 <Save className='mr-2 h-4 w-4' />
                 Salvar
               </Button>
@@ -133,10 +122,10 @@ export default function ProfilePage() {
           <div className='flex items-center space-x-6'>
             <div className='relative'>
               <Avatar className='h-24 w-24'>
-                {/* <AvatarImage
-                  src={user?.avatar || '/placeholder.svg'}
+                <AvatarImage
+                  src={user?.profileImageUrl || ''}
                   alt={`${user?.firstName} ${user?.surname}`}
-                /> */}
+                />
                 <AvatarFallback className={`bg-blue-900 text-lg text-white`}>
                   {getInitials(
                     user?.firstName as string,
@@ -144,15 +133,14 @@ export default function ProfilePage() {
                   )}
                 </AvatarFallback>
               </Avatar>
-              {isEditing && (
-                <Button
-                  size='sm'
-                  variant='secondary'
-                  className='absolute -right-2 -bottom-2 h-8 w-8 rounded-full p-0'
-                >
-                  <Camera className='h-4 w-4' />
-                </Button>
-              )}
+              <Button
+                size='sm'
+                variant='secondary'
+                className='absolute -right-2 -bottom-2 h-8 w-8 rounded-full p-0'
+                onClick={() => setIsAvatarModalOpen(true)}
+              >
+                <Camera className='h-4 w-4' />
+              </Button>
             </div>
             <div className='flex-1'>
               <div className='mb-2 flex items-center gap-3'>
@@ -183,7 +171,7 @@ export default function ProfilePage() {
         <TabsList className='grid w-full grid-cols-4'>
           <TabsTrigger value='personal'>Informações Pessoais</TabsTrigger>
           <TabsTrigger value='contact'>Contato</TabsTrigger>
-          <TabsTrigger value='security'>Segurança</TabsTrigger>
+          {/* <TabsTrigger value='security'>Segurança</TabsTrigger> */}
           <TabsTrigger value='preferences'>Preferências</TabsTrigger>
         </TabsList>
 
@@ -245,59 +233,16 @@ export default function ProfilePage() {
                         setEditedProfile({
                           ...editedProfile!,
                           birthDate: e.target.value,
-                          //   + 'T00:00:00.000Z',
                         } as UserProfile)
                       }
                     />
                   ) : (
                     <p className='flex items-center gap-2 text-sm font-medium'>
                       <Calendar className='h-4 w-4' />
-                      {editedProfile?.birthDate}
+                      {user?.birthDate}
                     </p>
                   )}
                 </div>
-                {/* <div className='space-y-2'>
-                  <Label htmlFor='address'>Endereço</Label>
-                  {isEditing ? (
-                    <Textarea
-                      id='address'
-                      value={editedProfile.address || ''}
-                      onChange={(e) =>
-                        setEditedProfile({
-                          ...editedProfile,
-                          address: e.target.value,
-                        })
-                      }
-                      rows={2}
-                    />
-                  ) : (
-                    <p className='flex items-center gap-2 text-sm font-medium'>
-                      <MapPin className='h-4 w-4' />
-                      {me.data?.address}
-                    </p>
-                  )}
-                </div> */}
-                {/* <div className='space-y-2'>
-                  <Label htmlFor='bio'>Biografia</Label>
-                  {isEditing ? (
-                    <Textarea
-                      id='bio'
-                      value={editedProfile.bio || ''}
-                      onChange={(e) =>
-                        setEditedProfile({
-                          ...editedProfile,
-                          bio: e.target.value,
-                        })
-                      }
-                      rows={3}
-                      placeholder='Conte um pouco sobre você...'
-                    />
-                  ) : (
-                    <p className='text-muted-foreground text-sm'>
-                      {profile.bio}
-                    </p>
-                  )}
-                </div> */}
               </CardContent>
             </Card>
           </div>
@@ -363,31 +308,14 @@ export default function ProfilePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className='space-y-4'>
-                {/* <div className='space-y-2'>
-                  <Label>Nome</Label>
-                  <p className='text-sm font-medium'>
-                    {user?.emergencyContact?.name}
-                  </p>
-                </div>
-                <div className='space-y-2'>
-                  <Label>Telefone</Label>
-                  <p className='text-sm font-medium'>
-                    {user?.emergencyContact?.phone}
-                  </p>
-                </div>
-                <div className='space-y-2'>
-                  <Label>Parentesco</Label>
-                  <p className='text-sm font-medium'>
-                    {user?.emergencyContact?.relationship}
-                  </p>
-                </div> */}
+                {/* Emergency contact fields */}
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
         {/* Security Tab */}
-        <TabsContent value='security' className='space-y-6'>
+        {/* <TabsContent value='security' className='space-y-6'>
           <Card>
             <CardHeader>
               <CardTitle className='flex items-center gap-2'>
@@ -430,7 +358,7 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
         {/* Preferences Tab */}
         <TabsContent value='preferences' className='space-y-6'>
@@ -481,6 +409,17 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Avatar Upload Modal */}
+      <AvatarUploadModal
+        isOpen={isAvatarModalOpen}
+        onOpenChange={setIsAvatarModalOpen}
+        user={user}
+        onSuccess={() => {
+          // Optionally refresh user data
+          me.refetch();
+        }}
+      />
     </div>
   );
 }
