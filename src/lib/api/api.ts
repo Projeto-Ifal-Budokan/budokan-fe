@@ -68,7 +68,10 @@ export async function apiRequest<T>(
 
   const config: RequestInit = {
     headers: {
-      'Content-Type': 'application/json',
+      // Only set Content-Type to JSON if body is not FormData
+      ...(!(options.body instanceof FormData) && {
+        'Content-Type': 'application/json',
+      }),
       ...requestOptions.headers,
       Cookie: await getAuthHeaders(),
     },

@@ -54,7 +54,6 @@ export const userService = {
     const response = await apiRequest<Response>(`/users/${id}/profile-image`, {
       method: 'PATCH',
       body: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response;
   },
