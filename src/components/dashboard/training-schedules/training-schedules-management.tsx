@@ -1,6 +1,7 @@
 'use client';
 
 import { AddTrainingScheduleModal } from '@/components/dashboard/training-schedules/add-training-schedule-modal';
+import { TrainingScheduleFilters } from '@/components/dashboard/training-schedules/training-schedule-filters';
 import { TrainingSchedulesTable } from '@/components/dashboard/training-schedules/training-schedules-table';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -15,6 +16,8 @@ import { InstructorDiscipline } from '@/types/instructor';
 import { hasAccess } from '@/utils/access-control';
 import { Calendar, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+
+console.log('TrainingSchedulesManagement mounted');
 
 export default function TrainingSchedulesManagement() {
   // State
@@ -42,13 +45,10 @@ export default function TrainingSchedulesManagement() {
 
   const { data: trainingSchedulesResponse, isLoading } = useTrainingSchedules(
     currentPage,
-    pageSize,
-    {
-      idDiscipline: filterDiscipline !== 'all' ? filterDiscipline : undefined,
-      weekday: filterWeekday !== 'all' ? filterWeekday : undefined,
-      search: searchTerm || undefined,
-    }
+    pageSize
   );
+
+  console.log({ trainingSchedulesResponse });
 
   // Extract pagination data from API response
   const trainingSchedules = useMemo(
@@ -83,6 +83,23 @@ export default function TrainingSchedulesManagement() {
   const canManage = useMemo(() => {
     return isAdmin || (instructorDisciplines?.data?.items?.length || 0) > 0;
   }, [isAdmin, instructorDisciplines]);
+
+  // Available disciplines for filtering
+  const availableDisciplines = useMemo(() => {
+    if (isAdmin) {
+      return allDisciplines?.data?.items || [];
+    }
+    // For non-admin users, only show disciplines they're linked to
+    if (!instructorDisciplines?.data?.items || !allDisciplines?.data?.items)
+      return [];
+    return instructorDisciplines.data.items
+      .map((inst: InstructorDiscipline) =>
+        allDisciplines.data.items.find(
+          (d: Discipline) => d.id === inst.idDiscipline
+        )
+      )
+      .filter(Boolean) as Discipline[];
+  }, [isAdmin, allDisciplines, instructorDisciplines]);
 
   // Utility functions
   const getWeekdayText = (weekday: string) => {
@@ -124,8 +141,16 @@ export default function TrainingSchedulesManagement() {
       .filter(Boolean) as Discipline[];
   }, [instructorDisciplines, allDisciplines]);
 
-  if (isLoading) {
-    return <Skeleton className='h-10 w-full' />;
+  if (isLoading && !trainingSchedulesResponse) {
+    return (
+      <div className='min-h-screen'>
+        <div className='mx-auto space-y-8'>
+          <Skeleton className='h-32 w-full' />
+          <Skeleton className='h-20 w-full' />
+          <Skeleton className='h-96 w-full' />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -163,54 +188,25 @@ export default function TrainingSchedulesManagement() {
         </div>
 
         {/* Filters Section */}
-        <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-          <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700'>
-              Buscar
-            </label>
-            <input
-              type='text'
-              placeholder='Buscar por disciplina...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-            />
-          </div>
+        <TrainingScheduleFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          filterDiscipline={filterDiscipline}
+          setFilterDiscipline={setFilterDiscipline}
+          filterWeekday={filterWeekday}
+          setFilterWeekday={setFilterWeekday}
+          availableDisciplines={availableDisciplines}
+        />
 
-          <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700'>
-              Dia da Semana
-            </label>
-            <select
-              value={filterWeekday}
-              onChange={(e) => setFilterWeekday(e.target.value)}
-              className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-            >
-              <option value='all'>Todos os dias</option>
-              <option value='monday'>Segunda-feira</option>
-              <option value='tuesday'>Terça-feira</option>
-              <option value='wednesday'>Quarta-feira</option>
-              <option value='thursday'>Quinta-feira</option>
-              <option value='friday'>Sexta-feira</option>
-              <option value='saturday'>Sábado</option>
-              <option value='sunday'>Domingo</option>
-            </select>
+        {/* Loading state for filtering */}
+        {isLoading && trainingSchedulesResponse && (
+          <div className='flex justify-center py-4'>
+            <div className='flex items-center gap-2 text-sm text-gray-600'>
+              <div className='h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600'></div>
+              Carregando horários...
+            </div>
           </div>
-
-          <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700'>
-              Disciplina
-            </label>
-            <select
-              value={filterDiscipline}
-              onChange={(e) => setFilterDiscipline(e.target.value)}
-              className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
-            >
-              <option value='all'>Todas as disciplinas</option>
-              {/* TODO: Add discipline options from API */}
-            </select>
-          </div>
-        </div>
+        )}
 
         {/* Table Section */}
         <TrainingSchedulesTable

@@ -3,6 +3,7 @@ import { Response } from '@/types/api';
 
 export interface TrainingSchedule {
   id: number;
+  disciplineName: string;
   idDiscipline: string;
   weekday: string;
   startTime: string;
@@ -30,27 +31,12 @@ export const trainingSchedulesService = {
 
   getTrainingSchedules: async (
     page: number = 1,
-    pageSize: number = 10,
-    filters?: {
-      idDiscipline?: string;
-      weekday?: string;
-      search?: string;
-    }
+    pageSize: number = 10
   ): Promise<ApiResponse<ApiPaginatedResponse<TrainingSchedule[]>>> => {
     const params = new URLSearchParams({
       page: page.toString(),
       page_size: pageSize.toString(),
     });
-
-    if (filters?.idDiscipline && filters.idDiscipline !== 'all') {
-      params.append('idDiscipline', filters.idDiscipline);
-    }
-    if (filters?.weekday && filters.weekday !== 'all') {
-      params.append('weekday', filters.weekday);
-    }
-    if (filters?.search) {
-      params.append('search', filters.search);
-    }
 
     const response = await api.get<ApiPaginatedResponse<TrainingSchedule[]>>(
       `/training-schedules/?${params.toString()}`

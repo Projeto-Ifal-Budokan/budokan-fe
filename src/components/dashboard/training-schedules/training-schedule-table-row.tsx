@@ -58,7 +58,7 @@ export function TrainingScheduleTableRow({
             </div>
             <div>
               <div className='font-semibold text-gray-900'>
-                Disciplina {trainingSchedule.idDiscipline}
+                {trainingSchedule.disciplineName}
               </div>
             </div>
           </div>

@@ -23,19 +23,13 @@ const getTrainingScheduleQuery = (id: string) => ({
 
 const listTrainingSchedulesQuery = (
   page: number = 1,
-  pageSize: number = 10,
-  filters?: {
-    idDiscipline?: string;
-    weekday?: string;
-    search?: string;
-  }
+  pageSize: number = 10
 ) => ({
-  queryKey: trainingScheduleKeys.list({ page, pageSize, filters }),
+  queryKey: trainingScheduleKeys.list({ page, pageSize }),
   queryFn: async () => {
     const response = await trainingSchedulesService.getTrainingSchedules(
       page,
-      pageSize,
-      filters
+      pageSize
     );
     return response;
   },
@@ -51,17 +45,9 @@ export function useManageTrainingSchedules() {
     });
   };
 
-  const useTrainingSchedules = (
-    page: number = 1,
-    pageSize: number = 10,
-    filters?: {
-      idDiscipline?: string;
-      weekday?: string;
-      search?: string;
-    }
-  ) => {
+  const useTrainingSchedules = (page: number = 1, pageSize: number = 10) => {
     return useQuery({
-      ...listTrainingSchedulesQuery(page, pageSize, filters),
+      ...listTrainingSchedulesQuery(page, pageSize),
     });
   };
 
@@ -71,15 +57,10 @@ export function useManageTrainingSchedules() {
 
   const fetchTrainingSchedules = async (
     page: number = 1,
-    pageSize: number = 10,
-    filters?: {
-      idDiscipline?: string;
-      weekday?: string;
-      search?: string;
-    }
+    pageSize: number = 10
   ) => {
     return await queryClient.fetchQuery(
-      listTrainingSchedulesQuery(page, pageSize, filters)
+      listTrainingSchedulesQuery(page, pageSize)
     );
   };
 
