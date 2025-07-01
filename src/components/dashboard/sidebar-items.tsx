@@ -178,6 +178,12 @@ const adminSidebarItems: SidebarItem[] = [
     ],
   },
   {
+    label: 'Horários de Treino',
+    href: '/dashboard/training-schedules',
+    icon: 'Clock',
+    privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+  },
+  {
     label: ' Rankings',
     href: '/dashboard/rankings',
     icon: 'Trophy',
