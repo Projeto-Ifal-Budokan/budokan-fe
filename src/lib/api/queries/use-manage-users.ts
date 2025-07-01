@@ -81,6 +81,16 @@ export function useManageUsers() {
     },
   });
 
+  const updateAvatar = useMutation({
+    mutationFn: ({ id, profileImage }: { id: string; profileImage: File }) =>
+      userService.updateAvatar(id, profileImage),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
+      toast.success('Avatar do usuário atualizado com sucesso!');
+    },
+  });
+
   return {
     useUser,
     useUsers,
@@ -89,5 +99,6 @@ export function useManageUsers() {
     deleteUser,
     updateUser,
     updateUserStatus,
+    updateAvatar,
   };
 }

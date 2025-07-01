@@ -54,7 +54,6 @@ import {
   User,
   UserCheck,
 } from 'lucide-react';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 interface AddMatriculationFormProps {
@@ -83,10 +82,6 @@ export function AddMatriculationForm({ onSuccess }: AddMatriculationFormProps) {
       isPaymentExempt: false,
     },
   });
-
-  useEffect(() => {
-    console.log(form.formState.errors);
-  }, [form.formState.errors]);
 
   const selectedDiscipline = form.watch('idDiscipline');
   const selectedUser = form.watch(

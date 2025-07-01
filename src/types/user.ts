@@ -18,6 +18,7 @@ export interface User {
   privileges: Privilege[];
   birthDate: string;
   phone: string;
+  profileImageUrl: string;
 }
 
 export type CreateUserData = Omit<

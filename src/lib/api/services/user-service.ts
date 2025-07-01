@@ -1,4 +1,10 @@
-import { api, ApiPaginatedResponse, ApiResponse } from '@/lib/api/api';
+import {
+  api,
+  ApiPaginatedResponse,
+  apiRequest,
+  ApiResponse,
+} from '@/lib/api/api';
+
 import { Response } from '@/types/api';
 import { User, UserStatus } from '@/types/user';
 
@@ -34,6 +40,20 @@ export const userService = {
   ): Promise<ApiResponse<Response>> => {
     const response = await api.patch<Response>(`/users/${id}/status`, {
       status,
+    });
+    return response;
+  },
+
+  updateAvatar: async (
+    id: string,
+    profileImage: File
+  ): Promise<ApiResponse<Response>> => {
+    const formData = new FormData();
+    formData.append('profileImage', profileImage);
+
+    const response = await apiRequest<Response>(`/users/${id}/profile-image`, {
+      method: 'PATCH',
+      body: formData,
     });
     return response;
   },

@@ -31,6 +31,7 @@ export function Breadcrumb() {
     roles: 'Papéis',
     privileges: 'Privilégios',
     rankings: 'Rankings',
+    'training-schedules': 'Horários de Treino',
   };
 
   return (
