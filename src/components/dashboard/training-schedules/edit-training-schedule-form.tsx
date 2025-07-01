@@ -28,10 +28,14 @@ import * as z from 'zod';
 
 const editTrainingScheduleFormSchema = z
   .object({
-    idDiscipline: z.string().min(1, 'Disciplina é obrigatória'),
+    idDiscipline: z.number().min(1, 'Disciplina é obrigatória'),
     weekday: z.string().min(1, 'Dia da semana é obrigatório'),
-    startTime: z.string().min(1, 'Horário de início é obrigatório'),
-    endTime: z.string().min(1, 'Horário de fim é obrigatório'),
+    startTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
+    endTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
   })
   .refine(
     (data) => {
@@ -71,20 +75,29 @@ export function EditTrainingScheduleForm({
   const form = useForm<EditTrainingScheduleFormValues>({
     resolver: zodResolver(editTrainingScheduleFormSchema),
     defaultValues: {
-      idDiscipline: trainingSchedule.idDiscipline.toString(),
+      idDiscipline: Number(trainingSchedule.idDiscipline),
       weekday: trainingSchedule.weekday,
-      startTime: trainingSchedule.startTime.substring(0, 5), // Remove seconds
-      endTime: trainingSchedule.endTime.substring(0, 5), // Remove seconds
+      startTime:
+        trainingSchedule.startTime.length === 8
+          ? trainingSchedule.startTime
+          : trainingSchedule.startTime + ':00',
+      endTime:
+        trainingSchedule.endTime.length === 8
+          ? trainingSchedule.endTime
+          : trainingSchedule.endTime + ':00',
     },
   });
 
-  const onSubmit = async (data: EditTrainingScheduleFormValues) => {
+  const onSubmit = (data: EditTrainingScheduleFormValues) => {
     try {
-      await onEdit({
+      // Ensure time is in HH:MM:SS
+      const formatTime = (t: string) => (t.length === 5 ? `${t}:00` : t);
+      onEdit({
         id: trainingSchedule.id,
         ...data,
-        startTime: data.startTime + ':00', // Add seconds back
-        endTime: data.endTime + ':00', // Add seconds back
+        idDiscipline: Number(data.idDiscipline),
+        startTime: formatTime(data.startTime),
+        endTime: formatTime(data.endTime),
       });
       toast.success('Horário de treino atualizado com sucesso!');
     } catch (error) {
@@ -114,7 +127,7 @@ export function EditTrainingScheduleForm({
                 <FormLabel>Disciplina</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value.toString()}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -175,7 +188,22 @@ export function EditTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Início</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input
+                      type='time'
+                      step='1'
+                      value={
+                        field.value.length === 8
+                          ? field.value.slice(0, 5)
+                          : field.value
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.length === 5
+                            ? `${e.target.value}:00`
+                            : e.target.value
+                        )
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -189,7 +217,22 @@ export function EditTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Fim</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input
+                      type='time'
+                      step='1'
+                      value={
+                        field.value.length === 8
+                          ? field.value.slice(0, 5)
+                          : field.value
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.length === 5
+                            ? `${e.target.value}:00`
+                            : e.target.value
+                        )
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

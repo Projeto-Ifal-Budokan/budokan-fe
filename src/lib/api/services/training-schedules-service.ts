@@ -4,7 +4,7 @@ import { Response } from '@/types/api';
 export interface TrainingSchedule {
   id: number;
   disciplineName: string;
-  idDiscipline: string;
+  idDiscipline: number;
   weekday: string;
   startTime: string;
   endTime: string;
@@ -13,7 +13,7 @@ export interface TrainingSchedule {
 }
 
 export interface CreateTrainingScheduleData {
-  idDiscipline: string;
+  idDiscipline: number;
   weekday: string;
   startTime: string;
   endTime: string;

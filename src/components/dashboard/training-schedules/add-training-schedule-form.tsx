@@ -30,8 +30,12 @@ const trainingScheduleFormSchema = z
   .object({
     idDiscipline: z.string().min(1, 'Disciplina é obrigatória'),
     weekday: z.string().min(1, 'Dia da semana é obrigatório'),
-    startTime: z.string().min(1, 'Horário de início é obrigatório'),
-    endTime: z.string().min(1, 'Horário de fim é obrigatório'),
+    startTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
+    endTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
   })
   .refine(
     (data) => {
@@ -75,7 +79,15 @@ export function AddTrainingScheduleForm({
 
   const onSubmit = async (data: TrainingScheduleFormValues) => {
     try {
-      await createTrainingSchedule.mutateAsync(data);
+      // Convert startTime/endTime to HH:MM:SS if needed
+      const formatTime = (t: string) => (t.length === 5 ? `${t}:00` : t);
+      const payload = {
+        ...data,
+        idDiscipline: Number(data.idDiscipline),
+        startTime: formatTime(data.startTime),
+        endTime: formatTime(data.endTime),
+      };
+      await createTrainingSchedule.mutateAsync(payload);
       toast.success('Horário de treino criado com sucesso!');
       form.reset();
       onSuccess();
@@ -169,7 +181,22 @@ export function AddTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Início</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input
+                      type='time'
+                      step='1'
+                      value={
+                        field.value.length === 8
+                          ? field.value.slice(0, 5)
+                          : field.value
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.length === 5
+                            ? `${e.target.value}:00`
+                            : e.target.value
+                        )
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -183,7 +210,22 @@ export function AddTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Fim</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input
+                      type='time'
+                      step='1'
+                      value={
+                        field.value.length === 8
+                          ? field.value.slice(0, 5)
+                          : field.value
+                      }
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value.length === 5
+                            ? `${e.target.value}:00`
+                            : e.target.value
+                        )
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
