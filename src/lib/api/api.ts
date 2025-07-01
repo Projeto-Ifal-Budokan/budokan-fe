@@ -1,7 +1,6 @@
 import { handleNotAccessPage, handleUnauthorized } from '@/app/actions/auth';
 import { getAuthHeaders } from '@/utils/cookie-utils';
 import { RequestInit } from 'next/dist/server/web/spec-extension/request';
-import { toast } from 'sonner';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://api.example.com';
@@ -130,7 +129,7 @@ export async function apiRequest<T>(
         errorMessage = data || errorMessage;
       }
 
-      toast.error(errorMessage);
+      // toast.error(errorMessage);
       if (DEBUG) {
         console.error('API Error:', {
           url,
