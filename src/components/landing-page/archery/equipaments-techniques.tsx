@@ -1,6 +1,7 @@
 import archeryAsset from '@/assets/images/arquearia.png';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import archeryAsset2 from '@/assets/images/arquearia-carousel.png';
 
 export const EquipamentsTechniquesSection = () => {
   return (
@@ -21,7 +22,7 @@ export const EquipamentsTechniquesSection = () => {
         <div className='mb-16 grid items-center gap-12 md:grid-cols-2'>
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
             <Image
-              src={archeryAsset}
+              src={archeryAsset2}
               alt='Arquearia Equipment'
               fill
               className='object-cover object-[center_25%]'
