@@ -15,7 +15,7 @@ export const instructors = [
     name: 'Sensei Hsie',
     title: 'Hsie Sashan',
     description:
-      'Com mais de 25 anos de experiência, foi responsável pela divisão de Kendo da Budokan-Ryu. Participou de diversos campeonatos mundiais e é referência na formação de novos kendokas.',
+      'Com mais de 50 anos de experiência, é responsável pela divisão de Kendo da Budokan-Ryu. É referência na formação de novos kendokas e pela precisão e rápidez da sua técnica.',
     imageSrc: senseiKendoAsset.src,
     alt: 'Sensei Hsie',
   },
@@ -23,7 +23,7 @@ export const instructors = [
     name: 'Sensei Yasuhiro',
     title: 'Yasuhiro Higashikawauchi',
     description:
-      'Especialista em Arquearia, treinou por mais de 15 anos no Japão antes de retornar ao Brasil para difundir esta arte milenar. É reconhecido por sua precisão técnica e profundo conhecimento filosófico.',
+      'Especialista em Arquearia. É reconhecido por sua precisão técnica e profundo conhecimento filosófico. Conquistou incontáveis titulos, estaduais e nacionais.',
     imageSrc: senseiArcheryAsset.src,
     alt: 'Sensei Yasuhiro',
   },
