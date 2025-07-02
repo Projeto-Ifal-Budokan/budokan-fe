@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import kendoAsset from '@/assets/images/kendo.png'
+import kendoAsset from '@/assets/images/kendo3.jpeg'
+import kendoAsset2 from '@/assets/images/kendo.png'
 
 export const EquipamentsTechniquesSection = () => {
   return (
@@ -21,7 +22,7 @@ export const EquipamentsTechniquesSection = () => {
           <div className='mb-16 grid items-center gap-12 md:grid-cols-2'>
             <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
               <Image
-                src={kendoAsset}
+                src={kendoAsset2}
                 alt='Kendo Equipment'
                 fill
                 className='object-cover object-[center_15%]'

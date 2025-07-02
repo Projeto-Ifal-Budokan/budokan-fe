@@ -1,4 +1,4 @@
-import kendoAsset from '@/assets/images/kendo.png';
+import kendoAsset from '@/assets/images/kendo2.jpeg';
 import Image from 'next/image';
 
 export const AboutSection = () => {
