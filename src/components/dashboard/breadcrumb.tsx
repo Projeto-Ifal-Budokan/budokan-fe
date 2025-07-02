@@ -32,6 +32,7 @@ export function Breadcrumb() {
     privileges: 'Privilégios',
     rankings: 'Rankings',
     'training-schedules': 'Horários de Treino',
+    sessions: 'Aulas',
   };
 
   return (

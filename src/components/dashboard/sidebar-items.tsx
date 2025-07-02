@@ -36,7 +36,7 @@ const studentSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Aulas',
-    href: '/dashboard/classes',
+    href: '/dashboard/sessions',
     icon: 'Calendar',
     privilege: PRIVILEGES.VIEW_MATRICULATION,
   },
@@ -81,7 +81,7 @@ const instructorSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Aulas',
-    href: '/dashboard/classes',
+    href: '/dashboard/sessions',
     icon: 'Calendar',
     privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
   },
@@ -175,6 +175,15 @@ const adminSidebarItems: SidebarItem[] = [
       PRIVILEGES.CREATE_DISCIPLINE,
       PRIVILEGES.UPDATE_DISCIPLINE,
       PRIVILEGES.DELETE_DISCIPLINE,
+    ],
+  },
+  {
+    label: 'Aulas',
+    href: '/dashboard/sessions',
+    icon: 'Calendar',
+    privileges: [
+      PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+      PRIVILEGES.VIEW_MATRICULATION,
     ],
   },
   {
