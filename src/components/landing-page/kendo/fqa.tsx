@@ -51,11 +51,12 @@ export const FQASection = () => {
                 O Kendo é muito doloroso ou perigoso?
               </AccordionTrigger>
               <AccordionContent className='pt-2 text-gray-600'>
-                O Kendo é uma arte marcial segura quando praticada corretamente.
-                O equipamento de proteção (bogu) foi desenvolvido
-                especificamente para absorver os impactos dos golpes. Hematomas
-                leves podem ocorrer, especialmente no início, mas lesões graves
-                são raras. A segurança é sempre prioridade em nossos treinos.
+                O Kendo é uma arte marcial tradicional praticada com alto padrão de segurança. 
+                Utilizamos equipamentos de proteção específicos (bogu), projetados para absorver 
+                os impactos dos golpes e proporcionar um ambiente de treino controlado. 
+                Desde o início, os praticantes são orientados com cuidado para desenvolverem 
+                técnica e autocontrole. Lesões são extremamente raras, pois a segurança é sempre 
+                uma prioridade em nossos treinos.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value='item-4' className='rounded-lg border p-2'>
