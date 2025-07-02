@@ -56,11 +56,12 @@ export const HistorySection = () => {
                 Karate-Do na Budokan
               </h3>
               <p className='text-gray-600'>
-                Na Budokan, o Karate-Do tem sido ensinado desde a fundação da
-                escola, seguindo os princípios tradicionais estabelecidos pelos
-                grandes mestres. Nossa linhagem técnica remonta diretamente aos
-                pioneiros do Karate Shotokan, garantindo a autenticidade dos
-                ensinamentos.
+                Na Budokan, o Karate-Do é praticado e ensinado desde a fundação da escola, 
+                com rigor técnico e fidelidade aos princípios tradicionais. Nossa linhagem 
+                remonta diretamente aos grandes mestres do estilo Shotokan — Gichin Funakoshi Sensei, 
+                Masatoshi Nakayama Sensei e Okuda Sensei — assegurando a autenticidade e a 
+                integridade dos ensinamentos transmitidos. Aqui, cada movimento carrega a herança 
+                viva do verdadeiro Karate-Do.
               </p>
             </div>
             <div>
