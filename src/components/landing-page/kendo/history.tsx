@@ -5,7 +5,7 @@ export const HistorySection = () => {
         <div className='container'>
           <div className='mb-12 text-center'>
             <h2 className='mb-4 text-3xl font-bold text-blue-800'>
-              História do Kendo
+              Torne-se um Praticante de Kendo
             </h2>
             <div className='mx-auto mb-6 h-1 w-20 bg-yellow-500'></div>
             <p className='mx-auto max-w-3xl text-gray-600'>
@@ -18,6 +18,17 @@ export const HistorySection = () => {
             <div className='space-y-6'>
               <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
+                  Kendo na Budokan-Ryu
+                </h3>
+                <p className='text-gray-600'>
+                  Na Budokan-Ryu, o Kendo é ensinado seguindo a tradição japonesa 
+                  autêntica, com instrutores qualificados. Nossa linhagem técnica conecta-se 
+                  diretamente aos grandes mestres orientais, garantindo a 
+                  preservação da essência desta arte.
+                </p>
+              </div>
+              {/* <div>
+                <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Origens no Japão Feudal
                 </h3>
                 <p className='text-gray-600'>
@@ -27,8 +38,8 @@ export const HistorySection = () => {
                   campo de batalha, sendo transmitidas em escolas tradicionais
                   (ryuha).
                 </p>
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Transformação em Arte Moderna
                 </h3>
@@ -39,8 +50,8 @@ export const HistorySection = () => {
                   Esta evolução transformou o kenjutsu letal em uma disciplina
                   educativa e esportiva.
                 </p>
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Era Moderna
                 </h3>
@@ -51,33 +62,32 @@ export const HistorySection = () => {
                   Hoje, é praticado em mais de 50 países, mantendo viva a
                   tradição marcial japonesa.
                 </p>
-              </div>
+              </div> */}
             </div>
             <div className='space-y-6'>
-              <div>
+              {/* <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Kendo na Budokan-Ryu
                 </h3>
                 <p className='text-gray-600'>
-                  Na Budokan-Ryu, o Kendo é ensinado seguindo a tradição japonesa
-                  autêntica, com instrutores qualificados que receberam
-                  treinamento no Japão. Nossa linhagem técnica conecta-se
-                  diretamente aos grandes mestres japoneses, garantindo a
+                  Na Budokan-Ryu, o Kendo é ensinado seguindo a tradição japonesa 
+                  autêntica, com instrutores qualificados. Nossa linhagem técnica conecta-se 
+                  diretamente aos grandes mestres orientais, garantindo a 
                   preservação da essência desta arte.
                 </p>
-              </div>
+              </div> */}
               <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Competições e Eventos
                 </h3>
                 <p className='text-gray-600'>
-                  Nossos praticantes participam regularmente de competições
-                  nacionais e internacionais, além de seminários com mestres
-                  visitantes. A Budokan-Ryu também organiza exames de graduação e
-                  eventos especiais que celebram a cultura e tradição do Kendo.
+                  Nossos praticantes participam regularmente de competições estaduais, 
+                  regionais e nacionais, além de seminários com mestres visitantes. 
+                  A Budokan-Ryu também organiza eventos especiais que celebram a 
+                  cultura e tradição do Kendo.
                 </p>
               </div>
-              <div>
+              {/* <div>
                 <h3 className='mb-2 text-xl font-bold text-blue-800'>
                   Filosofia e Valores
                 </h3>
@@ -87,7 +97,7 @@ export const HistorySection = () => {
                   constante (doryoku). Estes princípios transcendem o dojo e são
                   aplicados na vida cotidiana de nossos praticantes.
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
