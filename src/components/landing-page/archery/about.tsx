@@ -12,24 +12,15 @@ export const AboutSection = () => {
             </h2>
             <div className='mb-6 h-1 w-20 bg-yellow-500'></div>
             <p className='mb-4 text-gray-600'>
-              Arquearia, ou &quot;O Caminho do Arco&quot;, é a arte marcial
-              japonesa do tiro com arco tradicional. Mais que uma simples
-              prática de precisão, a Arquearia é considerado uma forma de
-              desenvolvimento espiritual e meditação em movimento, onde cada
-              tiro representa uma jornada de autoconhecimento.
+              A Arquearia é a prática do tiro com arco. Historicamente, utilizada tanto na caça quanto no combate. 
+              Na atualidade, consolidou-se como um esporte competitivo e uma atividade de lazer que promove concentração e disciplina.
             </p>
             <p className='mb-4 text-gray-600'>
-              Na Budokan, praticamos a Arquearia seguindo os princípios e
-              técnicas estabelecidos pela Federação Japonesa de Arquearia, com
-              ênfase na forma correta (kata), respiração, concentração e
-              harmonia entre corpo e mente.
+              A prática do tiro com arco desenvolve paciência, foco, estabilidade emocional a partir de uma profunda conexão entre o arqueiro, o arco e o alvo. 
+              Mais do que uma técnica, a Arquearia é uma arte que busca, por meio da perfeição do tiro, o aperfeiçoamento do caráter.
             </p>
             <p className='text-gray-600'>
-              O treinamento da Arquearia desenvolve paciência, foco,
-              estabilidade emocional e uma profunda conexão entre o praticante,
-              o arco e o alvo. É uma arte que transcende a mera habilidade
-              técnica, buscando a perfeição do caráter através da perfeição do
-              tiro.
+              Na Budokan, a Arquearia é praticada de acordo com os princípios e técnicas da Federação Field Brasil, vinculada à International Field Archery Association (IFAA).
             </p>
           </div>
           <div className='relative h-[400px] overflow-hidden rounded-lg shadow-lg'>
