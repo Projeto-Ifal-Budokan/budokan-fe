@@ -185,6 +185,7 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
     try {
       const response = await authService.register({
         ...data,
+        profileImageUrl: '',
         birthDate: data.birthDate,
         healthObservations: data.healthObservations || '',
         emergencyContacts: isPractitioner ? data.emergencyContacts : [],
