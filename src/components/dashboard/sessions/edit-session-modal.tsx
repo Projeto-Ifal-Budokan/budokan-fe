@@ -26,7 +26,7 @@ export function EditSessionModal({
 }: EditSessionModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className='max-h-[95vh] max-w-6xl overflow-y-auto sm:max-w-[425px] md:min-w-3xl'>
         <DialogHeader>
           <DialogTitle>Editar Aula</DialogTitle>
           <DialogDescription>
