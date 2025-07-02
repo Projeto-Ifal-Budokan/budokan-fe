@@ -7,8 +7,32 @@ on:
   workflow_dispatch:
 
 jobs:
+  validate:
+    name: Validate code (lint & build)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run lint
+        run: pnpm lint
+
+      - name: Run build
+        run: pnpm build
+
   deploy:
     name: Deploy to Contabo
+    needs: validate
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +55,6 @@ jobs:
 
             chmod +x deploy.sh
 
-            # Mostra o valor da variável para debug
             echo "🔍 Debug - NEXT_PUBLIC_API_URL: '$NEXT_PUBLIC_API_URL'"
 
             ./deploy.sh
