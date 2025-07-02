@@ -3,25 +3,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-import { SessionFilters } from '@/types/session';
+import {
+  CreateSessionData,
+  SessionFilters,
+  UpdateSessionData,
+} from '@/types/session';
 import { sessionsService } from '../services/sessions-service';
 
 export const sessionKeys = {
   all: ['sessions'] as const,
-  detail: (id: string) => [...sessionKeys.all, Number(id)] as const,
   lists: () => [...sessionKeys.all, 'list'] as const,
   list: (filters?: SessionFilters) =>
     [...sessionKeys.lists(), { filters }] as const,
-  details: () => [...sessionKeys.all, 'detail'] as const,
 } as const;
-
-const getSessionQuery = (id: string) => ({
-  queryKey: sessionKeys.detail(id),
-  queryFn: async () => {
-    const response = await sessionsService.getSession(id);
-    return response.data;
-  },
-});
 
 const listSessionsQuery = (filters: SessionFilters = {}) => ({
   queryKey: sessionKeys.list(filters),
@@ -34,21 +28,11 @@ const listSessionsQuery = (filters: SessionFilters = {}) => ({
 export function useManageSessions() {
   const queryClient = useQueryClient();
 
-  const useSession = (id: string) => {
-    return useQuery({
-      ...getSessionQuery(id),
-      enabled: !!id,
-    });
-  };
-
   const useSessions = (filters: SessionFilters = {}) => {
     return useQuery({
-      ...listSessionsQuery(filters),
+      queryKey: ['sessions', filters],
+      queryFn: () => sessionsService.getSessions(filters),
     });
-  };
-
-  const fetchSession = async (id: string) => {
-    return await queryClient.fetchQuery(getSessionQuery(id));
   };
 
   const fetchSessions = async (filters: SessionFilters = {}) => {
@@ -56,9 +40,12 @@ export function useManageSessions() {
   };
 
   const createSession = useMutation({
-    mutationFn: sessionsService.createSession,
+    mutationFn: (data: CreateSessionData) =>
+      sessionsService.createSession(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: sessionKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: ['sessions'],
+      });
       toast.success('Sessão criada com sucesso!');
     },
     onError: (error) => {
@@ -68,9 +55,12 @@ export function useManageSessions() {
   });
 
   const updateSession = useMutation({
-    mutationFn: sessionsService.updateSession,
+    mutationFn: (data: UpdateSessionData) =>
+      sessionsService.updateSession(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: sessionKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: ['sessions'],
+      });
       toast.success('Sessão atualizada com sucesso!');
     },
     onError: (error) => {
@@ -80,9 +70,11 @@ export function useManageSessions() {
   });
 
   const deleteSession = useMutation({
-    mutationFn: sessionsService.deleteSession,
+    mutationFn: (id: string) => sessionsService.deleteSession(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: sessionKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: ['sessions'],
+      });
       toast.success('Sessão excluída com sucesso!');
     },
     onError: (error) => {
@@ -92,9 +84,7 @@ export function useManageSessions() {
   });
 
   return {
-    useSession,
     useSessions,
-    fetchSession,
     fetchSessions,
     createSession,
     updateSession,

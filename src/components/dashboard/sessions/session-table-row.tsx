@@ -12,6 +12,7 @@ import {
 import { Discipline } from '@/types/discipline';
 import { Session } from '@/types/session';
 import { Edit, Trash2, UserCheck } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { DeleteSessionModal } from './delete-session-modal';
 import { EditSessionModal } from './edit-session-modal';
@@ -64,9 +65,11 @@ export function SessionTableRow({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant='outline' size='icon'>
-                      <UserCheck className='h-4 w-4' />
-                    </Button>
+                    <Link href={`/dashboard/sessions/${session.id}`}>
+                      <Button variant='outline' size='icon'>
+                        <UserCheck className='h-4 w-4' />
+                      </Button>
+                    </Link>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Gerenciar Frequência</p>

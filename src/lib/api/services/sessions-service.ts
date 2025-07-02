@@ -8,11 +8,6 @@ import {
 } from '@/types/session';
 
 export const sessionsService = {
-  getSession: async (id: string): Promise<ApiResponse<Session>> => {
-    const response = await api.get<Session>(`/sessions/${id}`);
-    return response;
-  },
-
   getSessions: async (
     filters: SessionFilters = {}
   ): Promise<ApiResponse<ApiPaginatedResponse<Session[]>>> => {
