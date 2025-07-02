@@ -31,7 +31,7 @@ export const AboutSection = () => {
               Nossa História
             </h3>
             <p className='mb-4 text-gray-600'>
-              Fundada em 1985 pelo Sensei Tanaka, a Associação de Artes Marciais
+              Fundada em 1985 pelo Sensei Chicão (Francisco Araújo), a Associação de Artes Marciais
               Budokan-Ryu nasceu com o objetivo de preservar e difundir as artes
               marciais tradicionais japonesas no Brasil, mantendo sua essência,
               filosofia e técnicas.
