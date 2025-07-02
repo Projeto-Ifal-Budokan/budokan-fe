@@ -189,7 +189,6 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
         birthDate: data.birthDate,
         healthObservations: data.healthObservations || '',
         emergencyContacts: isPractitioner ? data.emergencyContacts : [],
-        profileImageUrl: '',
       });
 
       if (response.ok) {

@@ -86,7 +86,6 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
     emergencyContacts: [],
     isPractitioner: false,
     healthObservations: '',
-    profileImageUrl: '',
   });
 
   const [emergencyContacts, setEmergencyContacts] = useState<
