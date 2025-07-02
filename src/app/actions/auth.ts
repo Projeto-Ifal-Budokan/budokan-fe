@@ -33,7 +33,16 @@ export async function loginAction(data: LoginFormData) {
 export async function logoutAction() {
   const cookieStore = await cookies();
 
-  cookieStore.delete('access_token');
+  // Delete the auth cookie with the same configuration used to set it
+  // TODO: add enviroment variable for set domain
+  cookieStore.delete({
+    name: 'access_token',
+    domain:
+      process.env.NODE_ENV === 'production'
+        ? '.budokanryu.com.br'
+        : 'localhost',
+    path: '/',
+  });
 
   // Revalidate relevant paths after logout
   revalidatePath('/');
