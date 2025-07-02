@@ -1,4 +1,4 @@
-import archeryAsset from '@/assets/images/arquearia.png';
+import archeryAsset from '@/assets/images/archery-discipline.jpeg';
 import Image from 'next/image';
 
 export const AboutSection = () => {
@@ -28,7 +28,7 @@ export const AboutSection = () => {
               src={archeryAsset}
               alt='Arquearia Training'
               fill
-              className='object-cover object-[center_20%]'
+              className='object-cover object-[center_70%]'
             />
           </div>
         </div>
