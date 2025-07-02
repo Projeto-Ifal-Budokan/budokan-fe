@@ -36,7 +36,7 @@ export default function HeroCarousel() {
       id: 3,
       image: arqueariaCarouselAsset.src,
       title: 'Arquearia',
-      subtitle: 'O caminho do arco: a arte milenar do tiro com arco japonês',
+      subtitle: 'A arte do tiro com arco',
     },
   ];
 
