@@ -233,8 +233,8 @@ export function AddSessionForm({
         idDiscipline: Number(data.idDiscipline),
         idInstructor: Number(data.idInstructor),
         date: data.date,
-        startingTime: selectedSchedule.startTime,
-        endingTime: selectedSchedule.endTime,
+        startingTime: formatTime(selectedSchedule.startTime),
+        endingTime: formatTime(selectedSchedule.endTime),
         isLastSessionOfDay: data.isLastSessionOfDay,
       };
 
@@ -417,8 +417,8 @@ export function AddSessionForm({
                           <SelectContent>
                             {availableInstructors.map((instructor) => (
                               <SelectItem
-                                key={instructor.id}
-                                value={instructor.id.toString()}
+                                key={instructor.idInstructor}
+                                value={instructor.idInstructor.toString()}
                                 className='py-3'
                               >
                                 <div className='flex items-center gap-2'>
