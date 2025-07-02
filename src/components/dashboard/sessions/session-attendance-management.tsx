@@ -15,6 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { useManageAttendance } from '@/lib/api/queries/use-manage-attendance';
 import { AttendanceFilters, UpdateAttendanceData } from '@/types/attendance';
 import {
+  FileText,
   Save,
   Search,
   TrendingUp,
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { AddJustificationModal } from './add-justification-modal';
 
 interface SessionAttendanceManagementProps {
   sessionId: string;
@@ -46,6 +48,15 @@ export function SessionAttendanceManagement({
     new Map()
   );
   const [searchTerm, setSearchTerm] = useState('');
+  const [justificationModal, setJustificationModal] = useState<{
+    isOpen: boolean;
+    idMatriculation: number;
+    studentName: string;
+  }>({
+    isOpen: false,
+    idMatriculation: 0,
+    studentName: '',
+  });
 
   // API hooks
   const { useSessionAttendances, updateAttendance, batchUpdateAttendances } =
@@ -154,6 +165,25 @@ export function SessionAttendanceManagement({
 
   const attendancePercentage =
     stats.total > 0 ? (stats.present / stats.total) * 100 : 0;
+
+  const handleAddJustification = (
+    idMatriculation: number,
+    studentName: string
+  ) => {
+    setJustificationModal({
+      isOpen: true,
+      idMatriculation,
+      studentName,
+    });
+  };
+
+  const closeJustificationModal = () => {
+    setJustificationModal({
+      isOpen: false,
+      idMatriculation: 0,
+      studentName: '',
+    });
+  };
 
   if (isLoading) {
     return (
@@ -601,6 +631,26 @@ export function SessionAttendanceManagement({
                       )}
                     </div>
 
+                    {/* Justification Button - Only show for confirmed absent students */}
+                    {attendance.status === 'absent' &&
+                      canManage &&
+                      !hasPendingChange && (
+                        <Button
+                          size='sm'
+                          variant='outline'
+                          onClick={() =>
+                            handleAddJustification(
+                              attendance.idMatriculation,
+                              attendance.studentName || ''
+                            )
+                          }
+                          className='border-amber-200 bg-amber-50 text-amber-700 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100'
+                        >
+                          <FileText className='mr-2 h-4 w-4' />
+                          Justificar
+                        </Button>
+                      )}
+
                     {/* Enhanced Switch */}
                     {canManage && (
                       <div className='flex flex-col items-center gap-2'>
@@ -638,6 +688,15 @@ export function SessionAttendanceManagement({
           </p>
         </div>
       )}
+
+      {/* Add Justification Modal */}
+      <AddJustificationModal
+        isOpen={justificationModal.isOpen}
+        onClose={closeJustificationModal}
+        idMatriculation={justificationModal.idMatriculation}
+        studentName={justificationModal.studentName}
+        sessionDate={new Date().toISOString().split('T')[0]} // You can get this from session data
+      />
     </div>
   );
 }
