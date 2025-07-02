@@ -1,15 +1,19 @@
 import { SessionAttendanceDetailView } from '@/components/dashboard/sessions/session-detail-view';
 
 interface SessionDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function SessionDetailPage({ params }: SessionDetailPageProps) {
+export default async function SessionDetailPage({
+  params,
+}: SessionDetailPageProps) {
+  const { id } = await params;
+
   return (
     <div className='space-y-6'>
-      <SessionAttendanceDetailView sessionId={params.id} />
+      <SessionAttendanceDetailView sessionId={id} />
     </div>
   );
 }
