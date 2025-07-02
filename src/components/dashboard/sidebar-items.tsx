@@ -30,7 +30,7 @@ const studentSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Minhas Modalidades',
-    href: '/dashboard/my-disciplines',
+    href: '/dashboard/disciplines',
     icon: 'BookOpen',
     privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
@@ -48,19 +48,19 @@ const studentSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Horários de Treino',
-    href: '/dashboard/training-schedule',
+    href: '/dashboard/training-schedules',
     icon: 'Clock',
     privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
   {
     label: 'Comunidade',
-    href: '/dashboard/community',
+    href: '/dashboard/users',
     icon: 'Users',
     privilege: PRIVILEGES.VIEW_USER,
   },
   {
     label: 'Ranking & Exames',
-    href: '/dashboard/ranking',
+    href: '/dashboard/rankings',
     icon: 'Trophy',
     privileges: [PRIVILEGES.VIEW_RANK, PRIVILEGES.CREATE_RANK],
   },
@@ -75,7 +75,7 @@ const instructorSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Minhas Disciplinas',
-    href: '/dashboard/my-disciplines',
+    href: '/dashboard/disciplines',
     icon: 'BookOpen',
     privileges: [PRIVILEGES.LIST_DISCIPLINES, PRIVILEGES.VIEW_DISCIPLINE],
   },
@@ -93,19 +93,19 @@ const instructorSidebarItems: SidebarItem[] = [
   },
   {
     label: 'Horários das Disciplinas',
-    href: '/dashboard/discipline-schedule',
+    href: '/dashboard/training-schedules',
     icon: 'Clock',
     privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
   },
   {
     label: 'Comunidade',
-    href: '/dashboard/community',
+    href: '/dashboard/users',
     icon: 'Users',
     privileges: [PRIVILEGES.LIST_USERS, PRIVILEGES.VIEW_USER],
   },
   {
     label: 'Exames de Ranking',
-    href: '/dashboard/ranking-exams',
+    href: '/dashboard/rankings',
     icon: 'Trophy',
     privileges: [PRIVILEGES.LIST_RANKS, PRIVILEGES.VIEW_RANK],
   },
