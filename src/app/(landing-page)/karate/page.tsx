@@ -16,7 +16,7 @@ export default function Karate() {
       <AboutSection />
       <HistorySection />
       <TrainingSection />
-      <MaterialsSection />
+      {/* <MaterialsSection /> */}
       <BenefitsSection />
       <ScheduleSection />
       <TestimonialsSection />
