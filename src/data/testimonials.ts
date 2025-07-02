@@ -1,6 +1,5 @@
 import AvatarAldemarAraujo from '@/assets/images/avatar-aldemar-araujo.png';
 import AvatarLilianCarmen from '@/assets/images/avatar-lilian-carmen.jpg';
-import AvatarRobertoAsset from '@/assets/images/avatar-roberto.png';
 
 export interface Testimonial {
   id: number;
@@ -29,14 +28,5 @@ export const testimonialsData: Testimonial[] = [
     image: AvatarLilianCarmen.src,
     quote:
       '"Comecei a praticar tiro com arco em 2019 e, ao longo dos treinos, fui desenvolvendo a forma de execução correta para um tiro preciso. Em 2021 inicio a prática de tiro com arco na Budokan Arquearia, onde aprimorei, com a prática constante, a percepção do corpo, controle da respiração, forma de segurar o arco e a tensão aplicada à corda. Princípios fundamentais que ajudam na formação intrapessoal e interpessoal."',
-  },
-  {
-    id: 3,
-    name: 'Roberto Tanaka',
-    discipline: 'Kendo',
-    title: 'Praticante de Kendo há 7 anos',
-    image: AvatarRobertoAsset.src,
-    quote:
-      '"O Kendo na Budokan-Ryu é uma experiência transformadora. Mais que uma arte marcial, é uma jornada de autoconhecimento."',
   },
 ];
