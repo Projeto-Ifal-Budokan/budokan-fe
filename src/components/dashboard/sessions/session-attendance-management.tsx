@@ -13,8 +13,11 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useManageAttendance } from '@/lib/api/queries/use-manage-attendance';
+import { useManageDailyAbsences } from '@/lib/api/queries/use-manage-daily-absences';
 import { AttendanceFilters, UpdateAttendanceData } from '@/types/attendance';
+import { DailyAbsence } from '@/types/daily-absence';
 import {
+  Edit,
   FileText,
   Save,
   Search,
@@ -25,7 +28,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { AddJustificationModal } from './add-justification-modal';
+import { JustificationModal } from './justification-modal';
 
 interface SessionAttendanceManagementProps {
   sessionId: string;
@@ -52,18 +55,36 @@ export function SessionAttendanceManagement({
     isOpen: boolean;
     idMatriculation: number;
     studentName: string;
+    mode: 'create' | 'edit';
+    existingJustification?: DailyAbsence | null;
   }>({
     isOpen: false,
     idMatriculation: 0,
     studentName: '',
+    mode: 'create',
+    existingJustification: null,
   });
 
   // API hooks
   const { useSessionAttendances, updateAttendance, batchUpdateAttendances } =
     useManageAttendance();
+  const { useDailyAbsences } = useManageDailyAbsences();
 
   const { data: attendancesResponse, isLoading } =
     useSessionAttendances(filters);
+
+  // Get today's date for checking existing justifications
+  const today = new Date().toISOString().split('T')[0];
+
+  // Fetch daily absences for today to check existing justifications
+  const { data: dailyAbsencesResponse } = useDailyAbsences({
+    startDate: today,
+    endDate: today,
+    page: 1,
+    page_size: 100, // Get all for today
+  });
+
+  const dailyAbsences = dailyAbsencesResponse?.data?.items || [];
 
   const attendances = attendancesResponse?.data?.items || [];
 
@@ -170,10 +191,17 @@ export function SessionAttendanceManagement({
     idMatriculation: number,
     studentName: string
   ) => {
+    // Check if there's already a justification for this student today
+    const existingJustification = dailyAbsences.find(
+      (absence) => absence.idMatriculation === idMatriculation
+    );
+
     setJustificationModal({
       isOpen: true,
       idMatriculation,
       studentName,
+      mode: existingJustification ? 'edit' : 'create',
+      existingJustification: existingJustification || null,
     });
   };
 
@@ -182,7 +210,16 @@ export function SessionAttendanceManagement({
       isOpen: false,
       idMatriculation: 0,
       studentName: '',
+      mode: 'create',
+      existingJustification: null,
     });
+  };
+
+  // Helper function to check if student has justification for today
+  const hasJustificationForToday = (idMatriculation: number) => {
+    return dailyAbsences.some(
+      (absence) => absence.idMatriculation === idMatriculation
+    );
   };
 
   if (isLoading) {
@@ -644,10 +681,25 @@ export function SessionAttendanceManagement({
                               attendance.studentName || ''
                             )
                           }
-                          className='border-amber-200 bg-amber-50 text-amber-700 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100'
+                          className={
+                            hasJustificationForToday(attendance.idMatriculation)
+                              ? 'border-amber-200 bg-amber-50 text-amber-700 transition-all duration-200 hover:border-amber-300 hover:bg-amber-100'
+                              : 'border-blue-200 bg-blue-50 text-blue-700 transition-all duration-200 hover:border-blue-300 hover:bg-blue-100'
+                          }
                         >
-                          <FileText className='mr-2 h-4 w-4' />
-                          Justificar
+                          {hasJustificationForToday(
+                            attendance.idMatriculation
+                          ) ? (
+                            <>
+                              <Edit className='mr-2 h-4 w-4' />
+                              Editar Justificativa
+                            </>
+                          ) : (
+                            <>
+                              <FileText className='mr-2 h-4 w-4' />
+                              Justificar
+                            </>
+                          )}
                         </Button>
                       )}
 
@@ -689,13 +741,15 @@ export function SessionAttendanceManagement({
         </div>
       )}
 
-      {/* Add Justification Modal */}
-      <AddJustificationModal
+      {/* Justification Modal */}
+      <JustificationModal
         isOpen={justificationModal.isOpen}
         onClose={closeJustificationModal}
         idMatriculation={justificationModal.idMatriculation}
         studentName={justificationModal.studentName}
-        sessionDate={new Date().toISOString().split('T')[0]} // You can get this from session data
+        sessionDate={today}
+        existingJustification={justificationModal.existingJustification}
+        mode={justificationModal.mode}
       />
     </div>
   );
