@@ -1,6 +1,6 @@
-import arqueariaAsset from '@/assets/images/arquearia.png';
-import karateAsset from '@/assets/images/karate-do.png';
-import kendoAsset from '@/assets/images/kendo.png';
+import arqueariaAsset from '@/assets/images/archery-discipline.jpeg';
+import karateAsset from '@/assets/images/karate-discipline.jpeg';
+import kendoAsset from '@/assets/images/kendo-discipline.jpeg';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
