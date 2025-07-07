@@ -19,6 +19,8 @@ export interface User {
   birthDate: string;
   phone: string;
   profileImageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type CreateUserData = Omit<
