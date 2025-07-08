@@ -89,7 +89,11 @@ export function UserTableRow({
         <TableCell className='py-4'>
           <div className='flex items-center gap-4'>
             <Avatar className='h-10 w-10 ring-2 ring-gray-100'>
-              <AvatarImage alt={user.firstName} />
+              <AvatarImage
+                src={user.profileImageUrl}
+                alt={user.firstName}
+                className='object-cover'
+              />
               <AvatarFallback className='bg-gradient-to-br from-blue-100 to-indigo-100 text-sm font-medium text-blue-700'>
                 {user.firstName[0]}
                 {user.surname[0]}

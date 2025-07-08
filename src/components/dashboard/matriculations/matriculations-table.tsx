@@ -58,6 +58,8 @@ export function MatriculationsTable({
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(currentPage * pageSize, totalItems);
 
+  console.log({ matriculations });
+
   return (
     <Card className='shadow-sm'>
       <CardHeader>

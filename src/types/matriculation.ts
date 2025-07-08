@@ -62,8 +62,9 @@ export interface Matriculation {
   updatedAt: string;
 
   // Related data
-  userName: string;
-  userEmail: string;
+  studentName: string;
+  studentSurname: string;
+
   disciplineName: string;
   rankName: string;
 }
