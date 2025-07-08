@@ -97,11 +97,9 @@ export function AddMatriculationForm({ onSuccess }: AddMatriculationFormProps) {
 
   const { data: disciplinesResponse } = useDisciplines();
   const { data: usersResponse } = useUsers();
-  const { data: rankingsResponse } = useRankings();
 
   const disciplines = disciplinesResponse?.data?.items || [];
   const users = usersResponse?.data?.items || [];
-  const rankings = rankingsResponse?.data?.items || [];
 
   const form = useForm<CreateMatriculationData>({
     resolver: zodResolver(createMatriculationSchema),
@@ -119,16 +117,19 @@ export function AddMatriculationForm({ onSuccess }: AddMatriculationFormProps) {
   const selectedDisciplineId = form.watch('idDiscipline');
   const selectedRank = form.watch('idRank');
 
+  // Fetch rankings only for selected discipline
+  const { data: rankingsResponse } = useRankings(
+    selectedDisciplineId?.toString() || ''
+  );
+  const filteredRankings = rankingsResponse?.data?.items || [];
+
   // Get data objects
   const selectedUserData = users.find((user) => user.id === selectedUser);
   const selectedDisciplineData = disciplines.find(
     (discipline) => discipline.id === selectedDisciplineId
   );
-  const selectedRankData = rankings.find((rank) => rank.id === selectedRank);
-
-  // Filter rankings by selected discipline
-  const filteredRankings = rankings.filter(
-    (rank) => rank.idDiscipline === selectedDisciplineId
+  const selectedRankData = filteredRankings.find(
+    (rank) => rank.id === selectedRank
   );
 
   const isSubmitting =
