@@ -103,20 +103,6 @@ const dashboardCards = [
     href: '/dashboard/students',
     gradient: 'from-red-500 to-pink-500',
   },
-  //   {
-  //     title: 'Pagamentos',
-  //     description: 'Controle financeiro e mensalidades',
-  //     icon: CreditCard,
-  //     href: '/dashboard/payments',
-  //     gradient: 'from-emerald-500 to-teal-500',
-  //   },
-  //   {
-  //     title: 'Relatórios',
-  //     description: 'Visualizar estatísticas e relatórios',
-  //     icon: BarChart3,
-  //     href: '/dashboard/reports',
-  //     gradient: 'from-teal-500 to-cyan-500',
-  //   },
 ];
 
 export function EnhancedDashboard() {
