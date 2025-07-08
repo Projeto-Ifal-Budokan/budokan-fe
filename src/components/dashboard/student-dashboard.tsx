@@ -15,7 +15,6 @@ import { useManageSessions } from '@/lib/api/queries/use-manage-sessions';
 import {
   BookOpen,
   Calendar,
-  CheckCircle,
   Clock,
   GraduationCap,
   Target,
@@ -134,7 +133,7 @@ export function StudentDashboard({ userId }: StudentDashboardProps) {
                   </div>
                 </div>
               </Link>
-              <Link href='/dashboard/attendance' className='group'>
+              {/* <Link href='/dashboard/attendance' className='group'>
                 <div className='flex items-center gap-4 rounded-xl border border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50 p-6 transition-all hover:border-green-300 hover:shadow-md'>
                   <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white shadow-lg'>
                     <CheckCircle className='h-6 w-6' />
@@ -144,7 +143,7 @@ export function StudentDashboard({ userId }: StudentDashboardProps) {
                     <p className='text-sm text-gray-600'>Ver histórico</p>
                   </div>
                 </div>
-              </Link>
+              </Link> */}
               <Link href='/dashboard/rankings' className='group'>
                 <div className='flex items-center gap-4 rounded-xl border border-gray-200 bg-gradient-to-r from-yellow-50 to-amber-50 p-6 transition-all hover:border-yellow-300 hover:shadow-md'>
                   <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-yellow-600 text-white shadow-lg'>

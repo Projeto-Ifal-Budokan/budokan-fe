@@ -41,17 +41,11 @@ const studentSidebarItems: SidebarItem[] = [
     privilege: PRIVILEGES.VIEW_RANK,
   },
   {
-    label: 'Aulas',
+    label: 'Minhas Aulas',
     href: '/dashboard/sessions',
     icon: 'Calendar',
     privilege: PRIVILEGES.VIEW_MATRICULATION,
   },
-  // {
-  //   label: 'Horários de Treino',
-  //   href: '/dashboard/training-schedules',
-  //   icon: 'Clock',
-  //   privilege: PRIVILEGES.VIEW_DISCIPLINE,
-  // },
 ];
 
 const instructorSidebarItems: SidebarItem[] = [
