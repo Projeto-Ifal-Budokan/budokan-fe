@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Plus, Users } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { AddMatriculationForm } from './add-matriculation-form';
 
 interface AddMatriculationModalProps {
@@ -29,20 +29,22 @@ export function AddMatriculationModal({
           Nova Matrícula
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[95vh] max-w-6xl overflow-y-auto sm:max-w-4xl'>
-        <DialogHeader className='pb-4'>
-          <DialogTitle className='flex items-center gap-3 text-2xl font-bold text-gray-900'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white'>
-              <Users className='h-5 w-5' />
-            </div>
-            Adicionar Nova Matrícula
-          </DialogTitle>
-          <DialogDescription className='text-base text-gray-600'>
-            Preencha as informações abaixo para criar uma nova matrícula no
-            sistema. Complete todos os campos obrigatórios.
-          </DialogDescription>
-        </DialogHeader>
-        <AddMatriculationForm onSuccess={() => onOpenChange(false)} />
+      <DialogContent className='max-h-[95vh] max-w-6xl overflow-y-auto p-0 md:min-w-3xl'>
+        <div className='sticky top-0 z-10 border-b border-gray-100 bg-white px-8 py-6'>
+          <DialogHeader className='space-y-2'>
+            <DialogTitle className='text-2xl font-semibold text-gray-900'>
+              Criar Nova Matrícula
+            </DialogTitle>
+            <DialogDescription className='text-base text-gray-600'>
+              Configure a matrícula selecionando o usuário, tipo, disciplina e
+              graduação
+            </DialogDescription>
+          </DialogHeader>
+        </div>
+
+        <div className='px-8 pb-8'>
+          <AddMatriculationForm onSuccess={() => onOpenChange(false)} />
+        </div>
       </DialogContent>
     </Dialog>
   );
