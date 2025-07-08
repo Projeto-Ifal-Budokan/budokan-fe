@@ -48,7 +48,7 @@ export function SessionTableRow({
           {session.disciplineName || `Disciplina ${session.idDiscipline}`}
         </TableCell>
         <TableCell>
-          {session.instructorName || `Instrutor ${session.idInstructor}`}
+          {session.instructorFirstName} {session.instructorSurname}
         </TableCell>
         <TableCell>{formatDate(session.date)}</TableCell>
         <TableCell>

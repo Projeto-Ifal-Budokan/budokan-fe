@@ -1,8 +1,10 @@
 'use client';
 
 import { useAuth } from '@/lib/api/queries/use-auth';
+import { useInstructorDisciplines } from '@/lib/api/queries/use-instructor-disciplines';
 import { useManageMatriculations } from '@/lib/api/queries/use-manage-matriculations';
 import { usePrivilegesByUser } from '@/lib/api/queries/use-privileges';
+import { InstructorDiscipline } from '@/types/instructor';
 import { Matriculation } from '@/types/matriculation';
 import { hasAccess } from '@/utils/access-control';
 import { GraduationCap } from 'lucide-react';
@@ -16,6 +18,28 @@ import { MatriculationsSkeleton } from './matriculations-skeleton';
 import { MatriculationsTable } from './matriculations-table';
 import { StatusChangeModal } from './status-change-modal';
 
+// Unified interface for both student matriculations and instructor disciplines
+interface UnifiedEnrollment {
+  id: number;
+  idStudent?: number;
+  idInstructor?: number;
+  idDiscipline: number;
+  idRank: number;
+  type: 'student' | 'instructor';
+  status: 'active' | 'inactive' | 'graduated';
+  paymentExempt?: boolean;
+  isPaymentExempt?: boolean;
+  activatedBy?: number | null;
+  inactivatedBy?: number | null;
+  createdAt: string;
+  updatedAt: string;
+  userName: string;
+  userEmail?: string;
+  disciplineName: string;
+  rankName: string;
+  source: 'matriculation' | 'instructor-discipline';
+}
+
 export default function MatriculationsManagement() {
   // State
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +49,7 @@ export default function MatriculationsManagement() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isStatusChangeModalOpen, setIsStatusChangeModalOpen] = useState(false);
   const [pendingStatusChange, setPendingStatusChange] = useState<{
-    matriculation: Matriculation;
+    matriculation: UnifiedEnrollment;
     newStatus: 'active' | 'inactive' | 'graduated';
   } | null>(null);
 
@@ -35,6 +59,8 @@ export default function MatriculationsManagement() {
 
   // Hooks
   const { updateMatriculation, useMatriculations } = useManageMatriculations();
+  const { useInstructorDisciplinesList, updateInstructorDiscipline } =
+    useInstructorDisciplines();
   const router = useRouter();
   const { data: currentUser } = useAuth().me;
   const { data: currentUserPrivileges } = usePrivilegesByUser(
@@ -51,19 +77,91 @@ export default function MatriculationsManagement() {
     [filterType, filterStatus, filterDiscipline, searchTerm]
   );
 
-  const { data: matriculationsResponse, isLoading } = useMatriculations(
-    currentPage,
-    pageSize,
-    filters
-  );
+  // Fetch both student matriculations and instructor disciplines
+  const { data: matriculationsResponse, isLoading: isLoadingMatriculations } =
+    useMatriculations(currentPage, pageSize, filters);
 
-  // Extract pagination data from API response
-  const matriculations = useMemo(
-    () => matriculationsResponse?.data?.items || [],
-    [matriculationsResponse]
-  );
-  const totalItems = matriculationsResponse?.data?.count || 0;
+  const {
+    data: instructorDisciplinesResponse,
+    isLoading: isLoadingInstructorDisciplines,
+  } = useInstructorDisciplinesList(currentPage, pageSize, {
+    ...filters,
+    // Convert type filter for instructor disciplines endpoint
+    instructorId: filters.type === 'instructor' ? undefined : null, // Adjust based on API
+  });
+
+  // Transform and combine data
+  const combinedEnrollments = useMemo(() => {
+    const studentEnrollments: UnifiedEnrollment[] =
+      filters.type === 'instructor'
+        ? []
+        : (matriculationsResponse?.data?.items || []).map(
+            (matriculation: Matriculation) => ({
+              ...matriculation,
+              userName:
+                matriculation.type === 'student'
+                  ? `${matriculation.studentName || ''} ${matriculation.studentSurname || ''}`.trim()
+                  : 'Unknown User',
+              userEmail: undefined,
+              source: 'matriculation' as const,
+            })
+          );
+
+    const instructorEnrollments: UnifiedEnrollment[] =
+      filters.type === 'student'
+        ? []
+        : (instructorDisciplinesResponse?.data?.items || []).map(
+            (instructorDiscipline: InstructorDiscipline) => ({
+              id: instructorDiscipline.id,
+              idInstructor: instructorDiscipline.idInstructor,
+              idDiscipline: instructorDiscipline.idDiscipline,
+              idRank: instructorDiscipline.idRank,
+              type: 'instructor' as const,
+              status: instructorDiscipline.status as 'active' | 'inactive',
+              createdAt: instructorDiscipline.createdAt,
+              updatedAt: instructorDiscipline.updatedAt,
+              userName:
+                instructorDiscipline.instructorName || 'Unknown Instructor',
+              userEmail: undefined,
+              disciplineName: instructorDiscipline.disciplineName,
+              rankName: instructorDiscipline.rankName,
+              source: 'instructor-discipline' as const,
+            })
+          );
+
+    let combined = [...studentEnrollments, ...instructorEnrollments];
+
+    // Apply client-side filtering
+    if (filters.status && filters.status !== 'all') {
+      combined = combined.filter((item) => item.status === filters.status);
+    }
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      combined = combined.filter(
+        (item) =>
+          item.userName.toLowerCase().includes(searchLower) ||
+          item.disciplineName.toLowerCase().includes(searchLower) ||
+          item.rankName.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Sort by creation date (newest first)
+    combined.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    return combined;
+  }, [matriculationsResponse, instructorDisciplinesResponse, filters]);
+
+  // Calculate pagination for combined data
+  const totalItems = combinedEnrollments.length;
   const totalPages = Math.ceil(totalItems / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedEnrollments = combinedEnrollments.slice(startIndex, endIndex);
+
+  const isLoading = isLoadingMatriculations || isLoadingInstructorDisciplines;
 
   // Computed values
   const isAdmin = currentUserPrivileges
@@ -141,7 +239,7 @@ export default function MatriculationsManagement() {
 
   // Event handlers
   const handleStatusChangeRequest = (
-    matriculation: Matriculation,
+    enrollment: UnifiedEnrollment,
     newStatus: string
   ) => {
     if (!isAdmin) {
@@ -151,12 +249,12 @@ export default function MatriculationsManagement() {
       return;
     }
 
-    if (matriculation.status === newStatus) {
+    if (enrollment.status === newStatus) {
       return;
     }
 
     setPendingStatusChange({
-      matriculation,
+      matriculation: enrollment,
       newStatus: newStatus as 'active' | 'inactive' | 'graduated',
     });
     setIsStatusChangeModalOpen(true);
@@ -168,10 +266,18 @@ export default function MatriculationsManagement() {
     const { matriculation, newStatus } = pendingStatusChange;
 
     try {
-      await updateMatriculation.mutateAsync({
-        id: matriculation.id,
-        status: newStatus,
-      });
+      if (matriculation.source === 'matriculation') {
+        await updateMatriculation.mutateAsync({
+          id: matriculation.id,
+          status: newStatus,
+        });
+      } else {
+        // Handle instructor discipline status change
+        await updateInstructorDiscipline.mutateAsync({
+          id: matriculation.id,
+          status: newStatus as 'active' | 'inactive',
+        });
+      }
 
       const statusMessages = {
         active: 'ativada',
@@ -180,11 +286,11 @@ export default function MatriculationsManagement() {
       };
 
       toast.success(
-        `Matrícula ${statusMessages[newStatus as keyof typeof statusMessages]} com sucesso!`
+        `${matriculation.type === 'student' ? 'Matrícula' : 'Disciplina do instrutor'} ${statusMessages[newStatus as keyof typeof statusMessages]} com sucesso!`
       );
     } catch (error) {
-      console.error('Error updating matriculation status:', error);
-      toast.error('Erro ao alterar status da matrícula');
+      console.error('Error updating status:', error);
+      toast.error('Erro ao alterar status');
     } finally {
       setIsStatusChangeModalOpen(false);
       setPendingStatusChange(null);
@@ -196,8 +302,8 @@ export default function MatriculationsManagement() {
     setPendingStatusChange(null);
   };
 
-  const handleViewMatriculation = (matriculationId: number) => {
-    router.push(`/dashboard/matriculations/${matriculationId}`);
+  const handleViewMatriculation = (enrollmentId: number) => {
+    router.push(`/dashboard/matriculations/${enrollmentId}`);
   };
 
   const handlePageChange = (page: number) => {
@@ -214,52 +320,56 @@ export default function MatriculationsManagement() {
   }
 
   return (
-    <div className='min-h-screen'>
-      <div className='mx-auto space-y-8'>
-        {/* Header Section */}
-        <div className='flex flex-col gap-6 md:flex-row md:items-center md:justify-between'>
-          <div className='space-y-2'>
-            <div className='flex items-center gap-3'>
-              <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'>
-                <GraduationCap className='h-6 w-6' />
-              </div>
-              <div>
-                <h1 className='text-4xl font-bold tracking-tight text-gray-900'>
-                  Gerenciamento de Matrículas
-                </h1>
-                <p className='text-lg text-gray-600'>
-                  Controle de matrículas de alunos e instrutores nas modalidades
-                </p>
-              </div>
-            </div>
+    <div className='space-y-6 p-6'>
+      <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+        <div className='flex items-center gap-3'>
+          <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600'>
+            <GraduationCap className='h-6 w-6 text-white' />
           </div>
-
-          <AddMatriculationModal
-            isOpen={isAddModalOpen}
-            onOpenChange={setIsAddModalOpen}
-          />
+          <div>
+            <h1 className='text-2xl font-bold tracking-tight text-gray-900'>
+              Matrículas e Disciplinas
+            </h1>
+            <p className='text-gray-600'>
+              Gerencie matrículas de alunos e disciplinas de instrutores
+            </p>
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <MatriculationStatsCards matriculations={matriculations} />
+        {isAdmin && (
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className='inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-blue-600 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none'
+          >
+            <GraduationCap className='h-4 w-4' />
+            Nova Matrícula
+          </button>
+        )}
+      </div>
 
-        {/* Filters */}
-        <MatriculationFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          filterType={filterType}
-          setFilterType={setFilterType}
-          filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
-          filterDiscipline={filterDiscipline}
-          setFilterDiscipline={setFilterDiscipline}
-        />
+      <MatriculationStatsCards matriculations={combinedEnrollments} />
 
-        {/* Matriculations Table */}
+      <MatriculationFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        filterStatus={filterStatus}
+        setFilterStatus={setFilterStatus}
+        filterDiscipline={filterDiscipline}
+        setFilterDiscipline={setFilterDiscipline}
+      />
+
+      {isLoading ? (
+        <MatriculationsSkeleton />
+      ) : (
         <MatriculationsTable
-          matriculations={matriculations}
+          matriculations={paginatedEnrollments}
           isAdmin={isAdmin}
-          isPending={updateMatriculation.isPending}
+          isPending={
+            updateMatriculation.isPending ||
+            updateInstructorDiscipline.isPending
+          }
           onStatusChange={handleStatusChangeRequest}
           onViewMatriculation={handleViewMatriculation}
           getStatusColor={getStatusColor}
@@ -273,20 +383,31 @@ export default function MatriculationsManagement() {
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />
+      )}
 
-        {/* Status Change Modal */}
+      {isAddModalOpen && (
+        <AddMatriculationModal
+          isOpen={isAddModalOpen}
+          onOpenChange={setIsAddModalOpen}
+        />
+      )}
+
+      {isStatusChangeModalOpen && pendingStatusChange && (
         <StatusChangeModal
           isOpen={isStatusChangeModalOpen}
           onOpenChange={setIsStatusChangeModalOpen}
           pendingChange={pendingStatusChange}
-          isPending={updateMatriculation.isPending}
+          isPending={
+            updateMatriculation.isPending ||
+            updateInstructorDiscipline.isPending
+          }
           onConfirm={confirmStatusChange}
           onCancel={cancelStatusChange}
           getStatusColor={getStatusColor}
           getStatusChangeMessage={getStatusChangeMessage}
           getStatusChangeDescription={getStatusChangeDescription}
         />
-      </div>
+      )}
     </div>
   );
 }

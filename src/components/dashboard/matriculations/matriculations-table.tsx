@@ -16,15 +16,36 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Matriculation } from '@/types/matriculation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MatriculationTableRow } from './matriculation-table-row';
 
+// Update the interface to match our unified enrollment
+interface UnifiedEnrollment {
+  id: number;
+  idStudent?: number;
+  idInstructor?: number;
+  idDiscipline: number;
+  idRank: number;
+  type: 'student' | 'instructor';
+  status: 'active' | 'inactive' | 'graduated';
+  paymentExempt?: boolean;
+  isPaymentExempt?: boolean;
+  activatedBy?: number | null;
+  inactivatedBy?: number | null;
+  createdAt: string;
+  updatedAt: string;
+  userName: string;
+  userEmail?: string;
+  disciplineName: string;
+  rankName: string;
+  source: 'matriculation' | 'instructor-discipline';
+}
+
 interface MatriculationsTableProps {
-  matriculations: Matriculation[];
+  matriculations: UnifiedEnrollment[];
   isAdmin: boolean;
   isPending: boolean;
-  onStatusChange: (matriculation: Matriculation, newStatus: string) => void;
+  onStatusChange: (matriculation: UnifiedEnrollment, newStatus: string) => void;
   onViewMatriculation: (matriculationId: number) => void;
   getStatusColor: (status: string) => 'default' | 'secondary' | 'destructive';
   getStatusText: (status: string) => string;
@@ -113,7 +134,7 @@ export function MatriculationsTable({
               ) : (
                 matriculations.map((matriculation) => (
                   <MatriculationTableRow
-                    key={matriculation.id}
+                    key={`${matriculation.source}-${matriculation.id}`}
                     matriculation={matriculation}
                     isAdmin={isAdmin}
                     isPending={isPending}

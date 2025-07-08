@@ -8,6 +8,8 @@ import { useManageDisciplines } from '@/lib/api/queries/use-manage-disciplines';
 import { Award, BookOpen, Calendar, ChevronLeft, Users } from 'lucide-react';
 import Link from 'next/link';
 
+import { useInstructorDisciplines } from '@/lib/api/queries/use-instructor-disciplines';
+import { useManageMatriculations } from '@/lib/api/queries/use-manage-matriculations';
 import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { DisciplineEnrollmentsTab } from './detail-tabs/discipline-enrollments-tab';
 import { DisciplineRanksTab } from './detail-tabs/discipline-ranks-tab';
@@ -25,6 +27,14 @@ export function DisciplineDetailView({
   const { useRankings } = useManageRankings();
   const { data: ranks } = useRankings(disciplineId);
   const { data: discipline, isLoading } = useDiscipline(disciplineId);
+  const { useMatriculations } = useManageMatriculations();
+  const { useInstructorDisciplinesList } = useInstructorDisciplines();
+  const { data: matriculations } = useMatriculations(1, 1000, {
+    discipline: disciplineId,
+  });
+  const { data: instructors } = useInstructorDisciplinesList(1, 1000, {
+    discipline: disciplineId,
+  });
 
   if (isLoading) {
     return <DisciplineDetailSkeleton />;
@@ -147,7 +157,7 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Users className='h-5 w-5 text-blue-600' />
                 <span className='text-2xl font-bold text-blue-900'>
-                  {/* {discipline.studentEnrollments?.length || 0} */}
+                  {matriculations?.data.count || 0}
                 </span>
               </div>
             </CardContent>
@@ -163,24 +173,7 @@ export function DisciplineDetailView({
               <div className='flex items-center gap-2'>
                 <Users className='h-5 w-5 text-purple-600' />
                 <span className='text-2xl font-bold text-purple-900'>
-                  {/* {discipline.instructors?.filter((i) => i.status === 'active')
-                    .length || 0} */}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className='border-orange-200 bg-gradient-to-br from-orange-50 to-orange-100/50'>
-            <CardHeader className='pb-3'>
-              <CardTitle className='text-sm font-medium text-orange-700'>
-                Horários Ativos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='flex items-center gap-2'>
-                <Calendar className='h-5 w-5 text-orange-600' />
-                <span className='text-2xl font-bold text-orange-900'>
-                  {/* {discipline.schedules?.length || 0} */}
+                  {instructors?.data.count || 0}
                 </span>
               </div>
             </CardContent>
