@@ -25,7 +25,7 @@ export interface User {
 
 export type CreateUserData = Omit<
   User,
-  'id' | 'roles' | 'status' | 'privileges'
+  'id' | 'roles' | 'status' | 'privileges' | 'createdAt' | 'updatedAt'
 > & {
   password: string;
   phone: string;
