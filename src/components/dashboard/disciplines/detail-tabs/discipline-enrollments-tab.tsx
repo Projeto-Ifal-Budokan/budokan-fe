@@ -483,9 +483,7 @@ export function DisciplineEnrollmentsTab({
   // Fetch student matriculations for this discipline
   const { data: matriculationsResponse, isLoading: isLoadingMatriculations } =
     useMatriculations(1, 50, {
-      type: 'student',
       discipline: disciplineId,
-      status: 'active',
     });
 
   const instructorEnrollments = instructorsResponse?.data?.items || [];
