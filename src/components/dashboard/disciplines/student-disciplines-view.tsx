@@ -94,8 +94,6 @@ export default function StudentDisciplinesView() {
         return 'Ativo';
       case 'inactive':
         return 'Inativo';
-      case 'graduated':
-        return 'Graduado';
       default:
         return 'Inativo';
     }

@@ -70,6 +70,14 @@ interface DisciplineEnrollmentsTabProps {
   discipline: Discipline;
 }
 
+// Add the ModalEnrollment interface at the top
+interface ModalEnrollment {
+  id: number;
+  userName: string;
+  status: 'active' | 'inactive' | 'graduated';
+  disciplineName: string;
+}
+
 // Simple Student Matriculation Form
 function SimpleStudentMatriculationForm({
   disciplineId,
@@ -438,11 +446,12 @@ export function DisciplineEnrollmentsTab({
       newStatus: string;
     } | null>(null);
 
+  // Update the state type
   const [
     pendingMatriculationStatusChange,
     setPendingMatriculationStatusChange,
   ] = useState<{
-    matriculation: Matriculation;
+    matriculation: ModalEnrollment;
     newStatus: 'active' | 'inactive' | 'graduated';
   } | null>(null);
 
@@ -601,7 +610,11 @@ export function DisciplineEnrollmentsTab({
     }
 
     setPendingMatriculationStatusChange({
-      matriculation,
+      matriculation: {
+        ...matriculation,
+        userName:
+          `${matriculation.studentName} ${matriculation.studentSurname}`.trim(),
+      },
       newStatus: newStatus as 'active' | 'inactive' | 'graduated',
     });
     setIsMatriculationStatusModalOpen(true);
