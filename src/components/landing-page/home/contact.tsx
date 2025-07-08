@@ -1,6 +1,14 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { openWhatsApp } from '@/utils/whatsapp-utils';
 
 export const ContactSection = () => {
+  // Handle WhatsApp redirect for contact form
+  const handleSendMessage = () => {
+    openWhatsApp('Olá! Gostaria de mais informações sobre a Budokan-Ryu.');
+  };
+
   return (
     <section id='contact' className='bg-blue-50 py-16'>
       <div className='container'>
@@ -72,7 +80,10 @@ export const ContactSection = () => {
                   className='w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none'
                 />
               </div>
-              <Button className='bg-primary hover:bg-primary/90 w-full border-0 py-3 text-white'>
+              <Button
+                className='bg-primary hover:bg-primary/90 w-full border-0 py-3 text-white'
+                onClick={handleSendMessage}
+              >
                 Enviar Mensagem
               </Button>
             </form>
