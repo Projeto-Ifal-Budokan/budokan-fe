@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { InstructorDiscipline } from '@/types/instructor';
-import { Award, TrendingUp, Users } from 'lucide-react';
+import { TrendingUp, Users } from 'lucide-react';
 import { useMemo } from 'react';
 
 interface InstructorStatsCardsProps {
@@ -28,22 +28,22 @@ export function InstructorStatsCards({
       value: stats.total,
       description: `${stats.active} ativos, ${stats.inactive} inativos`,
       icon: Users,
-      trend: '+12%',
+      // trend: '+12%',
     },
     {
       title: 'Instrutores Ativos',
       value: stats.active,
       description: 'Ministrando aulas',
       icon: TrendingUp,
-      trend: '+8%',
+      // trend: '+8%',
     },
-    {
-      title: 'Experiência Média',
-      value: '15+',
-      description: 'anos de experiência',
-      icon: Award,
-      trend: '+5%',
-    },
+    // {
+    //   title: 'Experiência Média',
+    //   value: '15+',
+    //   description: 'anos de experiência',
+    //   icon: Award,
+    //   trend: '+5%',
+    // },
   ];
 
   return (
@@ -67,9 +67,6 @@ export function InstructorStatsCards({
               <div className='flex items-center gap-2'>
                 <span className='text-sm text-gray-600'>
                   {card.description}
-                </span>
-                <span className='text-xs font-medium text-green-600'>
-                  {card.trend}
                 </span>
               </div>
             </CardContent>

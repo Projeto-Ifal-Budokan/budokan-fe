@@ -68,13 +68,6 @@ export function useManageRankings() {
     });
   };
 
-  const useRankingsByDiscipline = (disciplineId: string) => {
-    return useQuery({
-      ...getRankingsByDisciplineQuery(disciplineId),
-      enabled: !!disciplineId,
-    });
-  };
-
   const fetchRankings = async (disciplineId?: string) => {
     return await queryClient.fetchQuery(getRankingsQuery(disciplineId));
   };
@@ -129,7 +122,6 @@ export function useManageRankings() {
   return {
     useRankings,
     useRanking,
-    useRankingsByDiscipline,
     fetchRankings,
     fetchRanking,
     fetchRankingsByDiscipline,

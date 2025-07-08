@@ -32,6 +32,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { AvatarUploadModal } from '@/components/dashboard/profile/avatar-upload-modal';
+import { EmergencyContactsList } from '@/components/dashboard/profile/emergency-contacts-list';
 import { calculatePlatformTime } from '@/utils/date-utils';
 import { ProfileSkeleton } from './profile-skeleton';
 
@@ -299,6 +300,10 @@ export default function ProfilePage() {
               <UserIcon className='mr-2 h-4 w-4' />
               Informações Pessoais
             </TabsTrigger>
+            <TabsTrigger value='contact'>
+              <Mail className='mr-2 h-4 w-4' />
+              Contatos de Emergência
+            </TabsTrigger>
             <TabsTrigger value='preferences'>
               <Settings className='mr-2 h-4 w-4' />
               Preferências
@@ -498,6 +503,10 @@ export default function ProfilePage() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value='contact' className='space-y-6'>
+            <EmergencyContactsList userId={user?.id} />
           </TabsContent>
 
           {/* Preferences Tab */}

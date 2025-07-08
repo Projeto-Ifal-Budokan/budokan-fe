@@ -8,7 +8,8 @@ export interface Session {
   isLastSessionOfDay: boolean;
   createdAt: string;
   updatedAt: string;
-  instructorName?: string;
+  instructorFirstName: string;
+  instructorSurname: string;
   disciplineName?: string;
 }
 

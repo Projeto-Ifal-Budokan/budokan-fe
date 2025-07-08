@@ -1,9 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Matriculation } from '@/types/matriculation';
 import { Award, GraduationCap, TrendingUp, Users } from 'lucide-react';
 
+interface EnrollmentStatsItem {
+  type: 'student' | 'instructor';
+  status: 'active' | 'inactive' | 'graduated';
+}
+
 interface MatriculationStatsCardsProps {
-  matriculations: Matriculation[] | undefined;
+  matriculations: EnrollmentStatsItem[] | undefined;
 }
 
 export function MatriculationStatsCards({

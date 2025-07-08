@@ -8,14 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Matriculation } from '@/types/matriculation';
 import { AlertTriangle, Loader2 } from 'lucide-react';
+
+interface ModalEnrollment {
+  userName: string;
+  status: 'active' | 'inactive' | 'graduated';
+  disciplineName: string;
+}
 
 interface StatusChangeModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   pendingChange: {
-    matriculation: Matriculation;
+    matriculation: ModalEnrollment;
     newStatus: 'active' | 'inactive' | 'graduated';
   } | null;
   isPending: boolean;
