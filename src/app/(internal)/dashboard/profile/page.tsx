@@ -32,6 +32,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { AvatarUploadModal } from '@/components/dashboard/profile/avatar-upload-modal';
+import { calculatePlatformTime } from '@/utils/date-utils';
 import { ProfileSkeleton } from './profile-skeleton';
 
 type UserProfile = User;
@@ -233,7 +234,9 @@ export default function ProfilePage() {
               <Clock className='h-5 w-5 opacity-80' />
             </CardHeader>
             <CardContent className='relative'>
-              <div className='text-3xl font-bold'>6 meses</div>
+              <div className='text-3xl font-bold'>
+                {calculatePlatformTime(user?.createdAt || '')}
+              </div>
               <p className='mt-1 text-xs opacity-80'>desde o cadastro</p>
             </CardContent>
           </Card>
@@ -266,7 +269,7 @@ export default function ProfilePage() {
             </CardContent>
           </Card> */}
 
-          <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl'>
+          {/* <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl'>
             <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
             <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium opacity-90'>
@@ -278,7 +281,7 @@ export default function ProfilePage() {
               <div className='text-3xl font-bold'>2º Dan</div>
               <p className='mt-1 text-xs opacity-80'>faixa preta</p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
         {/* Tabs Section */}

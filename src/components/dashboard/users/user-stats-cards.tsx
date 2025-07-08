@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { User } from '@/types/user';
-import { Shield, UserCheck, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 
 interface UserStatsCardsProps {
   users: User[] | undefined;
@@ -25,7 +25,7 @@ export function UserStatsCards({ users }: UserStatsCardsProps) {
         </CardContent>
       </Card>
 
-      <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-xl'>
+      {/* <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-xl'>
         <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
         <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
           <CardTitle className='text-sm font-medium opacity-90'>
@@ -65,7 +65,7 @@ export function UserStatsCards({ users }: UserStatsCardsProps) {
           <div className='text-3xl font-bold'>8</div>
           <p className='mt-1 text-xs opacity-80'>funcionários ativos</p>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

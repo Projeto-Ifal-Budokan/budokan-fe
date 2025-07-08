@@ -4,6 +4,7 @@ import type React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { scrollToSection } from '@/utils/scroll-utils';
+import { openWhatsApp } from '@/utils/whatsapp-utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel.png';
 import karetdoCarouselAsset from '@/assets/images/karatedo-carousel.png';
 import kendoCarouselAsset from '@/assets/images/kendo-carousel.png';
+
 interface CarouselSlide {
   id: number;
   image: string;
@@ -87,6 +89,13 @@ export default function HeroCarousel() {
     scrollToSection('disciplines');
   };
 
+  // Handle WhatsApp redirect for scheduling
+  const handleScheduleClick = () => {
+    openWhatsApp(
+      'Olá! Gostaria de agendar uma aula experimental na Budokan-Ryu.'
+    );
+  };
+
   return (
     <div className='relative h-[600px] overflow-hidden'>
       {/* Carousel slides */}
@@ -128,7 +137,10 @@ export default function HeroCarousel() {
                 {slide.subtitle}
               </p>
               <div className='flex flex-col gap-4 sm:flex-row'>
-                <Button className='bg-primary hover:bg-primary/90 border-0 px-8 py-6 text-lg font-bold text-white'>
+                <Button
+                  className='bg-primary hover:bg-primary/90 border-0 px-8 py-6 text-lg font-bold text-white'
+                  onClick={handleScheduleClick}
+                >
                   Agende uma Aula Experimental
                 </Button>
                 <Button

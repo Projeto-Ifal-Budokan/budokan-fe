@@ -19,11 +19,13 @@ export interface User {
   birthDate: string;
   phone: string;
   profileImageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type CreateUserData = Omit<
   User,
-  'id' | 'roles' | 'status' | 'privileges'
+  'id' | 'roles' | 'status' | 'privileges' | 'createdAt' | 'updatedAt'
 > & {
   password: string;
   phone: string;

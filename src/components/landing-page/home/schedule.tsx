@@ -1,7 +1,17 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { modalitiesSchedules } from '@/data/schedules';
+import { openWhatsApp } from '@/utils/whatsapp-utils';
 
 export const ScheduleSection = () => {
+  // Handle WhatsApp redirect for scheduling
+  const handleScheduleClick = () => {
+    openWhatsApp(
+      'Olá! Gostaria de agendar uma aula experimental na Budokan-Ryu.'
+    );
+  };
+
   return (
     <section id='schedule' className='bg-blue-900 py-16 text-white'>
       <div className='container'>
@@ -58,7 +68,10 @@ export const ScheduleSection = () => {
           <p className='mb-6 opacity-80'>
             Interessado em começar? Agende uma aula experimental gratuita!
           </p>
-          <Button className='bg-primary hover:bg-primary/90/80 border-0 px-8 py-6 text-lg font-bold text-white'>
+          <Button
+            className='bg-primary hover:bg-primary/90/80 border-0 px-8 py-6 text-lg font-bold text-white'
+            onClick={handleScheduleClick}
+          >
             Agendar Aula Experimental
           </Button>
         </div>

@@ -47,7 +47,7 @@ export function UserFilters({
           </div>
 
           <div className='flex gap-3'>
-            <Select value={filterTipo} onValueChange={setFilterTipo}>
+            {/* <Select value={filterTipo} onValueChange={setFilterTipo}>
               <SelectTrigger className='h-11 w-48 border-gray-200 bg-white shadow-sm'>
                 <SelectValue placeholder='Filtrar por tipo' />
               </SelectTrigger>
@@ -55,9 +55,9 @@ export function UserFilters({
                 <SelectItem value='todos'>Todos os tipos</SelectItem>
                 <SelectItem value='administrador'>Administrador</SelectItem>
                 <SelectItem value='instrutor'>Instrutor</SelectItem>
-                <SelectItem value='funcionario'>Funcionário</SelectItem>
+             
               </SelectContent>
-            </Select>
+            </Select> */}
 
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger className='h-11 w-40 border-gray-200 bg-white shadow-sm'>
