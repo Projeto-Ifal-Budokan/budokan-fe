@@ -33,7 +33,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { createElement, HTMLAttributes } from 'react';
+import { HTMLAttributes, createElement } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { SidebarItem } from './sidebar-items';
 
@@ -229,7 +229,9 @@ export default function Sidebar({
                     href={item.href}
                     className={cn(
                       'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200',
-                      pathname === item.href
+                      pathname === item.href ||
+                        (pathname.startsWith(item.href) &&
+                          item.href !== '/dashboard')
                         ? 'border border-orange-500/30 bg-orange-500/20 font-medium text-orange-300 shadow-sm'
                         : 'text-white/90 hover:bg-white/10 hover:text-orange-200',
                       isCollapsed && 'justify-center px-2'
@@ -239,7 +241,10 @@ export default function Sidebar({
                       createElement(IconComponent, {
                         className: cn(
                           'h-5 w-5 transition-transform duration-200',
-                          pathname === item.href && 'scale-110'
+                          pathname === item.href ||
+                            (pathname.startsWith(item.href) &&
+                              item.href !== '/dashboard' &&
+                              'scale-110')
                         ),
                       })}
                     {!isCollapsed && (
