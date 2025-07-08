@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Allow: /karate
+Allow: /kendo
+Allow: /archery
+Allow: /login
+Allow: /signup
+
+# Block dashboard and internal routes
+Disallow: /dashboard/
+Disallow: /dashboard/*
+Disallow: /forgot-password
+
+# Block API routes from indexing
+Disallow: /api/
+Disallow: /_next/
+Disallow: /*.json$
+
+# Allow sitemap
+Sitemap: https://www.budokanryu.com.br/sitemap.xml
+
+# Crawl delay (optional - be nice to smaller servers)
+Crawl-delay: 1 
