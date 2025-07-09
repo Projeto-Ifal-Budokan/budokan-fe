@@ -35,34 +35,16 @@ const studentSidebarItems: SidebarItem[] = [
     privilege: PRIVILEGES.VIEW_DISCIPLINE,
   },
   {
-    label: 'Aulas',
+    label: 'Meus Rankings',
+    href: '/dashboard/rankings',
+    icon: 'Trophy',
+    privilege: PRIVILEGES.VIEW_RANK,
+  },
+  {
+    label: 'Minhas Aulas',
     href: '/dashboard/sessions',
     icon: 'Calendar',
     privilege: PRIVILEGES.VIEW_MATRICULATION,
-  },
-  {
-    label: 'Frequência',
-    href: '/dashboard/attendance',
-    icon: 'UserCheck',
-    privilege: PRIVILEGES.VIEW_MATRICULATION,
-  },
-  {
-    label: 'Horários de Treino',
-    href: '/dashboard/training-schedules',
-    icon: 'Clock',
-    privilege: PRIVILEGES.VIEW_DISCIPLINE,
-  },
-  {
-    label: 'Comunidade',
-    href: '/dashboard/users',
-    icon: 'Users',
-    privilege: PRIVILEGES.VIEW_USER,
-  },
-  {
-    label: 'Ranking & Exames',
-    href: '/dashboard/rankings',
-    icon: 'Trophy',
-    privileges: [PRIVILEGES.VIEW_RANK, PRIVILEGES.CREATE_RANK],
   },
 ];
 
@@ -72,6 +54,13 @@ const instructorSidebarItems: SidebarItem[] = [
     href: '/dashboard',
     icon: 'Home',
     privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
+  },
+
+  {
+    label: 'Meu Perfil',
+    href: '/dashboard/profile',
+    icon: 'User',
+    privilege: PRIVILEGES.VIEW_USER,
   },
   {
     label: 'Minhas Disciplinas',
@@ -96,24 +85,6 @@ const instructorSidebarItems: SidebarItem[] = [
     href: '/dashboard/training-schedules',
     icon: 'Clock',
     privilege: PRIVILEGES.VIEW_INSTRUCTOR_DISCIPLINE,
-  },
-  {
-    label: 'Comunidade',
-    href: '/dashboard/users',
-    icon: 'Users',
-    privileges: [PRIVILEGES.LIST_USERS, PRIVILEGES.VIEW_USER],
-  },
-  {
-    label: 'Exames de Ranking',
-    href: '/dashboard/rankings',
-    icon: 'Trophy',
-    privileges: [PRIVILEGES.LIST_RANKS, PRIVILEGES.VIEW_RANK],
-  },
-  {
-    label: 'Meu Perfil',
-    href: '/dashboard/profile',
-    icon: 'User',
-    privilege: PRIVILEGES.VIEW_USER,
   },
 ];
 

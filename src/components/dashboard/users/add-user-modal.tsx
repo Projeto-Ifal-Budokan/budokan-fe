@@ -20,7 +20,6 @@ export function AddUserModal({ isOpen, onOpenChange }: AddUserModalProps) {
   const handleSubmit = async (data: CreateUserData) => {
     const response = await register.mutateAsync({
       ...data,
-      isPractitioner: false,
       healthObservations: '',
     });
 

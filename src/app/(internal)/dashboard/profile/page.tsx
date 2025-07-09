@@ -33,6 +33,8 @@ import { toast } from 'sonner';
 
 import { AvatarUploadModal } from '@/components/dashboard/profile/avatar-upload-modal';
 import { EmergencyContactsList } from '@/components/dashboard/profile/emergency-contacts-list';
+// import { useUserDisciplines } from '@/lib/api/queries/use-user-disciplines';
+import { useManageMatriculations } from '@/lib/api/queries/use-manage-matriculations';
 import { calculatePlatformTime } from '@/utils/date-utils';
 import { ProfileSkeleton } from './profile-skeleton';
 
@@ -49,6 +51,15 @@ export default function ProfilePage() {
   const { data: userPrivileges } = usePrivilegesByUser(
     user?.id?.toString() || ''
   );
+
+  // const { data: userDisciplines } = useUserDisciplines(
+  //   user?.id?.toString() || ''
+  // );
+
+  const { useMatriculations } = useManageMatriculations();
+  const { data: userMatriculations } = useMatriculations(1, 100, {
+    idStudent: user?.id?.toString() || '',
+  });
 
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
@@ -251,38 +262,12 @@ export default function ProfilePage() {
               <Award className='h-5 w-5 opacity-80' />
             </CardHeader>
             <CardContent className='relative'>
-              <div className='text-3xl font-bold'>3</div>
+              <div className='text-3xl font-bold'>
+                {userMatriculations?.data?.count || 0}
+              </div>
               <p className='mt-1 text-xs opacity-80'>ativas atualmente</p>
             </CardContent>
           </Card>
-
-          {/* <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-xl'>
-            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
-            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium opacity-90'>
-                Frequência
-              </CardTitle>
-              <Heart className='h-5 w-5 opacity-80' />
-            </CardHeader>
-            <CardContent className='relative'>
-              <div className='text-3xl font-bold'>95%</div>
-              <p className='mt-1 text-xs opacity-80'>taxa de presença</p>
-            </CardContent>
-          </Card> */}
-
-          {/* <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-xl'>
-            <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
-            <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium opacity-90'>
-                Ranking Atual
-              </CardTitle>
-              <Award className='h-5 w-5 opacity-80' />
-            </CardHeader>
-            <CardContent className='relative'>
-              <div className='text-3xl font-bold'>2º Dan</div>
-              <p className='mt-1 text-xs opacity-80'>faixa preta</p>
-            </CardContent>
-          </Card> */}
         </div>
 
         {/* Tabs Section */}
@@ -292,10 +277,6 @@ export default function ProfilePage() {
           className='space-y-6'
         >
           <TabsList className='grid w-full grid-cols-3'>
-            {/* <TabsTrigger value='overview'>
-              <Activity className='mr-2 h-4 w-4' />
-              Atividade Recente
-            </TabsTrigger> */}
             <TabsTrigger value='personal'>
               <UserIcon className='mr-2 h-4 w-4' />
               Informações Pessoais
@@ -309,57 +290,6 @@ export default function ProfilePage() {
               Preferências
             </TabsTrigger>
           </TabsList>
-
-          {/* Overview Tab */}
-          {/* <TabsContent value='overview' className='space-y-6'>
-            <Card className='shadow-xl'>
-              <CardHeader>
-                <CardTitle className='flex items-center gap-2'>
-                  <Activity className='h-5 w-5' />
-                  Atividade Recente
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className='space-y-4'>
-                  {[
-                    {
-                      action: 'Participou da aula de Karatê',
-                      time: '2 horas atrás',
-                      icon: '🥋',
-                    },
-                    {
-                      action: 'Atualização de ranking',
-                      time: '1 dia atrás',
-                      icon: '🏆',
-                    },
-                    {
-                      action: 'Pagamento realizado',
-                      time: '3 dias atrás',
-                      icon: '💳',
-                    },
-                    {
-                      action: 'Cadastro atualizado',
-                      time: '1 semana atrás',
-                      icon: '✏️',
-                    },
-                  ].map((activity, index) => (
-                    <div
-                      key={index}
-                      className='flex items-center gap-4 rounded-lg border border-gray-100 bg-gray-50 p-4'
-                    >
-                      <span className='text-2xl'>{activity.icon}</span>
-                      <div className='flex-1'>
-                        <p className='font-medium text-gray-900'>
-                          {activity.action}
-                        </p>
-                        <p className='text-sm text-gray-500'>{activity.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent> */}
 
           {/* Personal Information Tab */}
           <TabsContent value='personal' className='space-y-6'>

@@ -1,4 +1,5 @@
 import { AdminRankingsView } from '@/components/dashboard/rankings/admin-rankings-view';
+import StudentRankingsView from '@/components/dashboard/rankings/student-rankings-view';
 import { authService } from '@/lib/api/services/auth-service';
 import { privilegesService } from '@/lib/api/services/privileges-service';
 import { hasAccess } from '@/utils/access-control';
@@ -13,5 +14,9 @@ export default async function RankingsPage() {
     return <AdminRankingsView />;
   }
 
-  return null;
+  if (user && hasAccess('instructor', userPrivileges.items)) {
+    return <AdminRankingsView />;
+  }
+
+  return <StudentRankingsView />;
 }

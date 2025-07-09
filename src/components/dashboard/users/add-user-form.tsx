@@ -84,7 +84,7 @@ export function AddUserForm({ onCancel, onSubmit }: AddUserFormProps) {
     password: '',
     profileImageUrl: '',
     emergencyContacts: [],
-    isPractitioner: false,
+    isPractitioner: true,
     healthObservations: '',
   });
 

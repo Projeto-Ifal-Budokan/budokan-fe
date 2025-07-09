@@ -60,6 +60,9 @@ export function useManageMatriculations() {
       status?: string;
       discipline?: string;
       search?: string;
+      idStudent?: string;
+      idDiscipline?: string;
+      idRank?: string;
     }
   ) => {
     return useQuery({

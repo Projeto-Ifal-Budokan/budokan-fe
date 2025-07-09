@@ -1,5 +1,26 @@
 import { EnhancedDashboard } from '@/components/dashboard/enhanced-dashboard';
+import { StudentDashboard } from '@/components/dashboard/student-dashboard';
+import { authService } from '@/lib/api/services/auth-service';
+import { privilegesService } from '@/lib/api/services/privileges-service';
+import { hasAccess } from '@/utils/access-control';
 
-export default function DashboardPage() {
-  return <EnhancedDashboard />;
+export default async function DashboardPage() {
+  const { data: user } = await authService.me();
+  const { data: userPrivileges } = await privilegesService.getPrivilegesByUser(
+    String(user?.id)
+  );
+
+  if (user && hasAccess('admin', userPrivileges.items || [])) {
+    return <EnhancedDashboard />;
+  }
+
+  if (user && hasAccess('instructor', userPrivileges.items || [])) {
+    return <EnhancedDashboard />;
+  }
+
+  // if (user && hasAccess('student', userPrivileges.items || [])) {
+  //   return <StudentDashboard userId={user.id} />;
+  // }
+
+  return <StudentDashboard userId={user?.id} />;
 }

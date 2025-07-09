@@ -32,10 +32,10 @@ const editTrainingScheduleFormSchema = z
     weekday: z.string().min(1, 'Dia da semana é obrigatório'),
     startTime: z
       .string()
-      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
+      .regex(/^\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM)'),
     endTime: z
       .string()
-      .regex(/^\d{2}:\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM:SS)'),
+      .regex(/^\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM)'),
   })
   .refine(
     (data) => {
@@ -77,27 +77,19 @@ export function EditTrainingScheduleForm({
     defaultValues: {
       idDiscipline: Number(trainingSchedule.idDiscipline),
       weekday: trainingSchedule.weekday,
-      startTime:
-        trainingSchedule.startTime.length === 8
-          ? trainingSchedule.startTime
-          : trainingSchedule.startTime + ':00',
-      endTime:
-        trainingSchedule.endTime.length === 8
-          ? trainingSchedule.endTime
-          : trainingSchedule.endTime + ':00',
+      startTime: trainingSchedule.startTime.substring(0, 5),
+      endTime: trainingSchedule.endTime.substring(0, 5),
     },
   });
 
   const onSubmit = (data: EditTrainingScheduleFormValues) => {
     try {
-      // Ensure time is in HH:MM:SS
-      const formatTime = (t: string) => (t.length === 5 ? `${t}:00` : t);
       onEdit({
         id: trainingSchedule.id,
         ...data,
         idDiscipline: Number(data.idDiscipline),
-        startTime: formatTime(data.startTime),
-        endTime: formatTime(data.endTime),
+        startTime: `${data.startTime}`,
+        endTime: `${data.endTime}`,
       });
       toast.success('Horário de treino atualizado com sucesso!');
     } catch (error) {
@@ -188,22 +180,7 @@ export function EditTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Início</FormLabel>
                   <FormControl>
-                    <Input
-                      type='time'
-                      step='1'
-                      value={
-                        field.value.length === 8
-                          ? field.value.slice(0, 5)
-                          : field.value
-                      }
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value.length === 5
-                            ? `${e.target.value}:00`
-                            : e.target.value
-                        )
-                      }
-                    />
+                    <Input type='time' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,22 +194,7 @@ export function EditTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Fim</FormLabel>
                   <FormControl>
-                    <Input
-                      type='time'
-                      step='1'
-                      value={
-                        field.value.length === 8
-                          ? field.value.slice(0, 5)
-                          : field.value
-                      }
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value.length === 5
-                            ? `${e.target.value}:00`
-                            : e.target.value
-                        )
-                      }
-                    />
+                    <Input type='time' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
