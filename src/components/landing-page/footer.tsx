@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <footer className='bg-blue-900 py-12 text-white'>
       <div className='container'>
-        <div className='grid gap-8 md:grid-cols-4'>
+        <div className='grid gap-8 md:grid-cols-5'>
           <div>
             <div className='mb-4 flex items-center gap-2'>
               <Image
@@ -88,6 +88,7 @@ export const Footer = () => {
               </li>
             </ul>
           </div>
+
           <div>
             <h4 className='mb-4 text-lg font-bold'>Redes Sociais</h4>
             <div className='flex space-x-4'>
@@ -132,6 +133,38 @@ export const Footer = () => {
                   <polygon points='9.75 15.02 15.5 12 9.75 8.98 9.75 15.02' />
                 </svg>
               </a>
+            </div>
+          </div>
+          <div>
+            <h4 className='mb-4 text-lg font-bold'>Parceiros</h4>
+            <div className='space-y-4'>
+              <div className='grid grid-cols-1 gap-2'>
+                <div className='flex items-center justify-center rounded bg-white/20 p-2'>
+                  <Link href='https://www2.ifal.edu.br/' target='_blank'>
+                    <Image
+                      src='/ifal-logo.svg'
+                      alt='Parceiro 1'
+                      width={0}
+                      height={0}
+                      className='h-auto w-full object-contain'
+                    />
+                  </Link>
+                </div>
+                <div className='flex items-center justify-center rounded bg-white/20 p-2'>
+                  <Link
+                    href='https://www.instagram.com/cinfoifal/'
+                    target='_blank'
+                  >
+                    <Image
+                      src='/cinfo-logo.svg'
+                      alt='Parceiro 2'
+                      width={0}
+                      height={0}
+                      className='h-auto w-full object-contain'
+                    />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
