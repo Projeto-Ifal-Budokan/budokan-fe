@@ -8,16 +8,17 @@ import { Button } from '../ui/button';
 
 // Navigation links data
 const navLinks = [
-  { href: '#about', label: 'Sobre Nós' },
-  { href: '#disciplines', label: 'Modalidades' },
-  { href: '#instructors', label: 'Senseis' },
-  { href: '#schedule', label: 'Horários' },
-  { href: '#contact', label: 'Contato' },
+  { href: '/#about', label: 'Sobre Nós' },
+  { href: '/#disciplines', label: 'Modalidades' },
+  { href: '/#instructors', label: 'Senseis' },
+  { href: '/#schedule', label: 'Horários' },
+  { href: '/#contact', label: 'Contato' },
+  { href: '/team-developers', label: 'Equipe' },
 ];
 
 const Logo = () => {
   return (
-    <div className='flex items-center gap-2'>
+    <Link className='flex items-center gap-2' href='/'>
       <Image
         src='/logo.jpeg'
         alt='Budokan Logo'
@@ -28,7 +29,7 @@ const Logo = () => {
       <span className='text-xl font-bold text-white uppercase'>
         Budokan-Ryu
       </span>
-    </div>
+    </Link>
   );
 };
 
