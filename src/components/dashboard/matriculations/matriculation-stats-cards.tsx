@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Award, GraduationCap, TrendingUp, Users } from 'lucide-react';
+import { GraduationCap, TrendingUp, Users } from 'lucide-react';
 
 interface EnrollmentStatsItem {
   type: 'student' | 'instructor';
@@ -67,20 +67,6 @@ export function MatriculationStatsCards({
         <CardContent className='relative'>
           <div className='text-3xl font-bold'>{activeInstructors}</div>
           <p className='mt-1 text-xs opacity-80'>lecionando atualmente</p>
-        </CardContent>
-      </Card>
-
-      <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-amber-500 to-amber-600 text-white shadow-xl'>
-        <div className='absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10'></div>
-        <CardHeader className='relative flex flex-row items-center justify-between space-y-0 pb-2'>
-          <CardTitle className='text-sm font-medium opacity-90'>
-            Alunos Graduados
-          </CardTitle>
-          <Award className='h-5 w-5 opacity-80' />
-        </CardHeader>
-        <CardContent className='relative'>
-          <div className='text-3xl font-bold'>{graduatedStudents}</div>
-          <p className='mt-1 text-xs opacity-80'>já formados</p>
         </CardContent>
       </Card>
     </div>
