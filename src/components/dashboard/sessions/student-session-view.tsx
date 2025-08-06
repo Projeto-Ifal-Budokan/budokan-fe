@@ -119,10 +119,11 @@ export function StudentSessionsView() {
   }, [sessionsResponse, enrolledDisciplineIds]);
 
   // Calculate session statistics
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   const sessionStats = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     if (!studentSessions.length) {
       return {
         total: 0,
@@ -149,7 +150,7 @@ export function StudentSessionsView() {
           session.date >= todayString && session.date <= weekFromNowString
       ).length,
     };
-  }, [studentSessions, today]);
+  }, [studentSessions]);
 
   // Utility functions
   const formatDate = (dateString: string) => {

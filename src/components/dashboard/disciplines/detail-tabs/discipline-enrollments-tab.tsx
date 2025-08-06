@@ -98,8 +98,14 @@ function SimpleStudentMatriculationForm({
   const { data: ranksResponse, isLoading: isLoadingRanks } =
     useRankings(disciplineId);
 
-  const users = usersResponse?.data?.items || [];
-  const ranks = ranksResponse?.data?.items || [];
+  const users = useMemo(
+    () => usersResponse?.data?.items || [],
+    [usersResponse?.data?.items]
+  );
+  const ranks = useMemo(
+    () => ranksResponse?.data?.items || [],
+    [ranksResponse?.data?.items]
+  );
 
   const filteredUsers = useMemo(() => {
     if (!userSearch) return users;
@@ -270,8 +276,14 @@ function SimpleInstructorAssignmentForm({
   const { data: ranksResponse, isLoading: isLoadingRanks } =
     useRankings(disciplineId);
 
-  const users = usersResponse?.data?.items || [];
-  const ranks = ranksResponse?.data?.items || [];
+  const users = useMemo(
+    () => usersResponse?.data?.items || [],
+    [usersResponse?.data?.items]
+  );
+  const ranks = useMemo(
+    () => ranksResponse?.data?.items || [],
+    [ranksResponse?.data?.items]
+  );
 
   const filteredUsers = useMemo(() => {
     if (!userSearch) return users;

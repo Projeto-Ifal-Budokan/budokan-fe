@@ -12,6 +12,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useManageAttendance } from '@/lib/api/queries/use-manage-attendance';
 import { useManageMatriculations } from '@/lib/api/queries/use-manage-matriculations';
 import { useManageSessions } from '@/lib/api/queries/use-manage-sessions';
+import { Matriculation } from '@/types/matriculation';
+import { Session } from '@/types/session';
 import {
   BookOpen,
   Calendar,
@@ -315,7 +317,7 @@ export function StudentDashboard({ userId }: StudentDashboardProps) {
   );
 }
 
-function DisciplineCard({ matriculation }: { matriculation: any }) {
+function DisciplineCard({ matriculation }: { matriculation: Matriculation }) {
   return (
     <div className='flex items-center justify-between rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50 p-4 transition-all hover:border-blue-300 hover:shadow-sm'>
       <div className='flex items-center gap-4'>
@@ -345,7 +347,7 @@ function DisciplineCard({ matriculation }: { matriculation: any }) {
   );
 }
 
-function SessionCard({ session }: { session: any }) {
+function SessionCard({ session }: { session: Session }) {
   return (
     <div className='flex items-center gap-4 rounded-xl border border-gray-200 bg-gradient-to-r from-gray-50 to-green-50 p-4 transition-all hover:border-green-300 hover:shadow-sm'>
       <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white'>
