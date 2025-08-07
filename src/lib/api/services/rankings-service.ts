@@ -4,25 +4,24 @@ import { CreateRankData, Ranking, UpdateRankData } from '@/types/ranking';
 
 export const rankingsService = {
   getRankings: async (
-    disciplineId?: string,
-    page?: number,
-    limit?: number
+    disciplineId: string,
+    page: number = 1,
+    pageSize: number = 10,
+    filters?: Record<string, unknown>
   ): Promise<ApiResponse<ApiPaginatedResponse<Ranking[]>>> => {
-    const params = new URLSearchParams();
+    const searchParams = new URLSearchParams({
+      disciplineId: disciplineId,
+      page: page.toString(),
+      page_size: pageSize.toString(),
+      ...Object.fromEntries(
+        Object.entries(filters || {})
+          .filter(([, value]) => value !== undefined && value !== '')
+          .map(([key, value]) => [key, String(value)])
+      ),
+    });
 
-    if (disciplineId) {
-      params.append('disciplineId', disciplineId);
-    }
-    if (page) {
-      params.append('page', page.toString());
-    }
-    if (limit) {
-      params.append('limit', limit.toString());
-    }
-
-    const queryString = params.toString();
     const response = await api.get<ApiPaginatedResponse<Ranking[]>>(
-      `/ranks${queryString ? `?${queryString}` : ''}`
+      `/ranks/?${searchParams}`
     );
     return response;
   },

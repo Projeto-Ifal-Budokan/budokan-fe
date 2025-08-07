@@ -10,6 +10,7 @@ interface DisciplinePageProps {
 
 export default async function DisciplinePage({ params }: DisciplinePageProps) {
   const { id } = await params;
+  console.log('id', id);
 
   const { data: user } = await authService.me();
   const { data: userPrivileges } = await privilegesService.getPrivilegesByUser(

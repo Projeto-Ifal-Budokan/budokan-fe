@@ -18,33 +18,20 @@ export const matriculationsService = {
   getMatriculations: async (
     page: number = 1,
     pageSize: number = 10,
-    filters?: {
-      type?: string;
-      status?: string;
-      discipline?: string;
-      search?: string;
-    }
+    filters?: Record<string, unknown>
   ): Promise<ApiResponse<ApiPaginatedResponse<Matriculation[]>>> => {
-    const params = new URLSearchParams({
+    const searchParams = new URLSearchParams({
       page: page.toString(),
       page_size: pageSize.toString(),
+      ...Object.fromEntries(
+        Object.entries(filters || {})
+          .filter(([, value]) => value !== undefined && value !== '')
+          .map(([key, value]) => [key, String(value)])
+      ),
     });
 
-    if (filters?.type && filters.type !== 'all') {
-      params.append('type', filters.type);
-    }
-    if (filters?.status && filters.status !== 'all') {
-      params.append('status', filters.status);
-    }
-    if (filters?.discipline && filters.discipline !== 'all') {
-      params.append('discipline', filters.discipline);
-    }
-    if (filters?.search) {
-      params.append('search', filters.search);
-    }
-
     const response = await api.get<ApiPaginatedResponse<Matriculation[]>>(
-      `/matriculations/?${params.toString()}`
+      `/matriculations/?${searchParams}`
     );
     return response;
   },

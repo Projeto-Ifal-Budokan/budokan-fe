@@ -30,10 +30,10 @@ export function DisciplineDetailView({
   const { useMatriculations } = useManageMatriculations();
   const { useInstructorDisciplinesList } = useInstructorDisciplines();
   const { data: matriculations } = useMatriculations(1, 1000, {
-    discipline: disciplineId,
+    idDiscipline: disciplineId,
   });
   const { data: instructors } = useInstructorDisciplinesList(1, 1000, {
-    discipline: disciplineId,
+    idDiscipline: disciplineId,
   });
 
   if (isLoading) {
