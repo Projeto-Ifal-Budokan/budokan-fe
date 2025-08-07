@@ -3,6 +3,7 @@ import { privilegesService } from '@/lib/api/services/privileges-service';
 import {
   INSTRUCTOR_PRIVILEGES,
   PRIVILEGES,
+  STUDENT_PRIVILEGES,
   type PrivilegeType,
 } from '@/types/privileges';
 
@@ -243,13 +244,25 @@ export async function getSidebarItems(): Promise<SidebarItem[]> {
       userPrivileges.includes(privilege)
     );
 
+    const isStudent = STUDENT_PRIVILEGES.every((privilege) =>
+      userPrivileges.includes(privilege)
+    );
+
     if (isAdmin) {
       return adminSidebarItems;
     } else if (isInstructor) {
       return instructorSidebarItems;
-    } else {
+    } else if (isStudent) {
       return studentSidebarItems;
     }
+
+    return [
+      {
+        label: 'Dashboard',
+        href: '/dashboard',
+        icon: 'Home',
+      },
+    ];
   } catch (error) {
     console.error('Error fetching user data:', error);
     return [];
