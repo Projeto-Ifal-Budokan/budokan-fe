@@ -24,12 +24,7 @@ const getMatriculationQuery = (id: string) => ({
 const listMatriculationsQuery = (
   page: number = 1,
   pageSize: number = 10,
-  filters?: {
-    type?: string;
-    status?: string;
-    discipline?: string;
-    search?: string;
-  }
+  filters?: Record<string, unknown>
 ) => ({
   queryKey: matriculationKeys.list({ page, pageSize, filters }),
   queryFn: async () => {
@@ -55,12 +50,7 @@ export function useManageMatriculations() {
   const useMatriculations = (
     page: number = 1,
     pageSize: number = 10,
-    filters?: {
-      type?: string;
-      status?: string;
-      discipline?: string;
-      search?: string;
-    }
+    filters?: Record<string, unknown>
   ) => {
     return useQuery({
       ...listMatriculationsQuery(page, pageSize, filters),

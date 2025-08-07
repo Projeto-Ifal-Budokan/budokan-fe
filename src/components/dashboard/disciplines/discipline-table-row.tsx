@@ -46,7 +46,9 @@ export function DisciplineTableRow({
 
   const { updateDiscipline, deleteDiscipline } = useManageDisciplines();
   const { useRankings } = useManageRankings();
-  const { data: ranks } = useRankings(discipline.id.toString());
+  const { data: ranks } = useRankings(1, 1000, {
+    disciplineId: discipline.id,
+  });
 
   const handleEdit = async (disciplineData: Partial<Discipline>) => {
     await updateDiscipline.mutateAsync(disciplineData as UpdateDisciplineData);

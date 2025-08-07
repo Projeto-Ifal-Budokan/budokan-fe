@@ -118,9 +118,9 @@ export function AddMatriculationForm({ onSuccess }: AddMatriculationFormProps) {
   const selectedRank = form.watch('idRank');
 
   // Fetch rankings only for selected discipline
-  const { data: rankingsResponse } = useRankings(
-    selectedDisciplineId?.toString() || ''
-  );
+  const { data: rankingsResponse } = useRankings(1, 1000, {
+    disciplineId: selectedDisciplineId,
+  });
   const filteredRankings = rankingsResponse?.data?.items || [];
 
   // Get data objects

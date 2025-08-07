@@ -190,8 +190,6 @@ export default function MatriculationsManagement() {
         return 'Ativo';
       case 'inactive':
         return 'Inativo';
-      case 'graduated':
-        return 'Graduado';
       default:
         return 'Inativo';
     }
@@ -232,7 +230,6 @@ export default function MatriculationsManagement() {
     const descriptions = {
       active: 'A matrícula ficará ativa no sistema.',
       inactive: 'A matrícula ficará inativa no sistema.',
-      graduated: 'O aluno será marcado como graduado.',
     };
     return descriptions[newStatus as keyof typeof descriptions];
   };

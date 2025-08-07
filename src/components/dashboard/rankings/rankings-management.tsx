@@ -52,9 +52,9 @@ export default function RankingsManagement() {
   const disciplineId =
     filterDiscipline === 'all' ? undefined : filterDiscipline;
   const { data: rankingsResponse, isLoading: rankingsLoading } = useRankings(
-    disciplineId,
     currentPage,
-    pageSize
+    pageSize,
+    { disciplineId }
   );
 
   // Extract data from responses

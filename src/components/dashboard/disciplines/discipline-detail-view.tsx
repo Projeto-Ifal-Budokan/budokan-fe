@@ -25,15 +25,17 @@ export function DisciplineDetailView({
 }: DisciplineDetailViewProps) {
   const { useDiscipline } = useManageDisciplines();
   const { useRankings } = useManageRankings();
-  const { data: ranks } = useRankings(disciplineId);
+  const { data: ranks } = useRankings(1, 1000, {
+    disciplineId,
+  });
   const { data: discipline, isLoading } = useDiscipline(disciplineId);
   const { useMatriculations } = useManageMatriculations();
   const { useInstructorDisciplinesList } = useInstructorDisciplines();
   const { data: matriculations } = useMatriculations(1, 1000, {
-    discipline: disciplineId,
+    idDiscipline: disciplineId,
   });
   const { data: instructors } = useInstructorDisciplinesList(1, 1000, {
-    discipline: disciplineId,
+    idDiscipline: disciplineId,
   });
 
   if (isLoading) {

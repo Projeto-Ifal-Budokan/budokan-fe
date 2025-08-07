@@ -75,7 +75,6 @@ export function MatriculationFilters({
                 <SelectItem value='all'>Todos</SelectItem>
                 <SelectItem value='active'>Ativo</SelectItem>
                 <SelectItem value='inactive'>Inativo</SelectItem>
-                <SelectItem value='graduated'>Graduado</SelectItem>
               </SelectContent>
             </Select>
 

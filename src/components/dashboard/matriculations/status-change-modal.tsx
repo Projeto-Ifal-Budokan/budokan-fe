@@ -91,11 +91,7 @@ export function StatusChangeModal({
                 Status atual:
               </span>
               <Badge variant={getStatusColor(matriculation.status)}>
-                {matriculation.status === 'active'
-                  ? 'Ativo'
-                  : matriculation.status === 'inactive'
-                    ? 'Inativo'
-                    : 'Graduado'}
+                {matriculation.status === 'active' ? 'Ativo' : 'Inativo'}
               </Badge>
             </div>
 
@@ -104,11 +100,7 @@ export function StatusChangeModal({
                 Novo status:
               </span>
               <Badge variant={getStatusColor(newStatus)}>
-                {newStatus === 'active'
-                  ? 'Ativo'
-                  : newStatus === 'inactive'
-                    ? 'Inativo'
-                    : 'Graduado'}
+                {newStatus === 'active' ? 'Ativo' : 'Inativo'}
               </Badge>
             </div>
           </div>

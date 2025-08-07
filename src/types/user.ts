@@ -18,7 +18,7 @@ export interface User {
   privileges: Privilege[];
   birthDate: string;
   phone: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

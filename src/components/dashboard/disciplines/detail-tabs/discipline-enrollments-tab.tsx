@@ -95,11 +95,22 @@ function SimpleStudentMatriculationForm({
   const { createMatriculation } = useManageMatriculations();
 
   const { data: usersResponse, isLoading: isLoadingUsers } = useUsers(1, 50);
-  const { data: ranksResponse, isLoading: isLoadingRanks } =
-    useRankings(disciplineId);
+  const { data: ranksResponse, isLoading: isLoadingRanks } = useRankings(
+    1,
+    1000,
+    {
+      disciplineId,
+    }
+  );
 
-  const users = usersResponse?.data?.items || [];
-  const ranks = ranksResponse?.data?.items || [];
+  const users = useMemo(
+    () => usersResponse?.data?.items || [],
+    [usersResponse?.data?.items]
+  );
+  const ranks = useMemo(
+    () => ranksResponse?.data?.items || [],
+    [ranksResponse?.data?.items]
+  );
 
   const filteredUsers = useMemo(() => {
     if (!userSearch) return users;
@@ -267,11 +278,22 @@ function SimpleInstructorAssignmentForm({
   const { createInstructorDiscipline } = useManageInstructors();
 
   const { data: usersResponse, isLoading: isLoadingUsers } = useUsers(1, 50);
-  const { data: ranksResponse, isLoading: isLoadingRanks } =
-    useRankings(disciplineId);
+  const { data: ranksResponse, isLoading: isLoadingRanks } = useRankings(
+    1,
+    1000,
+    {
+      disciplineId: disciplineId,
+    }
+  );
 
-  const users = usersResponse?.data?.items || [];
-  const ranks = ranksResponse?.data?.items || [];
+  const users = useMemo(
+    () => usersResponse?.data?.items || [],
+    [usersResponse?.data?.items]
+  );
+  const ranks = useMemo(
+    () => ranksResponse?.data?.items || [],
+    [ranksResponse?.data?.items]
+  );
 
   const filteredUsers = useMemo(() => {
     if (!userSearch) return users;
@@ -534,8 +556,7 @@ export function DisciplineEnrollmentsTab({
         return 'Ativo';
       case 'inactive':
         return 'Inativo';
-      case 'graduated':
-        return 'Graduado';
+
       default:
         return 'Inativo';
     }
@@ -1095,7 +1116,6 @@ export function DisciplineEnrollmentsTab({
           const descriptions = {
             active: 'A matrícula ficará ativa no sistema.',
             inactive: 'A matrícula ficará inativa no sistema.',
-            graduated: 'O aluno será marcado como graduado.',
           };
           return descriptions[newStatus as keyof typeof descriptions];
         }}

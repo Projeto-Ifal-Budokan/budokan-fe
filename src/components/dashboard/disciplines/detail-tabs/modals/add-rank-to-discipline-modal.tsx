@@ -46,7 +46,9 @@ export function AddRankToDisciplineModal({
   const { data: allRanksResponse } = useRankings();
 
   // Get ranks for current discipline
-  const { data: disciplineRanksResponse } = useRankings(disciplineId);
+  const { data: disciplineRanksResponse } = useRankings(1, 1000, {
+    disciplineId,
+  });
 
   // Filter ranks that don't belong to this discipline
   const availableRanks = useMemo(() => {

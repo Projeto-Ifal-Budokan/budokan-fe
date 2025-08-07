@@ -5,6 +5,7 @@ Allow: /kendo
 Allow: /archery
 Allow: /login
 Allow: /signup
+Allow: /team-developers
 
 # Block dashboard and internal routes
 Disallow: /dashboard/

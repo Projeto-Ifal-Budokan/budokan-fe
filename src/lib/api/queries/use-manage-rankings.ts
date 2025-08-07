@@ -16,17 +16,13 @@ export const rankingKeys = {
 } as const;
 
 const getRankingsQuery = (
-  disciplineId?: string,
   page?: number,
-  limit?: number
+  limit?: number,
+  filters?: Record<string, unknown>
 ) => ({
-  queryKey: rankingKeys.list({ disciplineId, page, limit }),
+  queryKey: rankingKeys.list({ page, limit, filters }),
   queryFn: async () => {
-    const response = await rankingsService.getRankings(
-      disciplineId,
-      page,
-      limit
-    );
+    const response = await rankingsService.getRankings(page, limit, filters);
     return response;
   },
 });
@@ -52,12 +48,12 @@ export function useManageRankings() {
   const queryClient = useQueryClient();
 
   const useRankings = (
-    disciplineId?: string,
     page?: number,
-    limit?: number
+    limit?: number,
+    filters?: Record<string, unknown>
   ) => {
     return useQuery({
-      ...getRankingsQuery(disciplineId, page, limit),
+      ...getRankingsQuery(page, limit, filters),
     });
   };
 
@@ -68,8 +64,12 @@ export function useManageRankings() {
     });
   };
 
-  const fetchRankings = async (disciplineId?: string) => {
-    return await queryClient.fetchQuery(getRankingsQuery(disciplineId));
+  const fetchRankings = async (
+    page?: number,
+    limit?: number,
+    filters?: Record<string, unknown>
+  ) => {
+    return await queryClient.fetchQuery(getRankingsQuery(page, limit, filters));
   };
 
   const fetchRanking = async (id: string) => {
