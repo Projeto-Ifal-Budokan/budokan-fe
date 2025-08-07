@@ -54,8 +54,13 @@ export default function StudentRankingsView() {
   // Get rankings data
   const disciplineId =
     filterDiscipline === 'all' ? undefined : filterDiscipline;
-  const { data: rankingsResponse, isLoading: isLoadingRankings } =
-    useRankings(disciplineId);
+  const { data: rankingsResponse, isLoading: isLoadingRankings } = useRankings(
+    1,
+    1000,
+    {
+      disciplineId,
+    }
+  );
 
   // Extract enrolled disciplines for the current student
   const enrolledDisciplines = useMemo(() => {
