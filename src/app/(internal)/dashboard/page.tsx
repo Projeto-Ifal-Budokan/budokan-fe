@@ -11,6 +11,8 @@ export default async function DashboardPage() {
     String(user?.id)
   );
 
+  console.log(userPrivileges.items.map((p) => p.name));
+
   if (user && hasAccess('admin', userPrivileges.items || [])) {
     return <EnhancedDashboard />;
   }
