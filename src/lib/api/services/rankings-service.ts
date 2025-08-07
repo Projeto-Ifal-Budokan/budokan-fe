@@ -4,13 +4,11 @@ import { CreateRankData, Ranking, UpdateRankData } from '@/types/ranking';
 
 export const rankingsService = {
   getRankings: async (
-    disciplineId: string,
     page: number = 1,
     pageSize: number = 10,
     filters?: Record<string, unknown>
   ): Promise<ApiResponse<ApiPaginatedResponse<Ranking[]>>> => {
     const searchParams = new URLSearchParams({
-      disciplineId: disciplineId,
       page: page.toString(),
       page_size: pageSize.toString(),
       ...Object.fromEntries(

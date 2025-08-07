@@ -95,8 +95,13 @@ function SimpleStudentMatriculationForm({
   const { createMatriculation } = useManageMatriculations();
 
   const { data: usersResponse, isLoading: isLoadingUsers } = useUsers(1, 50);
-  const { data: ranksResponse, isLoading: isLoadingRanks } =
-    useRankings(disciplineId);
+  const { data: ranksResponse, isLoading: isLoadingRanks } = useRankings(
+    1,
+    1000,
+    {
+      disciplineId,
+    }
+  );
 
   const users = useMemo(
     () => usersResponse?.data?.items || [],
@@ -273,8 +278,13 @@ function SimpleInstructorAssignmentForm({
   const { createInstructorDiscipline } = useManageInstructors();
 
   const { data: usersResponse, isLoading: isLoadingUsers } = useUsers(1, 50);
-  const { data: ranksResponse, isLoading: isLoadingRanks } =
-    useRankings(disciplineId);
+  const { data: ranksResponse, isLoading: isLoadingRanks } = useRankings(
+    1,
+    1000,
+    {
+      disciplineId: disciplineId,
+    }
+  );
 
   const users = useMemo(
     () => usersResponse?.data?.items || [],

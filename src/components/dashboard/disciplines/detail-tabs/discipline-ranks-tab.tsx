@@ -31,7 +31,9 @@ export function DisciplineRanksTab({
   const [deletingRank, setDeletingRank] = useState<Rank | null>(null);
 
   const { useRankings } = useManageRankings();
-  const { data: ranks } = useRankings(disciplineId);
+  const { data: ranks } = useRankings(1, 1000, {
+    disciplineId,
+  });
 
   const getBeltColor = (description: string) => {
     const colors: { [key: string]: string } = {

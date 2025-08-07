@@ -25,7 +25,9 @@ export function DisciplineDetailView({
 }: DisciplineDetailViewProps) {
   const { useDiscipline } = useManageDisciplines();
   const { useRankings } = useManageRankings();
-  const { data: ranks } = useRankings(disciplineId);
+  const { data: ranks } = useRankings(1, 1000, {
+    disciplineId,
+  });
   const { data: discipline, isLoading } = useDiscipline(disciplineId);
   const { useMatriculations } = useManageMatriculations();
   const { useInstructorDisciplinesList } = useInstructorDisciplines();
