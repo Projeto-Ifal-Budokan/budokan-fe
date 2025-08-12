@@ -197,7 +197,6 @@ const SignupForm = ({ onSuccess }: { onSuccess: () => void }) => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast.error('Erro ao criar conta. Tente novamente.');
     } finally {
       setIsSubmitting(false);
     }

@@ -13,7 +13,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { formatDate } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { Eye, GraduationCap, MoreVertical, Pause, Play } from 'lucide-react';
+import { MoreVertical, Pause, Play } from 'lucide-react';
 
 // Update the interface to match our unified enrollment
 interface UnifiedEnrollment {
@@ -111,7 +111,7 @@ export function MatriculationTableRow({
         </Badge>
       </TableCell>
 
-      <TableCell>
+      {/* <TableCell>
         {matriculation.source === 'matriculation' ? (
           <Badge
             variant={matriculation.isPaymentExempt ? 'secondary' : 'outline'}
@@ -121,7 +121,7 @@ export function MatriculationTableRow({
         ) : (
           <span className='text-sm text-gray-400'>N/A</span>
         )}
-      </TableCell>
+      </TableCell> */}
 
       <TableCell>
         <span className='text-gray-600'>
@@ -145,12 +145,12 @@ export function MatriculationTableRow({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => onViewMatriculation(matriculation.id)}
             >
               <Eye className='mr-2 h-4 w-4' />
               Visualizar
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
 
             {canChangeStatus && (
               <>
@@ -173,16 +173,6 @@ export function MatriculationTableRow({
                   </DropdownMenuItem>
                 )}
               </>
-            )}
-
-            {canGraduate && (
-              <DropdownMenuItem
-                onClick={() => onStatusChange(matriculation, 'graduated')}
-                className='text-yellow-600'
-              >
-                <GraduationCap className='mr-2 h-4 w-4' />
-                Graduar
-              </DropdownMenuItem>
             )}
           </DropdownMenuContent>
         </DropdownMenu>

@@ -87,7 +87,6 @@ export default function RolesManagement() {
       toast.success('Papel excluído com sucesso!');
     } catch (error) {
       console.error('Error deleting role:', error);
-      toast.error('Erro ao excluir papel');
     } finally {
       setIsDeleteModalOpen(false);
       setSelectedRole(null);

@@ -18,21 +18,17 @@ import { AddRankToDisciplineModal } from './modals/add-rank-to-discipline-modal'
 import { DeleteRankModal } from './modals/delete-rank-modal';
 
 interface DisciplineRanksTabProps {
-  disciplineId: string;
   discipline: Discipline;
 }
 
-export function DisciplineRanksTab({
-  disciplineId,
-  discipline,
-}: DisciplineRanksTabProps) {
+export function DisciplineRanksTab({ discipline }: DisciplineRanksTabProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingRank, setEditingRank] = useState<Rank | null>(null);
   const [deletingRank, setDeletingRank] = useState<Rank | null>(null);
 
   const { useRankings } = useManageRankings();
   const { data: ranks } = useRankings(1, 1000, {
-    disciplineId,
+    disciplineId: String(discipline.id),
   });
 
   const getBeltColor = (description: string) => {
@@ -151,7 +147,7 @@ export function DisciplineRanksTab({
       <AddRankToDisciplineModal
         isOpen={isAddModalOpen}
         onOpenChange={setIsAddModalOpen}
-        disciplineId={disciplineId}
+        disciplineId={String(discipline.id)}
         disciplineName={discipline.name}
       />
 

@@ -29,12 +29,10 @@ import { DeleteTrainingScheduleModal } from '@/components/dashboard/training-sch
 import { EditTrainingScheduleModal } from '@/components/dashboard/training-schedules/edit-training-schedule-modal';
 
 interface DisciplineSchedulesTabProps {
-  disciplineId: string;
   discipline: Discipline;
 }
 
 export function DisciplineSchedulesTab({
-  disciplineId,
   discipline,
 }: DisciplineSchedulesTabProps) {
   // Modal states
@@ -76,10 +74,9 @@ export function DisciplineSchedulesTab({
   const schedules = useMemo(() => {
     if (!schedulesResponse?.data?.items) return [];
     return schedulesResponse.data.items.filter(
-      (schedule: TrainingSchedule) =>
-        schedule.idDiscipline === parseInt(disciplineId)
+      (schedule: TrainingSchedule) => schedule.idDiscipline === discipline.id
     );
-  }, [schedulesResponse, disciplineId]);
+  }, [schedulesResponse, discipline.id]);
 
   // Get user's accessible disciplines for the add modal
   const userDisciplines: Discipline[] = useMemo(() => {
@@ -98,8 +95,8 @@ export function DisciplineSchedulesTab({
   const canManage = useMemo(() => {
     if (isAdmin) return true;
     const userDisciplineIds = userDisciplines.map((d) => d.id);
-    return userDisciplineIds.includes(parseInt(disciplineId));
-  }, [isAdmin, userDisciplines, disciplineId]);
+    return userDisciplineIds.includes(discipline.id);
+  }, [isAdmin, userDisciplines, discipline.id]);
 
   const getDayColor = (day: string) => {
     const colors = {
@@ -329,7 +326,7 @@ export function DisciplineSchedulesTab({
         onOpenChange={setIsAddModalOpen}
         isAdmin={isAdmin}
         userDisciplines={userDisciplines}
-        disciplineId={disciplineId}
+        disciplineId={String(discipline.id)}
       />
 
       {selectedSchedule && (

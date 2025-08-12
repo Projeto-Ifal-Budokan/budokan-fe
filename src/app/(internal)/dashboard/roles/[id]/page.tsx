@@ -261,9 +261,6 @@ export default function RolePrivilegesPage() {
       ]);
     } catch (error) {
       console.error('Error toggling privilege:', error);
-      toast.error(
-        `Erro ao ${action === 'assign' ? 'atribuir' : 'remover'} privilégio`
-      );
     } finally {
       setPendingChanges((prev) => {
         const newSet = new Set(prev);

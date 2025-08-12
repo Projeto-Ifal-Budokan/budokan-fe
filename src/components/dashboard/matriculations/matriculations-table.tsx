@@ -106,9 +106,9 @@ export function MatriculationsTable({
                 <TableHead className='font-semibold text-gray-700'>
                   Status
                 </TableHead>
-                <TableHead className='font-semibold text-gray-700'>
+                {/* <TableHead className='font-semibold text-gray-700'>
                   Pagamento
-                </TableHead>
+                </TableHead> */}
                 <TableHead className='font-semibold text-gray-700'>
                   Criado em
                 </TableHead>

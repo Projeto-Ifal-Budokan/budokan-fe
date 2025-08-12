@@ -140,7 +140,6 @@ export default function UsersManagement() {
       );
     } catch (error) {
       console.error('Error updating user status:', error);
-      toast.error('Erro ao alterar status do usuário');
     } finally {
       setIsStatusChangeModalOpen(false);
       setPendingStatusChange(null);
