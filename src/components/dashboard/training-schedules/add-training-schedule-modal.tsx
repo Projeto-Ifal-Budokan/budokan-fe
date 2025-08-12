@@ -14,6 +14,7 @@ interface AddTrainingScheduleModalProps {
   onOpenChange: (open: boolean) => void;
   isAdmin: boolean;
   userDisciplines: Discipline[];
+  disciplineId?: string; // optional preselected discipline id for detail page usage
 }
 
 export function AddTrainingScheduleModal({
@@ -21,6 +22,7 @@ export function AddTrainingScheduleModal({
   onOpenChange,
   isAdmin,
   userDisciplines,
+  disciplineId,
 }: AddTrainingScheduleModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -32,6 +34,7 @@ export function AddTrainingScheduleModal({
           onSuccess={() => onOpenChange(false)}
           isAdmin={isAdmin}
           userDisciplines={userDisciplines}
+          disciplineId={disciplineId}
         />
       </DialogContent>
     </Dialog>

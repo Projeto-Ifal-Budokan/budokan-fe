@@ -329,6 +329,7 @@ export function DisciplineSchedulesTab({
         onOpenChange={setIsAddModalOpen}
         isAdmin={isAdmin}
         userDisciplines={userDisciplines}
+        disciplineId={disciplineId}
       />
 
       {selectedSchedule && (
