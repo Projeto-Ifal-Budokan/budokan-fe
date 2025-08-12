@@ -17,7 +17,7 @@ import {
   UserPlus,
   X,
 } from 'lucide-react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { UseFormRegister, useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 interface AddUserFormProps {
@@ -65,7 +65,7 @@ const FormField = ({
   type?: string;
   placeholder: string;
   required?: boolean;
-  register: any;
+  register: UseFormRegister<FormData>;
   error?: string;
 }) => (
   <div className='space-y-2'>
