@@ -98,10 +98,7 @@ export default function MatriculationsManagement() {
         : (matriculationsResponse?.data?.items || []).map(
             (matriculation: Matriculation) => ({
               ...matriculation,
-              userName:
-                matriculation.type === 'student'
-                  ? `${matriculation.studentName || ''} ${matriculation.studentSurname || ''}`.trim()
-                  : 'Unknown User',
+              userName: matriculation.studentName,
               userEmail: undefined,
               source: 'matriculation' as const,
             })

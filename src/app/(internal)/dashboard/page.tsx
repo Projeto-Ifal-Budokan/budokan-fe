@@ -1,3 +1,4 @@
+import { AccessPending } from '@/components/dashboard/access-pending';
 import { EnhancedDashboard } from '@/components/dashboard/enhanced-dashboard';
 import { StudentDashboard } from '@/components/dashboard/student-dashboard';
 import { authService } from '@/lib/api/services/auth-service';
@@ -10,6 +11,8 @@ export default async function DashboardPage() {
     String(user?.id)
   );
 
+  console.log(userPrivileges.items.map((p) => p.name));
+
   if (user && hasAccess('admin', userPrivileges.items || [])) {
     return <EnhancedDashboard />;
   }
@@ -18,9 +21,10 @@ export default async function DashboardPage() {
     return <EnhancedDashboard />;
   }
 
-  // if (user && hasAccess('student', userPrivileges.items || [])) {
-  //   return <StudentDashboard userId={user.id} />;
-  // }
+  if (user && hasAccess('student', userPrivileges.items || [])) {
+    return <StudentDashboard userId={user.id} />;
+  }
 
-  return <StudentDashboard userId={user?.id} />;
+  // User exists but doesn't have admin, instructor, or student privileges
+  return <AccessPending />;
 }

@@ -211,24 +211,15 @@ export function DisciplineDetailView({
               </TabsList>
 
               <TabsContent value='ranks' className='space-y-6 p-6'>
-                <DisciplineRanksTab
-                  disciplineId={disciplineId}
-                  discipline={discipline}
-                />
+                <DisciplineRanksTab discipline={discipline} />
               </TabsContent>
 
               <TabsContent value='enrollments' className='space-y-6 p-6'>
-                <DisciplineEnrollmentsTab
-                  disciplineId={disciplineId}
-                  discipline={discipline}
-                />
+                <DisciplineEnrollmentsTab discipline={discipline} />
               </TabsContent>
 
               <TabsContent value='schedules' className='space-y-6 p-6'>
-                <DisciplineSchedulesTab
-                  disciplineId={disciplineId}
-                  discipline={discipline}
-                />
+                <DisciplineSchedulesTab discipline={discipline} />
               </TabsContent>
             </Tabs>
           </CardContent>

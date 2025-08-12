@@ -16,7 +16,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { useManageDisciplines } from '@/lib/api/queries/use-manage-disciplines';
 import { useManageInstructors } from '@/lib/api/queries/use-manage-instructors';
+import { useManageRankings } from '@/lib/api/queries/use-manage-rankings';
 import { useManageUsers } from '@/lib/api/queries/use-manage-users';
 import { User } from '@/types/user';
 import { motion } from 'framer-motion';
@@ -54,74 +56,6 @@ interface Rank {
   disciplineName: string;
 }
 
-// Mock data - replace with actual API calls
-const mockDisciplines: Discipline[] = [
-  {
-    id: 1,
-    name: 'Karate-Do',
-    description: 'Arte marcial japonesa',
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Judo',
-    description: 'Arte marcial de projeções',
-    status: 'active',
-  },
-  {
-    id: 3,
-    name: 'Aikido',
-    description: 'Arte marcial defensiva',
-    status: 'active',
-  },
-  { id: 4, name: 'Kendo', description: 'Esgrima japonesa', status: 'active' },
-];
-
-const mockRanks: Rank[] = [
-  {
-    id: 1,
-    idDiscipline: 1,
-    name: '7º Kyu',
-    description: 'Faixa Branca',
-    disciplineName: 'Karate-Do',
-  },
-  {
-    id: 2,
-    idDiscipline: 1,
-    name: '6º Kyu',
-    description: 'Faixa Amarela',
-    disciplineName: 'Karate-Do',
-  },
-  {
-    id: 3,
-    idDiscipline: 1,
-    name: '5º Kyu',
-    description: 'Faixa Laranja',
-    disciplineName: 'Karate-Do',
-  },
-  {
-    id: 8,
-    idDiscipline: 1,
-    name: '1º Dan',
-    description: 'Faixa Preta',
-    disciplineName: 'Karate-Do',
-  },
-  {
-    id: 9,
-    idDiscipline: 1,
-    name: '2º Dan',
-    description: 'Faixa Preta',
-    disciplineName: 'Karate-Do',
-  },
-  {
-    id: 10,
-    idDiscipline: 1,
-    name: '3º Dan',
-    description: 'Faixa Preta',
-    disciplineName: 'Karate-Do',
-  },
-];
-
 export function AddInstructorDisciplineModal({
   open,
   onOpenChange,
@@ -141,12 +75,21 @@ export function AddInstructorDisciplineModal({
 
   // Hooks
   const { useUsers } = useManageUsers();
+  const { useDisciplines } = useManageDisciplines();
+  const { useRankings } = useManageRankings();
   const { createInstructorDiscipline } = useManageInstructors();
 
   const pageSize = 20; // Load 20 users per page
   const { data: usersResponse, isLoading: isLoadingUsers } = useUsers(
     currentPage,
     pageSize
+  );
+
+  const { data: disciplinesResponse } = useDisciplines(1, 100);
+  const { data: ranksResponse } = useRankings(
+    1,
+    100,
+    selectedDiscipline ? { idDiscipline: selectedDiscipline.id } : undefined
   );
 
   // Update users list when new data comes in
@@ -217,10 +160,6 @@ export function AddInstructorDisciplineModal({
       }
     },
     [loadMoreUsers]
-  );
-
-  const availableRanks = mockRanks.filter((rank) =>
-    selectedDiscipline ? rank.idDiscipline === selectedDiscipline.id : false
   );
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -296,7 +235,7 @@ export function AddInstructorDisciplineModal({
           Associar Instrutor
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[95vh] max-w-6xl overflow-hidden sm:max-w-4xl'>
+      <DialogContent className='max-h-[95vh] max-w-6xl overflow-y-auto sm:max-w-4xl'>
         <DialogHeader className='pb-4'>
           <DialogTitle className='flex items-center gap-3 text-2xl font-bold text-gray-900'>
             <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white'>
@@ -460,7 +399,7 @@ export function AddInstructorDisciplineModal({
 
               <ScrollArea className='h-96'>
                 <div className='space-y-3'>
-                  {mockDisciplines.map((discipline) => (
+                  {disciplinesResponse?.data.items.map((discipline) => (
                     <motion.div
                       key={discipline.id}
                       whileHover={{ scale: 1.02 }}
@@ -521,7 +460,7 @@ export function AddInstructorDisciplineModal({
               ) : (
                 <ScrollArea className='h-96'>
                   <div className='space-y-2'>
-                    {availableRanks.map((rank) => (
+                    {ranksResponse?.data?.items.map((rank) => (
                       <motion.div
                         key={rank.id}
                         whileHover={{ scale: 1.02 }}

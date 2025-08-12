@@ -22,6 +22,7 @@ import { useManageTrainingSchedules } from '@/lib/api/queries/use-manage-trainin
 import { Discipline } from '@/types/discipline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
@@ -32,10 +33,10 @@ const trainingScheduleFormSchema = z
     weekday: z.string().min(1, 'Dia da semana é obrigatório'),
     startTime: z
       .string()
-      .regex(/^\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM)'),
+      .regex(/^\d{2}:\d{2}$/i, 'Formato de hora inválido (HH:MM)'),
     endTime: z
       .string()
-      .regex(/^\d{2}:\d{2}$/, 'Formato de hora inválido (HH:MM)'),
+      .regex(/^\d{2}:\d{2}$/i, 'Formato de hora inválido (HH:MM)'),
   })
   .refine(
     (data) => {
@@ -56,12 +57,14 @@ interface AddTrainingScheduleFormProps {
   onSuccess: () => void;
   isAdmin: boolean;
   userDisciplines: Discipline[];
+  disciplineId?: string; // if provided, lock to this discipline and hide selector
 }
 
 export function AddTrainingScheduleForm({
   onSuccess,
   isAdmin,
   userDisciplines,
+  disciplineId,
 }: AddTrainingScheduleFormProps) {
   const { createTrainingSchedule } = useManageTrainingSchedules();
   const { useDisciplines } = useManageDisciplines();
@@ -70,24 +73,37 @@ export function AddTrainingScheduleForm({
   const form = useForm<TrainingScheduleFormValues>({
     resolver: zodResolver(trainingScheduleFormSchema),
     defaultValues: {
-      idDiscipline: '',
+      idDiscipline: disciplineId ? String(disciplineId) : '',
       weekday: '',
       startTime: '',
       endTime: '',
     },
   });
 
+  // If disciplineId changes while modal is open, sync it to the form
+  useEffect(() => {
+    if (disciplineId) {
+      form.setValue('idDiscipline', String(disciplineId));
+    }
+  }, [disciplineId, form]);
+
   const onSubmit = async (data: TrainingScheduleFormValues) => {
     try {
+      const normalizeTime = (t: string) => t.slice(0, 5); // ensure HH:MM
       const payload = {
         ...data,
         idDiscipline: Number(data.idDiscipline),
-        startTime: `${data.startTime}`,
-        endTime: `${data.endTime}`,
+        startTime: normalizeTime(data.startTime),
+        endTime: normalizeTime(data.endTime),
       };
       await createTrainingSchedule.mutateAsync(payload);
       toast.success('Horário de treino criado com sucesso!');
-      form.reset();
+      form.reset({
+        idDiscipline: disciplineId ? String(disciplineId) : '',
+        weekday: '',
+        startTime: '',
+        endTime: '',
+      });
       onSuccess();
     } catch (error) {
       toast.error('Erro ao criar horário de treino');
@@ -112,36 +128,38 @@ export function AddTrainingScheduleForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <div className='grid gap-4'>
-          <FormField
-            control={form.control}
-            name='idDiscipline'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Disciplina</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Selecione uma disciplina' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {availableDisciplines.map((discipline: Discipline) => (
-                      <SelectItem
-                        key={discipline.id}
-                        value={discipline.id.toString()}
-                      >
-                        {discipline.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {!disciplineId && (
+            <FormField
+              control={form.control}
+              name='idDiscipline'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Disciplina</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder='Selecione uma disciplina' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {availableDisciplines.map((discipline: Discipline) => (
+                        <SelectItem
+                          key={discipline.id}
+                          value={discipline.id.toString()}
+                        >
+                          {discipline.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <FormField
             control={form.control}
@@ -179,7 +197,7 @@ export function AddTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Início</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input type='time' step={60} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -193,7 +211,7 @@ export function AddTrainingScheduleForm({
                 <FormItem>
                   <FormLabel>Horário de Fim</FormLabel>
                   <FormControl>
-                    <Input type='time' {...field} />
+                    <Input type='time' step={60} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,7 +225,12 @@ export function AddTrainingScheduleForm({
             type='button'
             variant='outline'
             onClick={() => {
-              form.reset();
+              form.reset({
+                idDiscipline: disciplineId ? String(disciplineId) : '',
+                weekday: '',
+                startTime: '',
+                endTime: '',
+              });
               onSuccess();
             }}
           >

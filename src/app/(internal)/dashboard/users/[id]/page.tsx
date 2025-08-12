@@ -70,7 +70,6 @@ export default function UserDetailPage({ params }: UserDetailPageProps) {
       refetch(); // Refresh user data
     } catch (error) {
       console.error('Error updating user:', error);
-      toast.error('Erro ao atualizar usuário. Tente novamente.');
     }
   };
 

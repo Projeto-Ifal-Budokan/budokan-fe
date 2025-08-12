@@ -66,7 +66,6 @@ import { StatusChangeModal as InstructorStatusModal } from '../../instructors/st
 import { StatusChangeModal as MatriculationStatusModal } from '../../matriculations/status-change-modal';
 
 interface DisciplineEnrollmentsTabProps {
-  disciplineId: string;
   discipline: Discipline;
 }
 
@@ -447,7 +446,6 @@ function SimpleInstructorAssignmentForm({
 }
 
 export function DisciplineEnrollmentsTab({
-  disciplineId,
   discipline,
 }: DisciplineEnrollmentsTabProps) {
   const [activeTab, setActiveTab] = useState('students');
@@ -499,13 +497,13 @@ export function DisciplineEnrollmentsTab({
   // Fetch instructors for this discipline
   const { data: instructorsResponse, isLoading: isLoadingInstructors } =
     useInstructorDisciplines(1, 50, {
-      disciplineId: Number(disciplineId),
+      idDiscipline: String(discipline.id),
     });
 
   // Fetch student matriculations for this discipline
   const { data: matriculationsResponse, isLoading: isLoadingMatriculations } =
     useMatriculations(1, 50, {
-      discipline: disciplineId,
+      idDiscipline: String(discipline.id),
     });
 
   const instructorEnrollments = instructorsResponse?.data?.items || [];
@@ -835,18 +833,7 @@ export function DisciplineEnrollmentsTab({
                                     Ativar
                                   </DropdownMenuItem>
                                 )}
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    handleMatriculationStatusChange(
-                                      enrollment,
-                                      'graduated'
-                                    )
-                                  }
-                                  className='text-yellow-600'
-                                >
-                                  <GraduationCap className='mr-2 h-4 w-4' />
-                                  Graduar
-                                </DropdownMenuItem>
+
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() =>
@@ -1051,7 +1038,7 @@ export function DisciplineEnrollmentsTab({
             </DialogDescription>
           </DialogHeader>
           <SimpleStudentMatriculationForm
-            disciplineId={disciplineId}
+            disciplineId={String(discipline.id)}
             onSuccess={() => setIsAddStudentModalOpen(false)}
           />
         </DialogContent>
@@ -1073,7 +1060,7 @@ export function DisciplineEnrollmentsTab({
             </DialogDescription>
           </DialogHeader>
           <SimpleInstructorAssignmentForm
-            disciplineId={disciplineId}
+            disciplineId={String(discipline.id)}
             onSuccess={() => setIsAddInstructorModalOpen(false)}
           />
         </DialogContent>
@@ -1108,7 +1095,6 @@ export function DisciplineEnrollmentsTab({
           const statusMessages = {
             active: 'ativar',
             inactive: 'desativar',
-            graduated: 'graduar',
           };
           return statusMessages[newStatus as keyof typeof statusMessages];
         }}
