@@ -1,27 +1,48 @@
 'use client';
 
+import { useDebounce } from '@/hooks/use-debounce';
 import { usePosts } from '@/lib/api/queries/use-posts';
 import { Post } from '@/types/api';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pagination } from './pagination';
 import { PostCard } from './post-card';
+import { SearchFilters } from './search-filters';
 
 export const PostsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const pageSize = 9;
+
+  // Reset para primeira página quando mudar a busca
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm]);
 
   const {
     data: posts,
     isLoading,
     error,
     isFetching,
-  } = usePosts({ page: currentPage, pageSize });
+  } = usePosts({
+    page: currentPage,
+    pageSize,
+    search: debouncedSearchTerm,
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
   };
 
   if (isLoading) {
@@ -61,12 +82,22 @@ export const PostsList = () => {
     return (
       <section className='bg-gray-50 py-16'>
         <div className='container'>
+          <SearchFilters
+            searchTerm={searchTerm}
+            onSearchChange={handleSearchChange}
+            onClearSearch={handleClearSearch}
+            isLoading={isLoading}
+          />
           <div className='text-center'>
             <h2 className='mb-4 text-2xl font-bold text-gray-900'>
-              Nenhum post encontrado
+              {debouncedSearchTerm
+                ? 'Nenhum post encontrado'
+                : 'Nenhum post encontrado'}
             </h2>
             <p className='text-gray-600'>
-              Ainda não há posts publicados. Volte em breve!
+              {debouncedSearchTerm
+                ? `Nenhum post encontrado para "${debouncedSearchTerm}". Tente outros termos.`
+                : 'Ainda não há posts publicados. Volte em breve!'}
             </p>
           </div>
         </div>
@@ -87,8 +118,19 @@ export const PostsList = () => {
           <p className='text-lg text-gray-600'>
             Confira as últimas novidades e informações sobre artes marciais
           </p>
-          <p className='mt-2 text-sm text-gray-500'>
+        </div>
+
+        <SearchFilters
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          onClearSearch={handleClearSearch}
+          isLoading={isLoading}
+        />
+
+        <div className='mb-8 text-center'>
+          <p className='text-sm text-gray-500'>
             Mostrando {posts.data.length} de {totalPosts} posts
+            {debouncedSearchTerm && ` para "${debouncedSearchTerm}"`}
           </p>
           {isFetching && (
             <div className='mt-4 flex justify-center'>
