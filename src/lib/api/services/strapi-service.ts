@@ -11,6 +11,7 @@ export const strapiService = {
     const params = new URLSearchParams({
       'pagination[page]': page.toString(),
       'pagination[pageSize]': pageSize.toString(),
+      'populate': 'featuredImage',
     });
 
     // Adiciona filtros de busca se houver termo de pesquisa
@@ -31,7 +32,11 @@ export const strapiService = {
   },
 
   async getPost(documentId: string) {
-    const response = await fetch(`${STRAPI_BASE_URL}/posts/${documentId}`);
+    const params = new URLSearchParams({
+      'populate': 'featuredImage',
+    });
+    
+    const response = await fetch(`${STRAPI_BASE_URL}/posts/${documentId}?${params}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,8 +1,10 @@
 'use client';
 
 import { Post } from '@/types/api';
+import { getStrapiImageFormat } from '@/utils/image-utils';
 import { decode } from 'he';
 import { Calendar, Clock, User } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface PostCardProps {
@@ -37,8 +39,27 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   const excerpt = stripHtml(decodedExcerpt).substring(0, 150) + '...';
 
+  // Obtém a URL da imagem destacada ou usa placeholder
+  const featuredImageUrl = post.featuredImage
+    ? getStrapiImageFormat(post.featuredImage, 'medium')
+    : '/placeholder-image.png';
+
   return (
     <article className='group overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl'>
+      {/* Imagem destacada ou placeholder */}
+      <div className='relative h-48 overflow-hidden'>
+        <Image
+          src={featuredImageUrl}
+          alt={
+            post.featuredImage?.alternativeText ||
+            decodedTitle ||
+            'Imagem do post'
+          }
+          fill
+          className='object-cover transition-transform duration-300 group-hover:scale-105'
+        />
+      </div>
+
       <div className='p-6'>
         <div className='mb-4 flex items-center gap-4 text-sm text-gray-500'>
           <div className='flex items-center gap-1'>

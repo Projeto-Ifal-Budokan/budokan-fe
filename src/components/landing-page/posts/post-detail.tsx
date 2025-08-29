@@ -1,8 +1,10 @@
 'use client';
 
 import { usePost } from '@/lib/api/queries/use-post';
+import { getStrapiImageFormat } from '@/utils/image-utils';
 import { decode } from 'he';
 import { ArrowLeft, Calendar, Clock, Loader2, Tag, User } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ContentRenderer } from './content-renderer';
 
@@ -107,6 +109,11 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
   const decodedMetaTitle = decode(post.metaTitle || '');
   const decodedMetaDescription = decode(post.metaDescription || '');
 
+  // Obtém a URL da imagem destacada ou usa placeholder
+  const featuredImageUrl = post.featuredImage
+    ? getStrapiImageFormat(post.featuredImage, 'large')
+    : '/placeholder-image.png';
+
   return (
     <>
       {/* Hero Section */}
@@ -132,6 +139,27 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
       <section className='bg-white py-16'>
         <div className='container'>
           <div className='mx-auto max-w-4xl'>
+            {/* Imagem destacada ou placeholder */}
+            <div className='mb-8'>
+              <div className='relative h-96 overflow-hidden rounded-lg shadow-lg'>
+                <Image
+                  src={featuredImageUrl}
+                  alt={
+                    post.featuredImage?.alternativeText ||
+                    decodedTitle ||
+                    'Imagem do post'
+                  }
+                  fill
+                  className='object-cover'
+                />
+              </div>
+              {post.featuredImage?.caption && (
+                <p className='mt-2 text-center text-sm text-gray-500 italic'>
+                  {post.featuredImage.caption}
+                </p>
+              )}
+            </div>
+
             {/* Post Meta */}
             <div className='mb-8 flex flex-wrap items-center gap-6 text-sm text-gray-500'>
               <div className='flex items-center gap-2'>
