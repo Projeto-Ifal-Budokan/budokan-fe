@@ -3,6 +3,7 @@
 import { usePost } from '@/lib/api/queries/use-post';
 import { ArrowLeft, Calendar, Clock, Loader2, Tag, User } from 'lucide-react';
 import Link from 'next/link';
+import { ContentRenderer } from './content-renderer';
 
 interface PostDetailProps {
   slug: string;
@@ -171,14 +172,7 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
             )}
 
             {/* Content */}
-            <div className='prose prose-lg max-w-none'>
-              <div
-                className='leading-relaxed text-gray-800'
-                dangerouslySetInnerHTML={{
-                  __html: post.content || '<p>Conteúdo não disponível</p>',
-                }}
-              />
-            </div>
+            <ContentRenderer content={post.content} />
 
             {/* Post Footer */}
             <div className='mt-12 border-t border-gray-200 pt-8'>
