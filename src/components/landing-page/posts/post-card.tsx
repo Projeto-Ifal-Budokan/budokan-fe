@@ -73,7 +73,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         )}
 
         <Link
-          href={`/posts/${post.slug}`}
+          href={`/posts/${post.documentId}`}
           className='inline-flex items-center font-medium text-blue-600 transition-colors hover:text-blue-800'
         >
           Ler mais

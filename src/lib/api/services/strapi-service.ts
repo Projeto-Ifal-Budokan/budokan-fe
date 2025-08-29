@@ -29,4 +29,14 @@ export const strapiService = {
     
     return response.json();
   },
+
+  async getPost(documentId: string) {
+    const response = await fetch(`${STRAPI_BASE_URL}/posts/${documentId}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
+  },
 }; 
