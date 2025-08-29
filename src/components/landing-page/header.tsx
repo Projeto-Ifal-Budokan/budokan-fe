@@ -1,6 +1,6 @@
 'use client';
 
-import { User2 } from 'lucide-react';
+import { Newspaper, User2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/#instructors', label: 'Senseis' },
   { href: '/#schedule', label: 'Horários' },
   { href: '/#contact', label: 'Contato' },
+  // { href: '/#posts', label: 'Posts' },
   { href: '/team-developers', label: 'Equipe' },
 ];
 
@@ -59,6 +60,15 @@ export const Header = () => {
               {link.label}
             </Link>
           ))}
+          <Link href='/posts'>
+            <Button
+              size='lg'
+              className='border-0 bg-white text-blue-800 hover:bg-gray-100/90'
+            >
+              <Newspaper className='size-4' />
+              Posts
+            </Button>
+          </Link>
           <Link href='/login'>
             <Button
               size='lg'
