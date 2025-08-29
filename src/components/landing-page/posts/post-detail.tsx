@@ -1,6 +1,7 @@
 'use client';
 
 import { usePost } from '@/lib/api/queries/use-post';
+import { decode } from 'he';
 import { ArrowLeft, Calendar, Clock, Loader2, Tag, User } from 'lucide-react';
 import Link from 'next/link';
 import { ContentRenderer } from './content-renderer';
@@ -99,6 +100,13 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
     return html.replace(/<[^>]*>/g, '');
   };
 
+  // Decodifica entidades HTML para todos os campos
+  const decodedTitle = decode(post.title || '');
+  const decodedAuthor = decode(post.author || '');
+  const decodedExcerpt = decode(post.excerpt || '');
+  const decodedMetaTitle = decode(post.metaTitle || '');
+  const decodedMetaDescription = decode(post.metaDescription || '');
+
   return (
     <>
       {/* Hero Section */}
@@ -113,7 +121,7 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
               <span>Voltar para posts</span>
             </Link>
             <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
-              {post.title || 'Título não disponível'}
+              {decodedTitle || 'Título não disponível'}
             </h1>
             <div className='h-1 w-20 bg-yellow-500'></div>
           </div>
@@ -128,7 +136,7 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
             <div className='mb-8 flex flex-wrap items-center gap-6 text-sm text-gray-500'>
               <div className='flex items-center gap-2'>
                 <User className='h-4 w-4' />
-                <span>{post.author || 'Autor desconhecido'}</span>
+                <span>{decodedAuthor || 'Autor desconhecido'}</span>
               </div>
               <div className='flex items-center gap-2'>
                 <Calendar className='h-4 w-4' />
@@ -163,10 +171,10 @@ export const PostDetail = ({ slug }: PostDetailProps) => {
             )}
 
             {/* Excerpt */}
-            {post.excerpt && (
+            {decodedExcerpt && (
               <div className='mb-8'>
                 <p className='text-lg leading-relaxed text-gray-600'>
-                  {stripHtml(post.excerpt)}
+                  {stripHtml(decodedExcerpt)}
                 </p>
               </div>
             )}

@@ -7,6 +7,8 @@ interface PostPageProps {
   }>;
 }
 
+import { decode } from 'he';
+
 export async function generateMetadata({
   params,
 }: PostPageProps): Promise<Metadata> {
@@ -19,15 +21,21 @@ export async function generateMetadata({
     const postData = await response.json();
 
     if (postData.data) {
+      // Decodifica entidades HTML para metadata
+      const decodedTitle = decode(postData.data.title || '');
+      const decodedMetaTitle = decode(postData.data.metaTitle || '');
+      const decodedMetaDescription = decode(
+        postData.data.metaDescription || ''
+      );
+      const decodedExcerpt = decode(postData.data.excerpt || '');
+
       return {
-        title: `${postData.data.title} - Budokan-Ryu`,
+        title: `${decodedTitle} - Budokan-Ryu`,
         description:
-          postData.data.metaDescription ||
-          postData.data.excerpt ||
-          'Detalhes do post',
+          decodedMetaDescription || decodedExcerpt || 'Detalhes do post',
         openGraph: {
-          title: postData.data.metaTitle || postData.data.title,
-          description: postData.data.metaDescription || postData.data.excerpt,
+          title: decodedMetaTitle || decodedTitle,
+          description: decodedMetaDescription || decodedExcerpt,
           url: `https://www.budokanryu.com.br/posts/${slug}`,
         },
       };

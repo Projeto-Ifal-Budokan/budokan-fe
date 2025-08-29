@@ -1,5 +1,6 @@
 'use client';
 
+import { decode } from 'he';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -13,15 +14,18 @@ export const ContentRenderer = ({ content }: ContentRendererProps) => {
     return <p className='text-gray-500 italic'>Conteúdo não disponível</p>;
   }
 
+  // Decodifica entidades HTML automaticamente
+  const decodedContent = decode(content);
+
   // Verifica se o conteúdo contém HTML
-  const hasHtml = /<[^>]*>/g.test(content);
+  const hasHtml = /<[^>]*>/g.test(decodedContent);
 
   // Se contém HTML, renderiza como HTML
   if (hasHtml) {
     return (
       <div
         className='prose prose-lg max-w-none leading-relaxed text-gray-800'
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: decodedContent }}
       />
     );
   }
@@ -133,7 +137,7 @@ export const ContentRenderer = ({ content }: ContentRendererProps) => {
           ),
         }}
       >
-        {content}
+        {decodedContent}
       </ReactMarkdown>
     </div>
   );
