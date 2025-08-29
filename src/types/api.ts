@@ -26,6 +26,16 @@ export interface Post {
   updatedAt: string;
 }
 
+export interface PaginationMeta {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+}
+
 export interface PostsResponse {
   data: Post[];
+  meta: {
+    pagination: PaginationMeta;
+  };
 }
