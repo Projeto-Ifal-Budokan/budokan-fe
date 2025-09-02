@@ -9,9 +9,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 
-import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel.png';
-import karetdoCarouselAsset from '@/assets/images/karatedo-carousel.png';
-import kendoCarouselAsset from '@/assets/images/kendo-carousel.png';
+import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel-new.jpg';
+import karetdoCarouselAsset from '@/assets/images/karatedo-carousel-new.jpg';
+import kendoCarouselAsset from '@/assets/images/sensei-kendo-new-carousel.jpg';
+import { cn } from '@/lib/utils';
 
 interface CarouselSlide {
   id: number;
@@ -112,7 +113,10 @@ export default function HeroCarousel() {
               src={slide.image || '/placeholder.svg'}
               alt={slide.title}
               fill
-              className='object-cover object-center'
+              className={cn(
+                'object-cover',
+                index === 1 ? 'object-bottom' : 'object-center'
+              )}
               priority={index === 0}
             />
             <div className='absolute inset-0 z-20 container flex flex-col items-center justify-center text-center text-white'>
