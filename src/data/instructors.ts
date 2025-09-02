@@ -13,7 +13,7 @@ export const instructors = [
   },
   {
     name: 'Sensei Hsie',
-    title: 'Hsie Sashan',
+    title: 'Hsie Shasan',
     description:
       'Com mais de 50 anos de experiência, é responsável pela divisão de Kendo da Budokan-Ryu. É referência na formação de novos kendokas e pela precisão e rápidez da sua técnica.',
     imageSrc: senseiKendoAsset.src,

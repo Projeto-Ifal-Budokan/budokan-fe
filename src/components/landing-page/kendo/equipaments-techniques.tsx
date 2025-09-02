@@ -1,7 +1,7 @@
+import kendoAsset2 from '@/assets/images/kendo-technique-new.jpg';
+import kendoAsset from '@/assets/images/kendo3.jpeg';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import kendoAsset from '@/assets/images/kendo3.jpeg'
-import kendoAsset2 from '@/assets/images/kendo.png'
 
 export const EquipamentsTechniquesSection = () => {
   return (
