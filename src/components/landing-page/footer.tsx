@@ -19,7 +19,7 @@ export const Footer = () => {
             </div>
             <p className='mb-4 text-sm opacity-70'>
               Associação de Artes Marciais Budokan-Ryu, dedicada ao ensino e
-              preservação de artes marciais tradicionais japonesas desde 1985.
+              preservação de artes marciais tradicionais japonesas desde 1992.
             </p>
           </div>
           <div>

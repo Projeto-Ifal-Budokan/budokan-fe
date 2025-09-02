@@ -1,5 +1,5 @@
-import senseiKarateAsset from '@/assets/images/sensei-karate.jpg';
 import senseiArcheryAsset from '@/assets/images/sensei-archery.jpeg';
+import senseiKarateAsset from '@/assets/images/sensei-karate.jpg';
 import senseiKendoAsset from '@/assets/images/sensei-kendo.jpeg';
 
 export const instructors = [
@@ -7,7 +7,7 @@ export const instructors = [
     name: 'Sensei Chicão',
     title: 'Francisco Araújo',
     description:
-      'Fundador da Budokan-Ryu, treina Karate há mais de 40 anos. Formado diretamente pelo Sensei Okuda e 5º Dan, é reconhecido nacionalmente por sua técnica e dedicação ao ensino.',
+      'Fundador da Budokan-Ryu, treina Karate há mais de 52 anos, faixa preta há mais de 42 anos. Formado diretamente pelo Sensei Okuda e 5º Dan, é reconhecido nacionalmente por sua técnica e dedicação ao ensino.',
     imageSrc: senseiKarateAsset.src,
     alt: 'Sensei Chicão',
   },
