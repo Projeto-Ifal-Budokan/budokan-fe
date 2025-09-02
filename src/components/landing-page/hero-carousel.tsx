@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 
-import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel.png';
+import arqueariaCarouselAsset from '@/assets/images/arquearia-carousel-new.jpg';
 import karetdoCarouselAsset from '@/assets/images/karatedo-carousel-new.jpg';
 import kendoCarouselAsset from '@/assets/images/sensei-kendo-new-carousel.jpg';
 import { cn } from '@/lib/utils';
