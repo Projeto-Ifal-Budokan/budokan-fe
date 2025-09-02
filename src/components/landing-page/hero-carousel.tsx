@@ -98,7 +98,7 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className='relative h-[600px] overflow-hidden'>
+    <div className='relative h-[650px] overflow-hidden'>
       {/* Carousel slides */}
       <div className='relative h-full'>
         {slides.map((slide, index) => (
@@ -115,7 +115,8 @@ export default function HeroCarousel() {
               fill
               className={cn(
                 'object-cover',
-                index === 1 ? 'object-bottom' : 'object-center'
+                index === 1 ? 'object-bottom' : 'object-center',
+                index === 0 ? 'object-[center_15%]' : 'object-center'
               )}
               priority={index === 0}
             />
