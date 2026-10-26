@@ -55,7 +55,7 @@ jobs:
           key: ${{ secrets.CONTABO_KEY }}
           envs: NEXT_PUBLIC_API_URL
           script: |
-            cd /home/budokan/budokan-fe
+            cd /opt/budokan/budokan-fe
 
             chmod +x deploy.sh
 
