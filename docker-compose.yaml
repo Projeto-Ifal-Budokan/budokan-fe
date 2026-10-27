@@ -13,6 +13,11 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      # o Next fala com o CMS pelo alias interno da swag_default, entao a lista de
+      # depoimentos funciona sem o dominio strapi. estar no DNS. A chave de envio vive
+      # so aqui: ela nunca vai para o bundle do navegador.
+      - STRAPI_URL=${STRAPI_URL:-http://budokan-cms:1337/api}
+      - STRAPI_FEEDBACK_KEY=${STRAPI_FEEDBACK_KEY}
     # Sem publicar porta: o SWAG chega ate aqui pela rede swag_default.
     # A porta 3000 ja esta ocupada por outro projeto nesta maquina.
     restart: unless-stopped
