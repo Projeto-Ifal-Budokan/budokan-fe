@@ -11,8 +11,8 @@ services:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    ports:
-      - '3000:3000'
+    # Sem publicar porta: o SWAG chega ate aqui pela rede swag_default.
+    # A porta 3000 ja esta ocupada por outro projeto nesta maquina.
     restart: unless-stopped
     healthcheck:
       test:
@@ -37,7 +37,11 @@ services:
     #       memory: 512M
     #       cpus: '0.5'
     networks:
-      - swag_default
+      # alias unico: o nome do servico ("app") viraria alias na rede compartilhada
+      # e colidiria com o "app" de outros projetos
+      swag_default:
+        aliases:
+          - budokan-fe
 
 networks:
   swag_default:
