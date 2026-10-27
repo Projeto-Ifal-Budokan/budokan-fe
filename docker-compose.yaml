@@ -1,5 +1,7 @@
 services:
-  app:
+  # nome do servico = alias DNS na swag_default compartilhada; "app" dividiria a
+  # resolugao com o backend e com projetos de terceiros
+  budokan-fe:
     build:
       context: .
       dockerfile: Dockerfile
@@ -39,11 +41,8 @@ services:
     #       memory: 512M
     #       cpus: '0.5'
     networks:
-      # alias unico: o nome do servico ("app") viraria alias na rede compartilhada
-      # e colidiria com o "app" de outros projetos
+      # sem alias explicito: o nome do servico ja e "budokan-fe"
       swag_default:
-        aliases:
-          - budokan-fe
 
 networks:
   swag_default:
