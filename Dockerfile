@@ -30,6 +30,10 @@ COPY . .
 # Set environment variables for build
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# NEXT_PUBLIC_* congela no build: trocar o client ID exige rebuild, nao so restart.
+# Ausente = o formulario mostra o login como indisponivel e a server action recusa.
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ENV NODE_ENV=production
 # ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PRIVATE_STANDALONE=true
