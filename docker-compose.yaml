@@ -8,6 +8,7 @@ services:
       args:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NODE_ENV=production
+        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     container_name: frontend-budokanryu
     environment:
       - NODE_ENV=production
@@ -18,6 +19,9 @@ services:
       # so aqui: ela nunca vai para o bundle do navegador.
       - STRAPI_URL=${STRAPI_URL:-http://budokan-cms:1337/api}
       - STRAPI_FEEDBACK_KEY=${STRAPI_FEEDBACK_KEY}
+      # client ID do Google e publico (vai no bundle do navegador); o segredo fica
+      # no Google, nunca aqui. Sem esta linha o depoimento fica sem envio.
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     # Sem publicar porta: o SWAG chega ate aqui pela rede swag_default.
     # A porta 3000 ja esta ocupada por outro projeto nesta maquina.
     restart: unless-stopped

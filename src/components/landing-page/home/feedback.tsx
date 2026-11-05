@@ -15,7 +15,9 @@ const Stars = ({ rating }: { rating: number | null }) => {
         <Star
           key={value}
           size={14}
-          className={value <= rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}
+          className={
+            value <= rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'
+          }
         />
       ))}
     </div>
@@ -54,15 +56,37 @@ export const FeedbackSection = async () => {
         ) : (
           <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
             {feedbacks.map((feedback) => (
-              <article key={feedback.id} className='rounded-lg bg-white p-6 shadow-sm'>
-                <div className='mb-3'>
-                  <h4 className='font-bold text-blue-900'>{feedback.authorName}</h4>
-                  <p className='text-sm text-gray-500'>
-                    {disciplineLabel(feedback.discipline)}
-                  </p>
-                  <Stars rating={feedback.rating} />
+              <article
+                key={feedback.id}
+                className='rounded-lg bg-white p-6 shadow-sm'
+              >
+                <div className='mb-3 flex items-center gap-3'>
+                  {feedback.authorPhotoUrl && (
+                    // img simples, nao next/image: a foto vem do CMS, e cada dominio
+                    // registrado no next.config e mais uma chance de quebrar o build
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={feedback.authorPhotoUrl}
+                      alt={`Foto de ${feedback.authorName}`}
+                      width={48}
+                      height={48}
+                      loading='lazy'
+                      className='h-12 w-12 shrink-0 rounded-full object-cover'
+                    />
+                  )}
+                  <div>
+                    <h4 className='font-bold text-blue-900'>
+                      {feedback.authorName}
+                    </h4>
+                    <p className='text-sm text-gray-500'>
+                      {disciplineLabel(feedback.discipline)}
+                    </p>
+                    <Stars rating={feedback.rating} />
+                  </div>
                 </div>
-                <p className='whitespace-pre-line text-gray-600'>{feedback.message}</p>
+                <p className='whitespace-pre-line text-gray-600'>
+                  {feedback.message}
+                </p>
               </article>
             ))}
           </div>

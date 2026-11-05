@@ -4,11 +4,15 @@
  * Roda no servidor do Next, direto pelo alias interno do Strapi na rede swag_default.
  * Isso importa por dois motivos: o site nao depende do dominio publico strapi. estar no
  * ar para mostrar depoimentos, e o navegador nunca fala com o CMS.
+ *
+ * authorPhotoUrl ja vem absoluto (o Strapi monta com STRAPI_URL), entao o site so repassa.
+ * O arquivo e servido pelo proprio CMS, do mesmo volume onde o Media Library grava.
  */
 
 export interface PublishedFeedback {
   id: string;
   authorName: string;
+  authorPhotoUrl: string;
   discipline: string;
   rating: number | null;
   message: string;
@@ -29,7 +33,7 @@ export const disciplineLabel = (value: string): string =>
   DISCIPLINE_LABEL[value] ?? 'Budokan-Ryu';
 
 export async function getPublishedFeedbacks(
-  limit = 6,
+  limit = 6
 ): Promise<PublishedFeedback[]> {
   const params = new URLSearchParams();
   params.append('pagination[page]', '1');
@@ -38,7 +42,14 @@ export async function getPublishedFeedbacks(
   // redundante com o middleware do Strapi, mas diz o que queremos: se alguem remover o
   // middleware la, o site continua mostrando so o que foi aprovado
   params.append('status', 'published');
-  for (const field of ['authorName', 'discipline', 'rating', 'message', 'publishedAt']) {
+  for (const field of [
+    'authorName',
+    'authorPhotoUrl',
+    'discipline',
+    'rating',
+    'message',
+    'publishedAt',
+  ]) {
     params.append('fields', field);
   }
 
@@ -46,7 +57,7 @@ export async function getPublishedFeedbacks(
     const response = await fetch(
       `${STRAPI_INTERNAL_URL}/feedbacks?${params.toString()}`,
       // o painel aprova quando quer; 5 minutos para aparecer no site e suficiente
-      { next: { revalidate: 300 } },
+      { next: { revalidate: 300 } }
     );
 
     if (!response.ok) {
@@ -61,6 +72,7 @@ export async function getPublishedFeedbacks(
     return (payload.data ?? []).map((item) => ({
       id: String(item.documentId ?? item.id ?? ''),
       authorName: String(item.authorName ?? ''),
+      authorPhotoUrl: String(item.authorPhotoUrl ?? ''),
       discipline: String(item.discipline ?? 'geral'),
       rating: typeof item.rating === 'number' ? item.rating : null,
       message: String(item.message ?? ''),
