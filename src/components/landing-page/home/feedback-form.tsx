@@ -296,10 +296,6 @@ export const FeedbackForm = () => {
         >
           Deixe seu depoimento
         </Button>
-        <p className='mt-3 text-sm text-gray-500'>
-          Leva dois passos: contar e confirmar. Seu depoimento passa por
-          aprovação antes de aparecer no site.
-        </p>
       </div>
 
       <Dialog open={open} onOpenChange={changeOpen}>
