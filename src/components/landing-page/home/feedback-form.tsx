@@ -1,6 +1,7 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import type { ZodError } from 'zod';
+
 import { Star } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,17 +16,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import {
   CONSENT_TEXT,
   DISCIPLINE_OPTIONS,
   feedbackSchema,
   MAX_MESSAGE,
+  stepOneSchema,
   type FeedbackFormValues,
-  type FeedbackPayload,
 } from '@/lib/validators/feedback';
 
 const inputClass =
-  'w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none';
+  'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none';
 
 const labelClass = 'mb-1 block text-sm font-medium text-gray-700';
 
@@ -46,6 +48,8 @@ interface GsiId {
     parent: HTMLElement,
     options: { theme?: string; size?: string; text?: string; shape?: string }
   ) => void;
+  /** esquece a escolha anterior — sem isso, "usar outra conta" volta para a mesma conta */
+  disableAutoSelect?: () => void;
 }
 
 declare global {
@@ -97,23 +101,42 @@ interface SignedIn {
   picture: string;
 }
 
+/**
+ * O botao que abre o formulario, e o formulario em duas etapas.
+ *
+ * Duas etapas porque o formulario antigo empilhava login, modalidade, nota, texto e
+ * autorizacao de uma vez: a pessoa via o Google pedir a conta dela antes de ter escrito
+ * qualquer coisa, que e exatamente a ordem que faz recuar. Agora ela conta a experiencia
+ * primeiro e so depois decide se assina com a conta — e a etapa dois mostra o espelho do
+ * que vai ser publicado, com nome e foto, antes de apertar Enviar.
+ *
+ * A validacao acompanha a divisao (veja `stepOneSchema`): cobrar o aceite na tela onde ainda
+ * nao se falou em identidade mostra erro sobre algo que a pessoa ainda nao viu.
+ */
 export const FeedbackForm = () => {
   const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
   const [signedIn, setSignedIn] = useState<SignedIn | null>(null);
   const [credential, setCredential] = useState('');
   const [gsiUnavailable, setGsiUnavailable] = useState(false);
   const renderedAt = useRef('');
   const buttonRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Sem resolver do zod no useForm: com resolver, cada envio conferia o formulario inteiro,
+   * inclusive o aceite, e a primeira etapa mostraria erro de autorizacao antes de a pessoa
+   * chegar nela. As regras continuam no mesmo `feedbackSchema` — o que mudou e o momento
+   * em que cada metade dele e aplicada.
+   */
   const {
     register,
     handleSubmit,
+    setError,
     reset,
     watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<FeedbackFormValues, unknown, FeedbackPayload>({
-    resolver: zodResolver(feedbackSchema),
+  } = useForm<FeedbackFormValues>({
     defaultValues: {
       discipline: 'geral',
       rating: '',
@@ -123,21 +146,42 @@ export const FeedbackForm = () => {
   });
 
   const rating = watch('rating');
-  const consent = watch('consent');
+  const message = watch('message');
+
+  const applyIssues = (error: ZodError) => {
+    for (const issue of error.issues) {
+      const field = issue.path[0];
+      if (typeof field === 'string') {
+        setError(
+          field as keyof FeedbackFormValues,
+          { message: issue.message },
+          { shouldFocus: true }
+        );
+      }
+    }
+  };
 
   const openDialog = () => {
     // carimbo usado na acao para descartar envio instantaneo (bot nao espera)
     renderedAt.current = String(Date.now());
+    setStep(1);
     setOpen(true);
   };
 
+  const changeOpen = (next: boolean) => {
+    setOpen(next);
+    // fechar pelo X ou pelo Esc nao pode deixar a pessoa na etapa 2 da ultima vez
+    if (!next) setStep(1);
+  };
+
   /**
-   * O botao do Google e renderizado quando o dialog monta: o container so existe ai.
-   * O callback recebe o ID token ja assinado pela conta que a pessoa escolheu — nome e foto
-   * vem dai, e o servidor confere. Nada de campo de nome: digitado, seria nome de terceiros.
+   * O botao do Google e renderizado na segunda etapa, quando o container existe e ainda nao
+   * ha conta escolhida. O callback recebe o ID token ja assinado pela conta que a pessoa
+   * escolheu — nome e foto vem dai, e o servidor confere. Nada de campo de nome: digitado,
+   * seria nome de terceiros.
    */
   useEffect(() => {
-    if (!open || GOOGLE_CLIENT_ID === '') return;
+    if (!open || step !== 2 || signedIn || GOOGLE_CLIENT_ID === '') return;
 
     loadGsi()
       .then(() => {
@@ -182,23 +226,50 @@ export const FeedbackForm = () => {
         });
       })
       .catch(() => setGsiUnavailable(true));
-  }, [open]);
+  }, [open, step, signedIn]);
 
-  const onSubmit = async (values: FeedbackPayload) => {
+  const useAnotherAccount = () => {
+    window.google?.accounts?.id?.disableAutoSelect?.();
+    setCredential('');
+    setSignedIn(null);
+  };
+
+  const onStepOne = (values: FeedbackFormValues) => {
+    const result = stepOneSchema.safeParse(values);
+    if (!result.success) {
+      applyIssues(result.error);
+      return;
+    }
+    setStep(2);
+  };
+
+  const onSubmit = async (values: FeedbackFormValues) => {
+    const result = feedbackSchema.safeParse(values);
+    if (!result.success) {
+      applyIssues(result.error);
+      // erro em campo da primeira etapa devolve para la; erro no aceite fica onde o aceite esta
+      const field = result.error.issues[0]?.path[0];
+      setStep(field === 'consent' ? 2 : 1);
+      return;
+    }
+
     if (credential === '') {
-      toast.error('Entre com o Google para enviar.');
+      toast.error('Confirme sua conta no Google para enviar.');
       return;
     }
 
     const formData = new FormData();
-    formData.set('discipline', values.discipline);
-    formData.set('rating', values.rating === null ? '' : String(values.rating));
-    formData.set('message', values.message);
-    formData.set('consent', values.consent ? 'true' : '');
+    formData.set('discipline', result.data.discipline);
+    formData.set(
+      'rating',
+      result.data.rating === null ? '' : String(result.data.rating)
+    );
+    formData.set('message', result.data.message);
+    formData.set('consent', result.data.consent ? 'true' : '');
     formData.set('renderedAt', renderedAt.current);
     formData.set('googleCredential', credential);
 
-    const result = await submitFeedbackAction(formData);
+    const response = await submitFeedbackAction(formData);
 
     // a mensagem e sempre a mesma: dizer "recebido" tambem no caso da isca preenchida
     // evita que um bot aprenda qual campo o denunciou
@@ -209,9 +280,10 @@ export const FeedbackForm = () => {
     reset();
     setCredential('');
     setSignedIn(null);
+    setStep(1);
 
-    if (!result.success && result.error) {
-      toast.error(result.error);
+    if (!response.success && response.error) {
+      toast.error(response.error);
     }
   };
 
@@ -225,128 +297,178 @@ export const FeedbackForm = () => {
           Deixe seu depoimento
         </Button>
         <p className='mt-3 text-sm text-gray-500'>
-          Entre com o Google. Seu depoimento passa por aprovacao antes de
-          aparecer no site.
+          Leva dois passos: contar e confirmar. Seu depoimento passa por
+          aprovação antes de aparecer no site.
         </p>
       </div>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className='max-w-lg'>
-          <DialogHeader>
+      <Dialog open={open} onOpenChange={changeOpen}>
+        <DialogContent className='max-w-xl'>
+          <DialogHeader className='space-y-2'>
+            <p className='text-xs font-semibold tracking-widest text-blue-700 uppercase'>
+              Etapa {step} de 2
+            </p>
             <DialogTitle className='text-blue-900'>
               Deixe seu depoimento
             </DialogTitle>
             <DialogDescription>
-              Conte como esta sendo sua experiencia na Budokan-Ryu.
+              {step === 1
+                ? 'Conte como está sendo sua experiência na Budokan-Ryu.'
+                : 'Confirme com o Google para assinar o que você escreveu.'}
             </DialogDescription>
+            <Progress
+              value={step === 1 ? 50 : 100}
+              className='mt-1 h-1.5 bg-blue-100'
+            />
           </DialogHeader>
 
-          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-            <div>
-              <span className={labelClass}>Login com o Google</span>
-              {GOOGLE_CLIENT_ID === '' || gsiUnavailable ? (
-                <p className='rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800'>
-                  Login com o Google indisponivel no momento, entao nao da para
-                  enviar depoimento.
-                </p>
-              ) : signedIn ? (
-                <div className='flex items-center gap-3 rounded-md border border-gray-200 p-3'>
-                  {/* img simples, nao next/image: a foto e servida pelo CMS, e cada dominio
-                      novo no next.config e uma chance a mais de quebrar o build */}
-                  {signedIn.picture && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={signedIn.picture}
-                      alt=''
-                      width={48}
-                      height={48}
-                      className='h-12 w-12 rounded-full object-cover'
-                    />
-                  )}
-                  <span className='text-sm text-gray-700'>{signedIn.name}</span>
-                </div>
-              ) : (
-                <div ref={buttonRef} />
-              )}
-            </div>
-
-            <div className='grid grid-cols-2 gap-4'>
-              <div>
-                <label htmlFor='feedback-discipline' className={labelClass}>
-                  Modalidade
-                </label>
-                <select
-                  id='feedback-discipline'
-                  {...register('discipline')}
-                  className={inputClass}
-                >
-                  {DISCIPLINE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <span className={labelClass}>Nota (opcional)</span>
-                <div className='flex gap-1 pt-1'>
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <button
-                      key={value}
-                      type='button'
-                      aria-label={`Nota ${value}`}
-                      onClick={() =>
-                        setValue('rating', value, { shouldValidate: true })
-                      }
-                      className='text-amber-500'
+          <form
+            onSubmit={handleSubmit(step === 1 ? onStepOne : onSubmit)}
+            className='space-y-5'
+          >
+            {step === 1 ? (
+              <>
+                <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+                  <div>
+                    <label htmlFor='feedback-discipline' className={labelClass}>
+                      Modalidade
+                    </label>
+                    <select
+                      id='feedback-discipline'
+                      {...register('discipline')}
+                      className={inputClass}
                     >
-                      <Star
-                        className={
-                          typeof rating === 'number' && rating >= value
-                            ? 'fill-amber-400'
-                            : 'text-gray-300'
-                        }
-                        size={22}
-                      />
-                    </button>
-                  ))}
+                      {DISCIPLINE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <span className={labelClass}>Nota (opcional)</span>
+                    <div className='flex gap-1 pt-1'>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <button
+                          key={value}
+                          type='button'
+                          aria-label={`Nota ${value} de 5`}
+                          onClick={() =>
+                            setValue(
+                              'rating',
+                              rating === value ? '' : value,
+                              { shouldValidate: true }
+                            )
+                          }
+                          className='text-amber-500'
+                        >
+                          <Star
+                            className={
+                              typeof rating === 'number' && rating >= value
+                                ? 'fill-amber-400'
+                                : 'text-gray-300'
+                            }
+                            size={22}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <label htmlFor='feedback-message' className={labelClass}>
-                Depoimento
-              </label>
-              <textarea
-                id='feedback-message'
-                rows={4}
-                maxLength={MAX_MESSAGE}
-                {...register('message')}
-                className={inputClass}
-              />
-              {errors.message ? (
-                <p className='mt-1 text-sm text-red-600'>
-                  {errors.message.message}
-                </p>
-              ) : (
-                <p className='mt-1 text-xs text-gray-400'>
-                  Entre 20 e {MAX_MESSAGE} caracteres.
-                </p>
-              )}
-            </div>
+                <div>
+                  <label htmlFor='feedback-message' className={labelClass}>
+                    Depoimento
+                  </label>
+                  <textarea
+                    id='feedback-message'
+                    rows={5}
+                    maxLength={MAX_MESSAGE}
+                    {...register('message')}
+                    className={inputClass}
+                  />
+                  <div className='mt-1 flex items-center justify-between gap-3'>
+                    {errors.message ? (
+                      <p className='text-sm text-red-600'>
+                        {errors.message.message}
+                      </p>
+                    ) : (
+                      <p className='text-xs text-gray-400'>
+                        Entre 20 e {MAX_MESSAGE} caracteres.
+                      </p>
+                    )}
+                    <span className='text-xs text-gray-400'>
+                      {typeof message === 'string' ? message.length : 0}/
+                      {MAX_MESSAGE}
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className='rounded-lg border border-gray-200 bg-gray-50 p-4'>
+                  {GOOGLE_CLIENT_ID === '' || gsiUnavailable ? (
+                    <p className='rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800'>
+                      Login com o Google indisponível no momento, então não dá
+                      para enviar depoimento.
+                    </p>
+                  ) : signedIn ? (
+                    <div className='flex items-center gap-3'>
+                      {/* img simples, nao next/image: a foto e servida pelo Google, e cada
+                          dominio novo no next.config e uma chance a mais de quebrar o build */}
+                      {signedIn.picture && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={signedIn.picture}
+                          alt=''
+                          width={48}
+                          height={48}
+                          className='h-12 w-12 shrink-0 rounded-full object-cover'
+                        />
+                      )}
+                      <div className='min-w-0'>
+                        <p className='truncate font-medium text-gray-800'>
+                          {signedIn.name}
+                        </p>
+                        <p className='text-xs text-gray-500'>
+                          É este nome e esta foto que vão aparecer junto do
+                          depoimento, depois da aprovação.
+                        </p>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={useAnotherAccount}
+                        className='ml-auto shrink-0 text-sm text-blue-700 underline-offset-2 hover:underline'
+                      >
+                        usar outra conta
+                      </button>
+                    </div>
+                  ) : (
+                    <div className='space-y-3'>
+                      <p className='text-sm text-gray-600'>
+                        Não criamos conta em lugar nenhum: usamos nome e foto da
+                        sua conta só para assinar este depoimento aqui no site.
+                      </p>
+                      <div ref={buttonRef} className='flex justify-center' />
+                    </div>
+                  )}
+                </div>
 
-            <label className='flex items-start gap-2 text-sm text-gray-600'>
-              <input
-                type='checkbox'
-                {...register('consent')}
-                className='mt-1'
-              />
-              <span>{CONSENT_TEXT}</span>
-            </label>
-            {errors.consent && (
-              <p className='text-sm text-red-600'>{errors.consent.message}</p>
+                <label className='flex items-start gap-2 text-sm text-gray-600'>
+                  <input
+                    type='checkbox'
+                    {...register('consent')}
+                    className='mt-1'
+                  />
+                  <span>{CONSENT_TEXT}</span>
+                </label>
+                {errors.consent && (
+                  <p className='text-sm text-red-600'>
+                    {errors.consent.message}
+                  </p>
+                )}
+              </>
             )}
 
             {/* isca anti-bot: humano nao ve e nao preenche; bot preenche e e descartado */}
@@ -359,21 +481,32 @@ export const FeedbackForm = () => {
               className='hidden'
             />
 
-            <div className='flex justify-end gap-3 pt-2'>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={() => setOpen(false)}
-              >
-                Cancelar
-              </Button>
-              <Button
-                type='submit'
-                disabled={isSubmitting || credential === '' || consent !== true}
-                className='bg-blue-900 text-white hover:bg-blue-800'
-              >
-                {isSubmitting ? 'Enviando...' : 'Enviar'}
-              </Button>
+            <div className='flex items-center justify-between gap-3 border-t border-gray-100 pt-4'>
+              {step === 1 ? (
+                <Button type='button' variant='ghost' onClick={() => setOpen(false)}>
+                  Cancelar
+                </Button>
+              ) : (
+                <Button type='button' variant='ghost' onClick={() => setStep(1)}>
+                  Voltar
+                </Button>
+              )}
+              {step === 1 ? (
+                <Button
+                  type='submit'
+                  className='bg-blue-900 px-6 text-white hover:bg-blue-800'
+                >
+                  Continuar
+                </Button>
+              ) : (
+                <Button
+                  type='submit'
+                  disabled={isSubmitting || credential === ''}
+                  className='bg-blue-900 px-6 text-white hover:bg-blue-800 disabled:bg-blue-300'
+                >
+                  {isSubmitting ? 'Enviando...' : 'Enviar depoimento'}
+                </Button>
+              )}
             </div>
           </form>
         </DialogContent>
