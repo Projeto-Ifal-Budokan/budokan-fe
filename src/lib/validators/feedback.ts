@@ -12,7 +12,8 @@ import { z } from 'zod';
 export const MIN_NAME = 2;
 export const MAX_NAME = 60;
 export const MIN_MESSAGE = 20;
-export const MAX_MESSAGE = 500;
+/** 600 e o limite do proprio CMS (schema e controller). Alguem ja escreveu 502. */
+export const MAX_MESSAGE = 600;
 
 /**
  * Texto do consentimento. Publicar nome e rosto de alguem e publicacao de dado pessoal,
@@ -41,6 +42,21 @@ export const feedbackSchema = z.object({
 
 export type FeedbackFormValues = z.input<typeof feedbackSchema>;
 export type FeedbackPayload = z.output<typeof feedbackSchema>;
+
+/**
+ * O que a primeira etapa do formulario pede.
+ *
+ * O formulario e em duas etapas, e a validacao acompanha a divisao: cobrar o consentimento
+ * na tela onde ainda nao se falou em identidade faz aparecer erro sobre algo que a pessoa
+ * ainda nao viu. As regras continuam sendo as mesmas do `feedbackSchema` — um schema so, do
+ * qual este e um recorte. Duplicar regra em dois lugares e o caminho classico para o
+ * navegador comecar a aceitar o que o servidor rejeita.
+ */
+export const stepOneSchema = feedbackSchema.pick({
+  discipline: true,
+  rating: true,
+  message: true,
+});
 
 export const DISCIPLINE_OPTIONS = [
   { value: 'geral', label: 'Geral' },
