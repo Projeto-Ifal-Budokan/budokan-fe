@@ -62,7 +62,12 @@ RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 nextjs
 
 # Copy necessary build output
-COPY --from=builder /app/public ./public
+# O --chown nao e decoracao: o checkout na maquina tem tudo em 0700 nas maos de
+# budokan-agent (uid 1002), COPY preserva dono e modo, e aqui embaixo roda USER nextjs
+# (uid 1001). Sem o chown, /app/public fica ilegivel para o usuario da app e todo arquivo
+# servido de public/ quebra -- logo no header e no hero, robots.txt, logos do rodape.
+# Os dois COPY de baixo ja faziam isso; public/ era o unico que nao.
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

@@ -38,7 +38,10 @@ export async function getPublishedFeedbacks(
   const params = new URLSearchParams();
   params.append('pagination[page]', '1');
   params.append('pagination[pageSize]', String(limit));
-  params.append('sort', 'publishedAt:desc');
+  // ordem de ID, nao de publicacao: os tres primeiros depoimentos foram semeados em sequencia
+  // (Aldemar, Lilian, Walter) e e essa a ordem que o dono do site quer ver. Um envio novo
+  // recebe ID maior e entra no fim da fila.
+  params.append('sort', 'id:asc');
   // redundante com o middleware do Strapi, mas diz o que queremos: se alguem remover o
   // middleware la, o site continua mostrando so o que foi aprovado
   params.append('status', 'published');
