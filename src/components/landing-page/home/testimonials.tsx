@@ -31,9 +31,7 @@ export const TestimonialsSection = async () => {
           <div className='bg-primary mx-auto mb-6 h-1 w-20'></div>
           <p className='mx-auto max-w-3xl text-gray-600'>
             Veja o que nossos alunos dizem sobre sua experiência na Budokan-Ryu
-            e como as artes marciais transformaram suas vidas. Quem treina com a
-            gente pode enviar o depoimento aqui — ele aparece depois de aprovado
-            pela equipe.
+            e como as artes marciais transformaram suas vidas.
           </p>
         </div>
 

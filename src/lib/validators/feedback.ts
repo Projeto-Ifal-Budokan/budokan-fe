@@ -21,11 +21,13 @@ export const MAX_MESSAGE = 600;
  * provar que a pessoa concordou sem saber com o que concordou nao prova nada.
  * Mudou o texto, mudou a versao. 2026-11-06: os acentos que faltavam foram colocados; o
  * sentido e o mesmo de 2026-10-28, mas a versao registrada precisa apontar para o texto que
- * estava na tela quando a pessoa marcou a caixa.
+ * estava na tela quando a pessoa marcou a caixa. 2026-11-06b: por decisao do dono do site,
+ * a frase sobre pedir a remocao saiu — e ela que diz que a pessoa pode voltar atras na
+ * publicacao do nome e da foto, entao a versao muda junto mesmo sem outra palavra ter mudado.
  */
-export const CONSENT_VERSION = '2026-11-06';
+export const CONSENT_VERSION = '2026-11-06b';
 export const CONSENT_TEXT =
-  'Autorizo a publicação do meu nome e da minha foto neste site depois da aprovação pela equipe da Budokan-Ryu. Posso pedir a remoção a qualquer momento.';
+  'Autorizo a publicação do meu nome e da minha foto neste site depois da aprovação pela equipe da Budokan-Ryu.';
 
 export const feedbackSchema = z.object({
   discipline: z.enum(['karate', 'kendo', 'archery', 'geral']),
