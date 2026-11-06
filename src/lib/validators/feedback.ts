@@ -19,11 +19,13 @@ export const MAX_MESSAGE = 600;
  * Texto do consentimento. Publicar nome e rosto de alguem e publicacao de dado pessoal,
  * entao o aceite e registrado com a data e com a versao do texto que estava em vigor —
  * provar que a pessoa concordou sem saber com o que concordou nao prova nada.
- * Mudou o texto, mudou a versao.
+ * Mudou o texto, mudou a versao. 2026-11-06: os acentos que faltavam foram colocados; o
+ * sentido e o mesmo de 2026-10-28, mas a versao registrada precisa apontar para o texto que
+ * estava na tela quando a pessoa marcou a caixa.
  */
-export const CONSENT_VERSION = '2026-10-28';
+export const CONSENT_VERSION = '2026-11-06';
 export const CONSENT_TEXT =
-  'Autorizo a publicacao do meu nome e da minha foto neste site depois da aprovacao pela equipe da Budokan-Ryu. Posso pedir a remocao a qualquer momento.';
+  'Autorizo a publicação do meu nome e da minha foto neste site depois da aprovação pela equipe da Budokan-Ryu. Posso pedir a remoção a qualquer momento.';
 
 export const feedbackSchema = z.object({
   discipline: z.enum(['karate', 'kendo', 'archery', 'geral']),
