@@ -121,9 +121,12 @@ export default function HeroCarousel() {
               priority={index === 0}
             />
             <div className='absolute inset-0 z-20 container flex flex-col items-center justify-center text-center text-white'>
-              {/* a logo de 120px do centro do hero saiu por pedido do dono do site: o nome ja
-                  aparece no header e no proprio h1, entao ali no meio era repeticao. o Image
-                  continua importado — ele e o fundo do slide. */}
+              {/* espaco reservado no lugar da logo de 120px que saiu. este bloco e centrado
+                  verticalmente (justify-center), entao remover a logo sem deixar o vazio faz
+                  todo o texto subir metade da altura dela: 144px de conteudo a menos, centro
+                  fixo, sobra 72px para cima. o que o dono do site pediu foi tirar o circulo, nao
+                  mover o texto — por isso o bloco continua aqui, so que vazio. */}
+              <div aria-hidden='true' className='mb-6 h-[120px] shrink-0' />
               <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
                 Associação de Artes Marciais
                 <br />
