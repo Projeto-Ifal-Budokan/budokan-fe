@@ -121,15 +121,9 @@ export default function HeroCarousel() {
               priority={index === 0}
             />
             <div className='absolute inset-0 z-20 container flex flex-col items-center justify-center text-center text-white'>
-              <div className='mb-6'>
-                <Image
-                  src='/logo.jpeg'
-                  alt='Budokan-Ryu Logo'
-                  width={120}
-                  height={120}
-                  className='mx-auto rounded-full'
-                />
-              </div>
+              {/* a logo de 120px do centro do hero saiu por pedido do dono do site: o nome ja
+                  aparece no header e no proprio h1, entao ali no meio era repeticao. o Image
+                  continua importado — ele e o fundo do slide. */}
               <h1 className='mb-4 text-4xl font-bold md:text-6xl'>
                 Associação de Artes Marciais
                 <br />
