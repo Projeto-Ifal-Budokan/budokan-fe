@@ -34,6 +34,15 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 # Ausente = o formulario mostra o login como indisponivel e a server action recusa.
 ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
+# O pre-render da home precisa dos depoimentos, mas o alias interno budokan-cms so existe em
+# runtime: durante o docker build nao ha rede para o outro container, a busca falha, o fallback
+# devolve lista vazia e "ainda nao ha depoimentos publicados" congela no HTML estatico. A
+# janela durava ate o ISR regenerar — 2 a 5 minutos a cada deploy do frontend. Na build a fala
+# sai pelo dominio publico; em runtime o compose continua usando o alias interno.
+# Se o dominio estiver fora na hora do build, o resultado e o mesmo de hoje: pagina sem
+# depoimentos ate a primeira revalidacao. Nada aqui faz o build falhar por isso.
+ARG STRAPI_BUILD_URL=https://strapi.budokanryu.com.br/api
+ENV STRAPI_URL=$STRAPI_BUILD_URL
 ENV NODE_ENV=production
 # ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PRIVATE_STANDALONE=true

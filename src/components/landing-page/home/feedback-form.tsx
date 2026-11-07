@@ -304,7 +304,12 @@ export const FeedbackForm = () => {
       </div>
 
       <Dialog open={open} onOpenChange={changeOpen}>
-        <DialogContent className='max-w-xl sm:max-w-xl'>
+        {/* so o variant sm e sobrescrito, de proposito. cn() usa tailwind-merge e dedup por
+            grupo, nao por valor: passar um max-w sem variant derrubaria o
+            max-w-[calc(100%-2rem)] da base, que e o que da a folga de cada lado em celular —
+            foi exatamente assim que o modal ficou colado na borda. sm:max-w-xl e de outro
+            grupo, entao o teto do desktop sobe para 576px e a folga do celular fica intacta. */}
+        <DialogContent className='sm:max-w-xl'>
           <DialogHeader className='space-y-2'>
             <p className='text-xs font-semibold tracking-widest text-blue-700 uppercase'>
               Etapa {step} de 2

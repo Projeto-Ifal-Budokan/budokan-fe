@@ -9,6 +9,10 @@ services:
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
         - NODE_ENV=production
         - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        # usado so no pre-render da build; em runtime STRAPI_URL la embaixo continua sendo
+        # o alias interno. O default esta escrito aqui de proposito: se a variavel nao existir
+        # no .env, o compose passaria string vazia e apagaria o default do Dockerfile.
+        - STRAPI_BUILD_URL=${STRAPI_BUILD_URL:-https://strapi.budokanryu.com.br/api}
     container_name: frontend-budokanryu
     environment:
       - NODE_ENV=production
