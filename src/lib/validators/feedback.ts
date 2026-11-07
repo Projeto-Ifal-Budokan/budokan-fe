@@ -12,8 +12,8 @@ import { z } from 'zod';
 export const MIN_NAME = 2;
 export const MAX_NAME = 60;
 export const MIN_MESSAGE = 20;
-/** 600 e o limite do proprio CMS (schema e controller). Alguem ja escreveu 502. */
-export const MAX_MESSAGE = 600;
+/** 1000 e o limite do proprio CMS (schema e controller). O mais longo que ja existia tinha 502. */
+export const MAX_MESSAGE = 1000;
 
 /**
  * Texto do consentimento. Publicar nome e rosto de alguem e publicacao de dado pessoal,
