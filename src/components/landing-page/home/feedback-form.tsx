@@ -31,6 +31,11 @@ const inputClass =
 
 const labelClass = 'mb-1 block text-sm font-medium text-gray-700';
 
+// o textarea precisa de altura propria: rows={6} sozinho da ~90px, e em 1000 caracteres isso e
+// um espaco de escrita menor que um tweet. resize-y deixa a pessoa puxar; min-h em dvh nenhum,
+// so px, porque aqui dentro do modal o que importa e caber junto dos botoes de baixo.
+const textareaClass = `${inputClass} min-h-28 resize-y sm:min-h-40`;
+
 /** publico: entra no bundle do navegador, o Google trata assim. nao e segredo */
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
 
@@ -299,7 +304,7 @@ export const FeedbackForm = () => {
       </div>
 
       <Dialog open={open} onOpenChange={changeOpen}>
-        <DialogContent className='max-w-xl'>
+        <DialogContent className='max-w-xl sm:max-w-xl'>
           <DialogHeader className='space-y-2'>
             <p className='text-xs font-semibold tracking-widest text-blue-700 uppercase'>
               Etapa {step} de 2
@@ -344,7 +349,7 @@ export const FeedbackForm = () => {
 
                   <div>
                     <span className={labelClass}>Nota (opcional)</span>
-                    <div className='flex gap-1 pt-1'>
+                    <div className='flex gap-0.5 pt-0.5'>
                       {[1, 2, 3, 4, 5].map((value) => (
                         <button
                           key={value}
@@ -357,7 +362,7 @@ export const FeedbackForm = () => {
                               { shouldValidate: true }
                             )
                           }
-                          className='text-amber-500'
+                          className='rounded-md p-2 text-amber-500'
                         >
                           <Star
                             className={
@@ -365,7 +370,7 @@ export const FeedbackForm = () => {
                                 ? 'fill-amber-400'
                                 : 'text-gray-300'
                             }
-                            size={22}
+                            size={26}
                           />
                         </button>
                       ))}
@@ -379,10 +384,10 @@ export const FeedbackForm = () => {
                   </label>
                   <textarea
                     id='feedback-message'
-                    rows={5}
+                    rows={6}
                     maxLength={MAX_MESSAGE}
                     {...register('message')}
-                    className={inputClass}
+                    className={textareaClass}
                   />
                   <div className='mt-1 flex items-center justify-between gap-3'>
                     {errors.message ? (
@@ -410,7 +415,7 @@ export const FeedbackForm = () => {
                       para enviar depoimento.
                     </p>
                   ) : signedIn ? (
-                    <div className='flex items-center gap-3'>
+                    <div className='flex flex-wrap items-center gap-3'>
                       {/* img simples, nao next/image: a foto e servida pelo Google, e cada
                           dominio novo no next.config e uma chance a mais de quebrar o build */}
                       {signedIn.picture && (
@@ -455,7 +460,7 @@ export const FeedbackForm = () => {
                   <input
                     type='checkbox'
                     {...register('consent')}
-                    className='mt-1'
+                    className='mt-1 size-4 shrink-0'
                   />
                   <span>{CONSENT_TEXT}</span>
                 </label>
@@ -477,20 +482,30 @@ export const FeedbackForm = () => {
               className='hidden'
             />
 
-            <div className='flex items-center justify-between gap-3 border-t border-gray-100 pt-4'>
+            <div className='flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3'>
               {step === 1 ? (
-                <Button type='button' variant='ghost' onClick={() => setOpen(false)}>
+                <Button
+                  type='button'
+                  variant='ghost'
+                  onClick={() => setOpen(false)}
+                  className='w-full sm:w-auto'
+                >
                   Cancelar
                 </Button>
               ) : (
-                <Button type='button' variant='ghost' onClick={() => setStep(1)}>
+                <Button
+                  type='button'
+                  variant='ghost'
+                  onClick={() => setStep(1)}
+                  className='w-full sm:w-auto'
+                >
                   Voltar
                 </Button>
               )}
               {step === 1 ? (
                 <Button
                   type='submit'
-                  className='bg-blue-900 px-6 text-white hover:bg-blue-800'
+                  className='w-full bg-blue-900 px-6 text-white hover:bg-blue-800 sm:w-auto'
                 >
                   Continuar
                 </Button>
@@ -498,7 +513,7 @@ export const FeedbackForm = () => {
                 <Button
                   type='submit'
                   disabled={isSubmitting || credential === ''}
-                  className='bg-blue-900 px-6 text-white hover:bg-blue-800 disabled:bg-blue-300'
+                  className='w-full bg-blue-900 px-6 text-white hover:bg-blue-800 disabled:bg-blue-300 sm:w-auto'
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar depoimento'}
                 </Button>
